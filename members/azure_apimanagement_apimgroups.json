@@ -1,0 +1,1278 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_apimanagement_apimgroups",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "GroupIdParameter": {
+          "description": "Group identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 256,
+          "minLength": 1,
+          "name": "groupId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchOptionalParameter": {
+          "description": "ETag of the Entity. Not required when creating an entity, but required when updating an entity.",
+          "in": "header",
+          "name": "If-Match",
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchRequiredParameter": {
+          "description": "ETag of the Entity. ETag should match the current entity state from the header response of the GET request or it should be * for unconditional update.",
+          "in": "header",
+          "name": "If-Match",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ServiceNameParameter": {
+          "description": "The name of the API Management service.",
+          "in": "path",
+          "maxLength": 50,
+          "minLength": 1,
+          "name": "serviceName",
+          "pattern": "^[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SkipQueryParameter": {
+          "description": "Number of records to skip.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 0,
+          "name": "$skip",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "TopQueryParameter": {
+          "description": "Number of records to return.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 1,
+          "name": "$top",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "UserIdParameter": {
+          "description": "User identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "userId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "GroupCollection": {
+          "description": "Paged Group list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/GroupContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "GroupContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Contract details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GroupContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GroupContractProperties": {
+          "description": "Group contract Properties.",
+          "properties": {
+            "builtIn": {
+              "description": "true if the group is one of the three system groups (Administrators, Developers, or Guests); otherwise false.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "description": {
+              "description": "Group description. Can contain HTML formatting tags.",
+              "maxLength": 1000,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Group name.",
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "externalId": {
+              "description": "For external groups, this property contains the id of the group from the external identity provider, e.g. for Azure Active Directory `aad://\u003ctenant\u003e.onmicrosoft.com/groups/\u003cgroup object id\u003e`; otherwise the value is null.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Group type.",
+              "enum": [
+                "custom",
+                "system",
+                "external"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "GroupType"
+              }
+            }
+          },
+          "required": [
+            "displayName"
+          ],
+          "type": "object"
+        },
+        "GroupContractProperties_2": {
+          "description": "Group contract Properties.",
+          "properties": {
+            "builtIn": {
+              "description": "true if the group is one of the three system groups (Administrators, Developers, or Guests); otherwise false.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "description": {
+              "description": "Group description. Can contain HTML formatting tags.",
+              "maxLength": 1000,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Group name.",
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "externalId": {
+              "description": "For external groups, this property contains the id of the group from the external identity provider, e.g. for Azure Active Directory `aad://\u003ctenant\u003e.onmicrosoft.com/groups/\u003cgroup object id\u003e`; otherwise the value is null.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Group type.",
+              "enum": [
+                "custom",
+                "system",
+                "external"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "GroupType"
+              }
+            }
+          },
+          "required": [
+            "displayName"
+          ],
+          "type": "object"
+        },
+        "GroupContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Contract details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GroupContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GroupCreateParameters": {
+          "description": "Parameters supplied to the Create Group operation.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GroupCreateParametersProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GroupCreateParametersProperties": {
+          "description": "Parameters supplied to the Create Group operation.",
+          "properties": {
+            "description": {
+              "description": "Group description.",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Group name.",
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "externalId": {
+              "description": "Identifier of the external groups, this property contains the id of the group from the external identity provider, e.g. for Azure Active Directory `aad://\u003ctenant\u003e.onmicrosoft.com/groups/\u003cgroup object id\u003e`; otherwise the value is null.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Group type.",
+              "enum": [
+                "custom",
+                "system",
+                "external"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "GroupType"
+              }
+            }
+          },
+          "required": [
+            "displayName"
+          ],
+          "type": "object"
+        },
+        "GroupUpdateParameters": {
+          "description": "Parameters supplied to the Update Group operation.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GroupUpdateParametersProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GroupUpdateParametersProperties": {
+          "description": "Parameters supplied to the Update Group operation.",
+          "properties": {
+            "description": {
+              "description": "Group description.",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Group name.",
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "externalId": {
+              "description": "Identifier of the external groups, this property contains the id of the group from the external identity provider, e.g. for Azure Active Directory `aad://\u003ctenant\u003e.onmicrosoft.com/groups/\u003cgroup object id\u003e`; otherwise the value is null.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Group type.",
+              "enum": [
+                "custom",
+                "system",
+                "external"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "GroupType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "UserCollection": {
+          "description": "Paged Users list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/UserContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "UserContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "User details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/UserContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "UserContractProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/UserEntityBaseParameters"
+            }
+          ],
+          "description": "User profile.",
+          "properties": {
+            "email": {
+              "description": "Email address.",
+              "type": "string"
+            },
+            "firstName": {
+              "description": "First name.",
+              "type": "string"
+            },
+            "groups": {
+              "description": "Collection of groups user is part of.",
+              "items": {
+                "$ref": "#/components/schemas/GroupContractProperties_2"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "displayName"
+              ]
+            },
+            "lastName": {
+              "description": "Last name.",
+              "type": "string"
+            },
+            "registrationDate": {
+              "description": "Date of user registration. The date conforms to the following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601 standard.\n",
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UserContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "User details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/UserContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "UserEntityBaseParameters": {
+          "description": "User Entity Base Parameters set.",
+          "properties": {
+            "identities": {
+              "description": "Collection of user identities.",
+              "items": {
+                "$ref": "#/components/schemas/UserIdentityContract"
+              },
+              "type": "array"
+            },
+            "note": {
+              "description": "Optional note about a user set by the administrator.",
+              "type": "string"
+            },
+            "state": {
+              "default": "active",
+              "description": "Account state. Specifies whether the user is active or not. Blocked users are unable to sign into the developer portal or call any APIs of subscribed products. Default state is Active.",
+              "enum": [
+                "active",
+                "blocked",
+                "pending",
+                "deleted"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "UserState",
+                "values": [
+                  {
+                    "description": "User state is active.",
+                    "value": "active"
+                  },
+                  {
+                    "description": "User is blocked. Blocked users cannot authenticate at developer portal or call API.",
+                    "value": "blocked"
+                  },
+                  {
+                    "description": "User account is pending. Requires identity confirmation before it can be made active.",
+                    "value": "pending"
+                  },
+                  {
+                    "description": "User account is closed. All identities and related entities are removed.",
+                    "value": "deleted"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        },
+        "UserIdentityContract": {
+          "description": "User identity details.",
+          "properties": {
+            "id": {
+              "description": "Identifier value within provider.",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Identity provider name.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these REST APIs for performing operations on Group entity in your Azure API Management deployment. Groups are used to manage the visibility of products to developers. Each API Management service instance comes with the following immutable system groups whose membership is automatically managed by API Management.  - **Administrators** - Azure subscription administrators are members of this group. - **Developers** - Authenticated developer portal users fall into this group. - **Guests** - Unauthenticated developer portal users are placed into this group. In addition to these system groups, administrators can create custom groups or [leverage external groups in associated Azure Active Directory tenants](https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-aad#how-to-add-an-external-azure-active-directory-group). Custom and external groups can be used alongside system groups in giving developers visibility and access to API products. For example, you could create one custom group for developers affiliated with a specific partner organization and allow them access to the APIs from a product containing relevant APIs only. A user can be a member of more than one group.",
+      "title": "ApiManagementClient",
+      "version": "2024-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/groups": {
+        "get": {
+          "description": "Lists a collection of groups defined within a service instance.",
+          "externalDocs": {
+            "url": "https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-create-groups"
+          },
+          "operationId": "Group_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| displayName | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| description | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| externalId | filter | eq |     |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GroupCollection"
+                  }
+                }
+              },
+              "description": "Lists a collection of Group entities."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGroups": {
+              "$ref": "./examples/ApiManagementListGroups.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/GroupContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/groups/{groupId}": {
+        "delete": {
+          "description": "Deletes specific group of the API Management service instance.",
+          "operationId": "Group_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The group was successfully deleted."
+            },
+            "204": {
+              "description": "The group was successfully deleted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGroup": {
+              "$ref": "./examples/ApiManagementDeleteGroup.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the details of the group specified by its identifier.",
+          "operationId": "Group_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GroupContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Group entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetGroup": {
+              "$ref": "./examples/ApiManagementGetGroup.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Gets the entity state (Etag) version of the group specified by its identifier.",
+          "operationId": "Group_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Specified group entity exists and current entity state version is present in the ETag header.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGroup": {
+              "$ref": "./examples/ApiManagementHeadGroup.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the details of the group specified by its identifier.",
+          "operationId": "Group_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupUpdateParameters"
+                }
+              }
+            },
+            "description": "Update parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GroupContract_2"
+                  }
+                }
+              },
+              "description": "The group details were successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementUpdateGroup": {
+              "$ref": "./examples/ApiManagementUpdateGroup.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or Updates a group.",
+          "operationId": "Group_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupCreateParameters"
+                }
+              }
+            },
+            "description": "Create parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GroupContract_2"
+                  }
+                }
+              },
+              "description": "Group already exists.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GroupContract_2"
+                  }
+                }
+              },
+              "description": "Group was created successfully.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Group"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGroup": {
+              "$ref": "./examples/ApiManagementCreateGroup.json"
+            },
+            "ApiManagementCreateGroupExternal": {
+              "$ref": "./examples/ApiManagementCreateGroupExternal.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/groups/{groupId}/users": {
+        "get": {
+          "description": "Lists a collection of user entities associated with the group.",
+          "operationId": "GroupUser_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| firstName | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| lastName | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| email | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| registrationDate | filter | ge, le, eq, ne, gt, lt |     |\u003c/br\u003e| note | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserCollection"
+                  }
+                }
+              },
+              "description": "Lists a collection of user entities associated with the group."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GroupUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGroupUsers": {
+              "$ref": "./examples/ApiManagementListGroupUsers.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/UserContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/groups/{groupId}/users/{userId}": {
+        "delete": {
+          "description": "Remove existing user from existing group.",
+          "operationId": "GroupUser_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The user was successfully removed from the group."
+            },
+            "204": {
+              "description": "The user was successfully removed from the group."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GroupUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGroupUser": {
+              "$ref": "./examples/ApiManagementDeleteGroupUser.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Checks that user entity specified by identifier is associated with the group entity.",
+          "operationId": "GroupUser_CheckEntityExists",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Entity exists"
+            },
+            "404": {
+              "description": "Entity does not exists."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GroupUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGroupUser": {
+              "$ref": "./examples/ApiManagementHeadGroupUser.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Add existing user to existing group",
+          "operationId": "GroupUser_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GroupIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserContract_2"
+                  }
+                }
+              },
+              "description": "The specified user is already a member of the specified group."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserContract_2"
+                  }
+                }
+              },
+              "description": "The user was successfully added to the group."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GroupUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGroupUser": {
+              "$ref": "./examples/ApiManagementCreateGroupUser.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

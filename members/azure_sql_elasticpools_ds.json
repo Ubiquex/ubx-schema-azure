@@ -1,0 +1,1176 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_elasticpools",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AlwaysEncryptedEnclaveType": {
+          "description": "Type of enclave requested on the database i.e. Default or VBS enclaves.",
+          "enum": [
+            "Default",
+            "VBS"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AlwaysEncryptedEnclaveType",
+            "values": [
+              {
+                "description": "Default",
+                "name": "Default",
+                "value": "Default"
+              },
+              {
+                "description": "VBS",
+                "name": "VBS",
+                "value": "VBS"
+              }
+            ]
+          }
+        },
+        "AvailabilityZoneType": {
+          "description": "Specifies the availability zone the database is pinned to.",
+          "enum": [
+            "NoPreference",
+            "1",
+            "2",
+            "3"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AvailabilityZoneType",
+            "values": [
+              {
+                "description": "NoPreference",
+                "name": "NoPreference",
+                "value": "NoPreference"
+              },
+              {
+                "description": "1",
+                "name": "1",
+                "value": "1"
+              },
+              {
+                "description": "2",
+                "name": "2",
+                "value": "2"
+              },
+              {
+                "description": "3",
+                "name": "3",
+                "value": "3"
+              }
+            ]
+          }
+        },
+        "ElasticPool": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "An elastic pool.",
+          "properties": {
+            "kind": {
+              "description": "Kind of elastic pool. This is metadata used for the Azure portal experience.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ElasticPoolProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "type": "object"
+        },
+        "ElasticPoolLicenseType": {
+          "description": "The license type to apply for this elastic pool.",
+          "enum": [
+            "LicenseIncluded",
+            "BasePrice"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ElasticPoolLicenseType",
+            "values": [
+              {
+                "description": "LicenseIncluded",
+                "name": "LicenseIncluded",
+                "value": "LicenseIncluded"
+              },
+              {
+                "description": "BasePrice",
+                "name": "BasePrice",
+                "value": "BasePrice"
+              }
+            ]
+          }
+        },
+        "ElasticPoolListResult": {
+          "description": "The response of a ElasticPool list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ElasticPool items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ElasticPool"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ElasticPoolPerDatabaseSettings": {
+          "description": "Per database settings of an elastic pool.",
+          "properties": {
+            "autoPauseDelay": {
+              "description": "Auto Pause Delay for per database within pool",
+              "format": "int32",
+              "type": "integer"
+            },
+            "maxCapacity": {
+              "description": "The maximum capacity any one database can consume.",
+              "format": "double",
+              "type": "number"
+            },
+            "minCapacity": {
+              "description": "The minimum capacity all databases are guaranteed.",
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "ElasticPoolProperties": {
+          "description": "Properties of an elastic pool",
+          "properties": {
+            "autoPauseDelay": {
+              "description": "Time in minutes after which elastic pool is automatically paused. A value of -1 means that automatic pause is disabled",
+              "format": "int32",
+              "type": "integer"
+            },
+            "availabilityZone": {
+              "$ref": "#/components/schemas/AvailabilityZoneType"
+            },
+            "creationDate": {
+              "description": "The creation date of the elastic pool (ISO8601 format).",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "highAvailabilityReplicaCount": {
+              "description": "The number of secondary replicas associated with the Business Critical, Premium, or Hyperscale edition elastic pool that are used to provide high availability. Applicable only to Hyperscale elastic pools.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "licenseType": {
+              "$ref": "#/components/schemas/ElasticPoolLicenseType"
+            },
+            "maintenanceConfigurationId": {
+              "description": "Maintenance configuration id assigned to the elastic pool. This configuration defines the period when the maintenance updates will will occur.",
+              "type": "string"
+            },
+            "maxSizeBytes": {
+              "description": "The storage limit for the database elastic pool in bytes.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "minCapacity": {
+              "description": "Minimal capacity that serverless pool will not shrink below, if not paused",
+              "format": "double",
+              "type": "number"
+            },
+            "perDatabaseSettings": {
+              "$ref": "#/components/schemas/ElasticPoolPerDatabaseSettings"
+            },
+            "preferredEnclaveType": {
+              "$ref": "#/components/schemas/AlwaysEncryptedEnclaveType"
+            },
+            "state": {
+              "$ref": "#/components/schemas/ElasticPoolState"
+            },
+            "zoneRedundant": {
+              "description": "Whether or not this elastic pool is zone redundant, which means the replicas of this elastic pool will be spread across multiple availability zones.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "ElasticPoolState": {
+          "description": "The state of the elastic pool.",
+          "enum": [
+            "Creating",
+            "Ready",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ElasticPoolState",
+            "values": [
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Ready",
+                "name": "Ready",
+                "value": "Ready"
+              },
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "ElasticPoolUpdate": {
+          "description": "An elastic pool update.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ElasticPoolUpdateProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "ElasticPoolUpdateProperties": {
+          "description": "Properties of an elastic pool",
+          "properties": {
+            "autoPauseDelay": {
+              "description": "Time in minutes after which elastic pool is automatically paused. A value of -1 means that automatic pause is disabled",
+              "format": "int32",
+              "type": "integer"
+            },
+            "availabilityZone": {
+              "$ref": "#/components/schemas/AvailabilityZoneType"
+            },
+            "highAvailabilityReplicaCount": {
+              "description": "The number of secondary replicas associated with the Business Critical, Premium, or Hyperscale edition elastic pool that are used to provide high availability. Applicable only to Hyperscale elastic pools.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "licenseType": {
+              "$ref": "#/components/schemas/ElasticPoolLicenseType"
+            },
+            "maintenanceConfigurationId": {
+              "description": "Maintenance configuration id assigned to the elastic pool. This configuration defines the period when the maintenance updates will will occur.",
+              "type": "string"
+            },
+            "maxSizeBytes": {
+              "description": "The storage limit for the database elastic pool in bytes.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "minCapacity": {
+              "description": "Minimal capacity that serverless pool will not shrink below, if not paused",
+              "format": "double",
+              "type": "number"
+            },
+            "perDatabaseSettings": {
+              "$ref": "#/components/schemas/ElasticPoolPerDatabaseSettings"
+            },
+            "preferredEnclaveType": {
+              "$ref": "#/components/schemas/AlwaysEncryptedEnclaveType"
+            },
+            "zoneRedundant": {
+              "description": "Whether or not this elastic pool is zone redundant, which means the replicas of this elastic pool will be spread across multiple availability zones.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Sku": {
+          "description": "An ARM Resource SKU.",
+          "properties": {
+            "capacity": {
+              "description": "Capacity of the particular SKU.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "family": {
+              "description": "If the service has different generations of hardware, for the same SKU, then that can be captured here.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the SKU, typically, a letter + Number code, e.g. P3.",
+              "type": "string"
+            },
+            "size": {
+              "description": "Size of the particular SKU",
+              "type": "string"
+            },
+            "tier": {
+              "description": "The tier or edition of the particular SKU, e.g. Basic, Premium.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/elasticPools": {
+        "get": {
+          "description": "Gets all elastic pools in a server.",
+          "operationId": "ElasticPools_ListByServer",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The number of elements in the collection to skip.",
+              "in": "query",
+              "name": "$skip",
+              "schema": {
+                "format": "int64",
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ElasticPoolListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Get all elastic pools in a server": {
+              "$ref": "./examples/ElasticPoolListByServer.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/elasticPools/{elasticPoolName}": {
+        "delete": {
+          "description": "Deletes an elastic pool.",
+          "operationId": "ElasticPools_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the elastic pool.",
+              "in": "path",
+              "name": "elasticPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Delete an elastic pool": {
+              "$ref": "./examples/ElasticPoolDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets an elastic pool.",
+          "operationId": "ElasticPools_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the elastic pool.",
+              "in": "path",
+              "name": "elasticPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ElasticPool"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Get a Hyperscale elastic pool": {
+              "$ref": "./examples/HyperscaleElasticPoolGet.json"
+            },
+            "Get an elastic pool": {
+              "$ref": "./examples/ElasticPoolGet.json"
+            },
+            "Get an elastic pool with Availability Zone": {
+              "$ref": "./examples/GetElasticPoolWithAvailabilityZone.json"
+            },
+            "Get an elastic pool with preferred enclave type parameter": {
+              "$ref": "./examples/ElasticPoolGetWithPreferredEnclaveType.json"
+            },
+            "Get an elastic pool with serverless properties": {
+              "$ref": "./examples/GetElasticPoolWithServerlessProperties.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates an elastic pool.",
+          "operationId": "ElasticPools_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the elastic pool.",
+              "in": "path",
+              "name": "elasticPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElasticPoolUpdate"
+                }
+              }
+            },
+            "description": "The elastic pool update parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ElasticPool"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Assigns maintenance configuration to an elastic pool.": {
+              "$ref": "./examples/ElasticPoolUpdateAssignMaintenanceConfiguration.json"
+            },
+            "Resets maintenance configuration of an elastic pool to default.": {
+              "$ref": "./examples/ElasticPoolUpdateResetMaintenanceConfiguration.json"
+            },
+            "Update an elastic pool with all parameter": {
+              "$ref": "./examples/ElasticPoolUpdateMax.json"
+            },
+            "Update an elastic pool with minimum parameters": {
+              "$ref": "./examples/ElasticPoolUpdateMin.json"
+            },
+            "Update an elastic pool with preferred enclave type parameter as Default": {
+              "$ref": "./examples/ElasticPoolUpdateWithDefaultPreferredEnclaveType.json"
+            },
+            "Update an elastic pool with preferred enclave type parameter as VBS": {
+              "$ref": "./examples/ElasticPoolUpdateWithVBSPreferredEnclaveType.json"
+            },
+            "Update an elastic pool with serverless properties": {
+              "$ref": "./examples/ElasticPoolUpdateServerlessProperties.json"
+            },
+            "Update high availability replica count of a Hyperscale elastic pool.": {
+              "$ref": "./examples/HyperscaleElasticPoolUpdateSetHighAvailabilityReplicaCount.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ElasticPool",
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates an elastic pool.",
+          "operationId": "ElasticPools_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the elastic pool.",
+              "in": "path",
+              "name": "elasticPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElasticPool"
+                }
+              }
+            },
+            "description": "The elastic pool parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ElasticPool"
+                  }
+                }
+              },
+              "description": "Resource 'ElasticPool' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ElasticPool"
+                  }
+                }
+              },
+              "description": "Resource 'ElasticPool' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Create or Update an elastic pool with Availability Zone": {
+              "$ref": "./examples/CreateElasticPoolWithAvailabilityZone.json"
+            },
+            "Create or Update an elastic pool with serverless properties": {
+              "$ref": "./examples/ElasticPoolCreateOrUpdateServerlessProperties.json"
+            },
+            "Create or update Hyperscale elastic pool with high availability replica count parameter": {
+              "$ref": "./examples/HyperscaleElasticPoolCreateOrUpdateSetHighAvailabilityReplicaCount.json"
+            },
+            "Create or update elastic pool with all parameter": {
+              "$ref": "./examples/ElasticPoolCreateOrUpdateMax.json"
+            },
+            "Create or update elastic pool with maintenance configuration parameter": {
+              "$ref": "./examples/ElasticPoolCreateOrUpdateSetMaintenanceConfiguration.json"
+            },
+            "Create or update elastic pool with minimum parameters": {
+              "$ref": "./examples/ElasticPoolCreateOrUpdateMin.json"
+            },
+            "Create or update elastic pool with preferred enclave type parameter as Default": {
+              "$ref": "./examples/ElasticPoolCreateWithDefaultPreferredEnclaveType.json"
+            },
+            "Create or update elastic pool with preferred enclave type parameter as VBS": {
+              "$ref": "./examples/ElasticPoolCreateWithVBSPreferredEnclaveType.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ElasticPool",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/elasticPools/{elasticPoolName}/failover": {
+        "post": {
+          "description": "Failovers an elastic pool.",
+          "operationId": "ElasticPools_Failover",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the elastic pool.",
+              "in": "path",
+              "name": "elasticPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ElasticPools"
+          ],
+          "x-ms-examples": {
+            "Failover an elastic pool": {
+              "$ref": "./examples/FailoverElasticPool.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "ElasticPools"
+      }
+    ]
+  }
+}

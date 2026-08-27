@@ -1,0 +1,726 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_startstopmanagedinstanceschedules",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "DayOfWeek": {
+          "description": "Day of maintenance window.",
+          "enum": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DayOfWeek",
+            "values": [
+              {
+                "description": "Sunday",
+                "name": "Sunday",
+                "value": "Sunday"
+              },
+              {
+                "description": "Monday",
+                "name": "Monday",
+                "value": "Monday"
+              },
+              {
+                "description": "Tuesday",
+                "name": "Tuesday",
+                "value": "Tuesday"
+              },
+              {
+                "description": "Wednesday",
+                "name": "Wednesday",
+                "value": "Wednesday"
+              },
+              {
+                "description": "Thursday",
+                "name": "Thursday",
+                "value": "Thursday"
+              },
+              {
+                "description": "Friday",
+                "name": "Friday",
+                "value": "Friday"
+              },
+              {
+                "description": "Saturday",
+                "name": "Saturday",
+                "value": "Saturday"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ScheduleItem": {
+          "description": "Schedule info describing when the server should be started or stopped.",
+          "properties": {
+            "startDay": {
+              "$ref": "#/components/schemas/DayOfWeek"
+            },
+            "startTime": {
+              "description": "Start time.",
+              "type": "string"
+            },
+            "stopDay": {
+              "$ref": "#/components/schemas/DayOfWeek"
+            },
+            "stopTime": {
+              "description": "Stop time.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "startDay",
+            "startTime",
+            "stopDay",
+            "stopTime"
+          ],
+          "type": "object"
+        },
+        "StartStopManagedInstanceSchedule": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Managed instance's Start/Stop schedule.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/StartStopManagedInstanceScheduleProperties"
+            }
+          },
+          "type": "object"
+        },
+        "StartStopManagedInstanceScheduleListResult": {
+          "description": "The response of a StartStopManagedInstanceSchedule list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The StartStopManagedInstanceSchedule items on this page",
+              "items": {
+                "$ref": "#/components/schemas/StartStopManagedInstanceSchedule"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "StartStopManagedInstanceScheduleProperties": {
+          "description": "Properties of managed instance's Start/Stop schedule.",
+          "properties": {
+            "description": {
+              "default": "",
+              "description": "The description of the schedule.",
+              "type": "string"
+            },
+            "nextExecutionTime": {
+              "description": "Timestamp when the next action will be executed in the corresponding schedule time zone.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "nextRunAction": {
+              "description": "Next action to be executed (Start or Stop)",
+              "readOnly": true,
+              "type": "string"
+            },
+            "scheduleList": {
+              "description": "Schedule list.",
+              "items": {
+                "$ref": "#/components/schemas/ScheduleItem"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "timeZoneId": {
+              "default": "UTC",
+              "description": "The time zone of the schedule.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "scheduleList"
+          ],
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/managedInstances/{managedInstanceName}/startStopSchedules": {
+        "get": {
+          "description": "Lists the managed instance's Start/Stop schedules.",
+          "operationId": "StartStopManagedInstanceSchedules_ListByInstance",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the managed instance.",
+              "in": "path",
+              "name": "managedInstanceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/StartStopManagedInstanceScheduleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "StartStopManagedInstanceSchedules"
+          ],
+          "x-ms-examples": {
+            "Lists the managed instance's Start/Stop schedules.": {
+              "$ref": "./examples/StartStopManagedInstanceScheduleList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/managedInstances/{managedInstanceName}/startStopSchedules/{startStopScheduleName}": {
+        "delete": {
+          "description": "Deletes the managed instance's Start/Stop schedule.",
+          "operationId": "StartStopManagedInstanceSchedules_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the managed instance.",
+              "in": "path",
+              "name": "managedInstanceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the managed instance Start/Stop schedule.",
+              "in": "path",
+              "name": "startStopScheduleName",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "default"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "StartStopScheduleName",
+                "values": [
+                  {
+                    "description": "default",
+                    "name": "default",
+                    "value": "default"
+                  }
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "StartStopManagedInstanceSchedules"
+          ],
+          "x-ms-examples": {
+            "Deletes the managed instance's Start/Stop schedule.": {
+              "$ref": "./examples/StartStopManagedInstanceScheduleDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the managed instance's Start/Stop schedule.",
+          "operationId": "StartStopManagedInstanceSchedules_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the managed instance.",
+              "in": "path",
+              "name": "managedInstanceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the managed instance Start/Stop schedule.",
+              "in": "path",
+              "name": "startStopScheduleName",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "default"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "StartStopScheduleName",
+                "values": [
+                  {
+                    "description": "default",
+                    "name": "default",
+                    "value": "default"
+                  }
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/StartStopManagedInstanceSchedule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "StartStopManagedInstanceSchedules"
+          ],
+          "x-ms-examples": {
+            "Gets the managed instance's Start/Stop schedule.": {
+              "$ref": "./examples/StartStopManagedInstanceScheduleGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates the managed instance's Start/Stop schedule.",
+          "operationId": "StartStopManagedInstanceSchedules_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the managed instance.",
+              "in": "path",
+              "name": "managedInstanceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the managed instance Start/Stop schedule.",
+              "in": "path",
+              "name": "startStopScheduleName",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "default"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "StartStopScheduleName",
+                "values": [
+                  {
+                    "description": "default",
+                    "name": "default",
+                    "value": "default"
+                  }
+                ]
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartStopManagedInstanceSchedule"
+                }
+              }
+            },
+            "description": "The requested managed instance Start/Stop schedule.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/StartStopManagedInstanceSchedule"
+                  }
+                }
+              },
+              "description": "Resource 'StartStopManagedInstanceSchedule' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/StartStopManagedInstanceSchedule"
+                  }
+                }
+              },
+              "description": "Resource 'StartStopManagedInstanceSchedule' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "StartStopManagedInstanceSchedules"
+          ],
+          "x-ms-examples": {
+            "Creates or updates the managed instance's Start/Stop schedule with all optional parameters specified.": {
+              "$ref": "./examples/StartStopManagedInstanceScheduleCreateOrUpdateMax.json"
+            },
+            "Creates or updates the managed instance's Start/Stop schedule with no optional parameters specified.": {
+              "$ref": "./examples/StartStopManagedInstanceScheduleCreateOrUpdateMin.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "StartStopManagedInstanceSchedules"
+      }
+    ]
+  }
+}

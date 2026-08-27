@@ -1,0 +1,2755 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_apimanagement_apimgateways",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiIdParameter": {
+          "description": "API identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "apiId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "CertificateIdParameter": {
+          "description": "Identifier of the certificate entity. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "certificateId",
+          "pattern": "^[^*#\u0026+:\u003c\u003e?]+$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "GatewayHostnameConfigurationIdParameter": {
+          "description": "Gateway hostname configuration identifier. Must be unique in the scope of parent Gateway entity.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "hcId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "GatewayIdParameter": {
+          "description": "Gateway entity identifier. Must be unique in the current API Management service instance. Must not have value 'managed'",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "gatewayId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchOptionalParameter": {
+          "description": "ETag of the Entity. Not required when creating an entity, but required when updating an entity.",
+          "in": "header",
+          "name": "If-Match",
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchRequiredParameter": {
+          "description": "ETag of the Entity. ETag should match the current entity state from the header response of the GET request or it should be * for unconditional update.",
+          "in": "header",
+          "name": "If-Match",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ServiceNameParameter": {
+          "description": "The name of the API Management service.",
+          "in": "path",
+          "maxLength": 50,
+          "minLength": 1,
+          "name": "serviceName",
+          "pattern": "^[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SkipQueryParameter": {
+          "description": "Number of records to skip.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 0,
+          "name": "$skip",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "TopQueryParameter": {
+          "description": "Number of records to return.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 1,
+          "name": "$top",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "ApiCollection": {
+          "description": "Paged API list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/ApiContract"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ApiContactInformation": {
+          "description": "API contact information",
+          "properties": {
+            "email": {
+              "description": "The email address of the contact person/organization. MUST be in the format of an email address",
+              "type": "string"
+            },
+            "name": {
+              "description": "The identifying name of the contact person/organization",
+              "type": "string"
+            },
+            "url": {
+              "description": "The URL pointing to the contact information. MUST be in the format of a URL",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ApiContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "API details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ApiContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "ApiContractProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ApiEntityBaseContract"
+            }
+          ],
+          "description": "API Entity Properties",
+          "properties": {
+            "apiVersionSet": {
+              "$ref": "#/components/schemas/ApiVersionSetContractDetails"
+            },
+            "displayName": {
+              "description": "API name. Must be 1 to 300 characters long.",
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "path": {
+              "description": "Relative URL uniquely identifying this API and all of its resource paths within the API Management service instance. It is appended to the API endpoint base URL specified during the service instance creation to form a public URL for this API.",
+              "maxLength": 400,
+              "type": "string"
+            },
+            "protocols": {
+              "description": "Describes on which protocols the operations in this API can be invoked.",
+              "items": {
+                "enum": [
+                  "http",
+                  "https",
+                  "ws",
+                  "wss"
+                ],
+                "type": "string",
+                "x-ms-enum": {
+                  "modelAsString": true,
+                  "name": "Protocol"
+                }
+              },
+              "type": "array"
+            },
+            "provisioningState": {
+              "description": "The provisioning state",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serviceUrl": {
+              "description": "Absolute URL of the backend service implementing this API. Cannot be more than 2000 characters long.",
+              "maxLength": 2000,
+              "type": "string"
+            },
+            "sourceApiId": {
+              "description": "API identifier of the source API.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        },
+        "ApiContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "API details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ApiContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "ApiEntityBaseContract": {
+          "description": "API base contract details.",
+          "properties": {
+            "apiRevision": {
+              "description": "Describes the revision of the API. If no value is provided, default revision 1 is created",
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            "apiRevisionDescription": {
+              "description": "Description of the API Revision.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "apiVersion": {
+              "description": "Indicates the version identifier of the API if the API is versioned",
+              "maxLength": 100,
+              "type": "string"
+            },
+            "apiVersionDescription": {
+              "description": "Description of the API Version.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "apiVersionSetId": {
+              "description": "A resource identifier for the related ApiVersionSet.",
+              "type": "string"
+            },
+            "authenticationSettings": {
+              "$ref": "#/components/schemas/AuthenticationSettingsContract"
+            },
+            "contact": {
+              "$ref": "#/components/schemas/ApiContactInformation"
+            },
+            "description": {
+              "description": "Description of the API. May include HTML formatting tags.",
+              "type": "string"
+            },
+            "isCurrent": {
+              "description": "Indicates if API revision is current api revision.",
+              "type": "boolean"
+            },
+            "isOnline": {
+              "description": "Indicates if API revision is accessible via the gateway.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "license": {
+              "$ref": "#/components/schemas/ApiLicenseInformation"
+            },
+            "subscriptionKeyParameterNames": {
+              "$ref": "#/components/schemas/SubscriptionKeyParameterNamesContract"
+            },
+            "subscriptionRequired": {
+              "description": "Specifies whether an API or Product subscription is required for accessing the API.",
+              "type": "boolean"
+            },
+            "termsOfServiceUrl": {
+              "description": " A URL to the Terms of Service for the API. MUST be in the format of a URL.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of API.",
+              "enum": [
+                "http",
+                "soap",
+                "websocket",
+                "graphql",
+                "odata",
+                "grpc"
+              ],
+              "type": "string",
+              "x-ms-client-name": "ApiType",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ApiType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ApiLicenseInformation": {
+          "description": "API license information",
+          "properties": {
+            "name": {
+              "description": "The license name used for the API",
+              "type": "string"
+            },
+            "url": {
+              "description": "A URL to the license used for the API. MUST be in the format of a URL",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ApiVersionSetContractDetails": {
+          "description": "An API Version Set contains the common configuration for a set of API Versions relating ",
+          "properties": {
+            "description": {
+              "description": "Description of API Version Set.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Identifier for existing API Version Set. Omit this value to create a new Version Set.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The display Name of the API Version Set.",
+              "type": "string"
+            },
+            "versionHeaderName": {
+              "description": "Name of HTTP header parameter that indicates the API Version if versioningScheme is set to `header`.",
+              "type": "string"
+            },
+            "versionQueryName": {
+              "description": "Name of query parameter that indicates the API Version if versioningScheme is set to `query`.",
+              "type": "string"
+            },
+            "versioningScheme": {
+              "description": "An value that determines where the API Version identifier will be located in a HTTP request.",
+              "enum": [
+                "Segment",
+                "Query",
+                "Header"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "versioningScheme",
+                "values": [
+                  {
+                    "description": "The API Version is passed in a path segment.",
+                    "value": "Segment"
+                  },
+                  {
+                    "description": "The API Version is passed in a query parameter.",
+                    "value": "Query"
+                  },
+                  {
+                    "description": "The API Version is passed in a HTTP header.",
+                    "value": "Header"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        },
+        "AssociationContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Association entity details.",
+          "properties": {
+            "properties": {
+              "description": "Association entity contract properties.",
+              "properties": {
+                "provisioningState": {
+                  "description": "Provisioning state.",
+                  "enum": [
+                    "created"
+                  ],
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": false,
+                    "name": "ProvisioningState"
+                  }
+                }
+              },
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "AuthenticationSettingsContract": {
+          "description": "API Authentication Settings.",
+          "properties": {
+            "oAuth2": {
+              "$ref": "#/components/schemas/OAuth2AuthenticationSettingsContract"
+            },
+            "oAuth2AuthenticationSettings": {
+              "description": "Collection of OAuth2 authentication settings included into this API.",
+              "items": {
+                "$ref": "#/components/schemas/OAuth2AuthenticationSettingsContract"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "authorizationServerId"
+              ]
+            },
+            "openid": {
+              "$ref": "#/components/schemas/OpenIdAuthenticationSettingsContract"
+            },
+            "openidAuthenticationSettings": {
+              "description": "Collection of Open ID Connect authentication settings included into this API.",
+              "items": {
+                "$ref": "#/components/schemas/OpenIdAuthenticationSettingsContract"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "openidProviderId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "BearerTokenSendingMethodsContract": {
+          "description": "Form of an authorization grant, which the client uses to request the access token.",
+          "enum": [
+            "authorizationHeader",
+            "query"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "bearerTokenSendingMethods",
+            "values": [
+              {
+                "description": "Access token will be transmitted in the Authorization header using Bearer schema",
+                "value": "authorizationHeader"
+              },
+              {
+                "description": "Access token will be transmitted as query parameters.",
+                "value": "query"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "GatewayCertificateAuthorityCollection": {
+          "description": "Paged Gateway certificate authority list representation.",
+          "properties": {
+            "nextLink": {
+              "description": "Next page link if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/GatewayCertificateAuthorityContract"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayCertificateAuthorityContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway certificate authority details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayCertificateAuthorityContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayCertificateAuthorityContractProperties": {
+          "description": "Gateway certificate authority details.",
+          "properties": {
+            "isTrusted": {
+              "description": "Determines whether certificate authority is trusted.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayCertificateAuthorityContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway certificate authority details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayCertificateAuthorityContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayCollection": {
+          "description": "Paged Gateway list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/GatewayContract"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayContractProperties": {
+          "description": "Properties of the Gateway contract.",
+          "properties": {
+            "description": {
+              "description": "Gateway description",
+              "maxLength": 1000,
+              "type": "string"
+            },
+            "locationData": {
+              "$ref": "#/components/schemas/ResourceLocationDataContract"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayDebugCredentialsContract": {
+          "description": "Gateway debug credentials.",
+          "properties": {
+            "token": {
+              "description": "Gateway debug token.",
+              "type": "string",
+              "x-ms-secret": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayHostnameConfigurationCollection": {
+          "description": "Paged Gateway hostname configuration list representation.",
+          "properties": {
+            "nextLink": {
+              "description": "Next page link if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/GatewayHostnameConfigurationContract"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayHostnameConfigurationContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway hostname configuration details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayHostnameConfigurationContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayHostnameConfigurationContractProperties": {
+          "description": "Gateway hostname configuration details.",
+          "properties": {
+            "certificateId": {
+              "description": "Identifier of Certificate entity that will be used for TLS connection establishment",
+              "type": "string"
+            },
+            "hostname": {
+              "description": "Hostname value. Supports valid domain name, partial or full wildcard",
+              "type": "string"
+            },
+            "http2Enabled": {
+              "description": "Specifies if HTTP/2.0 is supported",
+              "type": "boolean"
+            },
+            "negotiateClientCertificate": {
+              "description": "Determines whether gateway requests client certificate",
+              "type": "boolean"
+            },
+            "tls10Enabled": {
+              "description": "Specifies if TLS 1.0 is supported",
+              "type": "boolean"
+            },
+            "tls11Enabled": {
+              "description": "Specifies if TLS 1.1 is supported",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayHostnameConfigurationContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Gateway hostname configuration details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/GatewayHostnameConfigurationContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "GatewayKeyRegenerationRequestContract": {
+          "description": "Gateway key regeneration request contract properties.",
+          "properties": {
+            "keyType": {
+              "description": "The Key being regenerated.",
+              "enum": [
+                "primary",
+                "secondary"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "KeyType"
+              }
+            }
+          },
+          "required": [
+            "keyType"
+          ],
+          "type": "object"
+        },
+        "GatewayKeysContract": {
+          "description": "Gateway authentication keys.",
+          "properties": {
+            "primary": {
+              "description": "Primary gateway key.",
+              "type": "string"
+            },
+            "secondary": {
+              "description": "Secondary gateway key.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayListDebugCredentialsContract": {
+          "description": "List debug credentials properties.",
+          "properties": {
+            "apiId": {
+              "description": "Full resource Id of an API.",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.ApiManagement/service/apis"
+                  },
+                  {
+                    "type": "Microsoft.ApiManagement/service/workspaces/apis"
+                  }
+                ]
+              }
+            },
+            "credentialsExpireAfter": {
+              "description": "Credentials expiration in ISO8601 format. Maximum duration of the credentials is PT1H. When property is not specified, them value PT1H is used.",
+              "format": "duration",
+              "type": "string"
+            },
+            "purposes": {
+              "description": "Purposes of debug credential.",
+              "items": {
+                "description": "Purpose of debug credential.",
+                "enum": [
+                  "tracing"
+                ],
+                "type": "string",
+                "x-ms-enum": {
+                  "modelAsString": true,
+                  "name": "GatewayListDebugCredentialsContractPurpose",
+                  "values": [
+                    {
+                      "description": "The tracing purpose.",
+                      "value": "tracing"
+                    }
+                  ]
+                }
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "purposes",
+            "apiId"
+          ],
+          "type": "object"
+        },
+        "GatewayListTraceContract": {
+          "description": "List trace properties.",
+          "properties": {
+            "traceId": {
+              "description": "Trace id.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayTokenContract": {
+          "description": "Gateway access token.",
+          "properties": {
+            "value": {
+              "description": "Shared Access Authentication token value for the Gateway.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "GatewayTokenRequestContract": {
+          "description": "Gateway token request contract properties.",
+          "properties": {
+            "expiry": {
+              "description": "The Expiry time of the Token. Maximum token expiry time is set to 30 days. The date conforms to the following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601 standard.\n",
+              "format": "date-time",
+              "type": "string"
+            },
+            "keyType": {
+              "default": "primary",
+              "description": "The Key to be used to generate gateway token.",
+              "enum": [
+                "primary",
+                "secondary"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "KeyType"
+              }
+            }
+          },
+          "required": [
+            "keyType",
+            "expiry"
+          ],
+          "type": "object"
+        },
+        "GatewayTraceContract": {
+          "additionalProperties": true,
+          "description": "Trace collected in gateway.",
+          "type": "object"
+        },
+        "OAuth2AuthenticationSettingsContract": {
+          "description": "API OAuth2 Authentication settings details.",
+          "properties": {
+            "authorizationServerId": {
+              "description": "OAuth authorization server identifier.",
+              "type": "string"
+            },
+            "scope": {
+              "description": "operations scope.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OpenIdAuthenticationSettingsContract": {
+          "description": "API OAuth2 Authentication settings details.",
+          "properties": {
+            "bearerTokenSendingMethods": {
+              "description": "How to send token to the server.",
+              "items": {
+                "$ref": "#/components/schemas/BearerTokenSendingMethodsContract"
+              },
+              "type": "array"
+            },
+            "openidProviderId": {
+              "description": "OAuth authorization server identifier.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceLocationDataContract": {
+          "description": "Resource location data properties.",
+          "properties": {
+            "city": {
+              "description": "The city or locality where the resource is located.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "countryOrRegion": {
+              "description": "The country or region where the resource is located.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "district": {
+              "description": "The district, state, or province where the resource is located.",
+              "maxLength": 256,
+              "type": "string"
+            },
+            "name": {
+              "description": "A canonical name for the geographic or physical location.",
+              "maxLength": 256,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "SubscriptionKeyParameterNamesContract": {
+          "description": "Subscription key parameter names details.",
+          "example": {
+            "subscriptionKeyParameterNames": {
+              "header": "customHeaderParameterName",
+              "query": "customQueryParameterName"
+            }
+          },
+          "properties": {
+            "header": {
+              "description": "Subscription key header name.",
+              "type": "string"
+            },
+            "query": {
+              "description": "Subscription key query string parameter name.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these REST APIs for performing operations on Gateway entity in Azure API Management deployment.",
+      "title": "ApiManagementClient",
+      "version": "2024-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways": {
+        "get": {
+          "description": "Lists a collection of gateways registered with service instance.",
+          "operationId": "Gateway_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| region | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| description | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayCollection"
+                  }
+                }
+              },
+              "description": "Lists a collection of Gateway entities."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGateways": {
+              "$ref": "./examples/ApiManagementListGateways.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/GatewayContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}": {
+        "delete": {
+          "description": "Deletes specific Gateway.",
+          "operationId": "Gateway_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The Gateway was successfully deleted."
+            },
+            "204": {
+              "description": "The Gateway was successfully deleted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGateway": {
+              "$ref": "./examples/ApiManagementDeleteGateway.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the details of the Gateway specified by its identifier.",
+          "operationId": "Gateway_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Gateway entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetGateway": {
+              "$ref": "./examples/ApiManagementGetGateway.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Gets the entity state (Etag) version of the Gateway specified by its identifier.",
+          "operationId": "Gateway_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Specified Gateway entity exists and current entity state version is present in the ETag header.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGateway": {
+              "$ref": "./examples/ApiManagementHeadGateway.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the details of the gateway specified by its identifier.",
+          "operationId": "Gateway_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayContract_2"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayContract_2"
+                  }
+                }
+              },
+              "description": "The Gateway details were successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementUpdateGateway": {
+              "$ref": "./examples/ApiManagementUpdateGateway.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Gateway to be used in Api Management instance.",
+          "operationId": "Gateway_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayContract_2"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayContract_2"
+                  }
+                }
+              },
+              "description": "The Gateway details were successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayContract_2"
+                  }
+                }
+              },
+              "description": "The new Gateway was successfully added.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Gateway"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGateway": {
+              "$ref": "./examples/ApiManagementCreateGateway.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/apis": {
+        "get": {
+          "description": "Lists a collection of the APIs associated with a gateway.",
+          "operationId": "GatewayApi_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiCollection"
+                  }
+                }
+              },
+              "description": "The response body contains a collection of Api entities in the gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayApi"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGatewayApis": {
+              "$ref": "./examples/ApiManagementListGatewayApis.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/ApiContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/apis/{apiId}": {
+        "delete": {
+          "description": "Deletes the specified API from the specified Gateway.",
+          "operationId": "GatewayApi_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "API was successfully removed from Gateway"
+            },
+            "204": {
+              "description": "API successfully removed by previous request or does not exist in Gateway"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayApi"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGatewayApi": {
+              "$ref": "./examples/ApiManagementDeleteGatewayApi.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Checks that API entity specified by identifier is associated with the Gateway entity.",
+          "operationId": "GatewayApi_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Specified Gateway entity exists and current entity state version is present in the ETag header.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayApi"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGatewayApi": {
+              "$ref": "./examples/ApiManagementHeadGatewayApi.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Adds an API to the specified Gateway.",
+          "operationId": "GatewayApi_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssociationContract"
+                }
+              }
+            },
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiContract_2"
+                  }
+                }
+              },
+              "description": "The specified API is already added to the Gateway."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ApiContract_2"
+                  }
+                }
+              },
+              "description": "The API was successfully added to the Gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayApi"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGatewayApi": {
+              "$ref": "./examples/ApiManagementCreateGatewayApi.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/certificateAuthorities": {
+        "get": {
+          "description": "Lists the collection of Certificate Authorities for the specified Gateway entity.",
+          "operationId": "GatewayCertificateAuthority_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | eq, ne |  |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayCertificateAuthorityCollection"
+                  }
+                }
+              },
+              "description": "Collection of Gateway Certificate Authority entities."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayCertificateAuthority"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGatewaycertificateAuthorities": {
+              "$ref": "./examples/ApiManagementListGatewayCertificateAuthorities.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/GatewayCertificateAuthorityContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/certificateAuthorities/{certificateId}": {
+        "delete": {
+          "description": "Remove relationship between Certificate Authority and Gateway entity.",
+          "operationId": "GatewayCertificateAuthority_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/CertificateIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Certificate entity was successfully removed from Gateway entity as Certificate Authority."
+            },
+            "204": {
+              "description": "Certificate was successfully removed from Gateway entity as Certificate Authority by one of the previous requests or never assigned."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayCertificateAuthority"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGatewayCertificateAuthority": {
+              "$ref": "./examples/ApiManagementDeleteGatewayCertificateAuthority.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get assigned Gateway Certificate Authority details.",
+          "operationId": "GatewayCertificateAuthority_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/CertificateIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayCertificateAuthorityContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Gateway Certificate Authority entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayCertificateAuthority"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetGatewayCertificateAuthority": {
+              "$ref": "./examples/ApiManagementGetGatewayCertificateAuthority.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Checks if Certificate entity is assigned to Gateway entity as Certificate Authority.",
+          "operationId": "GatewayCertificateAuthority_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/CertificateIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Specified Gateway Certificate Authority entity exists and current entity state version is present in the ETag header.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayCertificateAuthority"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGatewayCertificateAuthority": {
+              "$ref": "./examples/ApiManagementHeadGatewayCertificateAuthority.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Assign Certificate entity to Gateway entity as Certificate Authority.",
+          "operationId": "GatewayCertificateAuthority_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/CertificateIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayCertificateAuthorityContract_2"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayCertificateAuthorityContract_2"
+                  }
+                }
+              },
+              "description": "Gateway Certificate Authority details were successfully updated",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayCertificateAuthorityContract_2"
+                  }
+                }
+              },
+              "description": "Certificate entity was successfully assigned to Gateway entity as Certificate Authority.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayCertificateAuthority"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGatewayCertificateAuthority": {
+              "$ref": "./examples/ApiManagementCreateGatewayCertificateAuthority.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/generateToken": {
+        "post": {
+          "description": "Gets the Shared Access Authorization Token for the gateway.",
+          "operationId": "Gateway_GenerateToken",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayTokenRequestContract"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayTokenContract"
+                  }
+                }
+              },
+              "description": "The response body contains the authorization token for the gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayGenerateToken"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayGenerateToken": {
+              "$ref": "./examples/ApiManagementGatewayGenerateToken.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/hostnameConfigurations": {
+        "get": {
+          "description": "Lists the collection of hostname configurations for the specified gateway.",
+          "operationId": "GatewayHostnameConfiguration_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e| hostname | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayHostnameConfigurationCollection"
+                  }
+                }
+              },
+              "description": "Collection of hostname configuration entities."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayHostnameConfiguration"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListGatewayHostnameConfigurations": {
+              "$ref": "./examples/ApiManagementListGatewayHostnameConfigurations.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/GatewayHostnameConfigurationContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/hostnameConfigurations/{hcId}": {
+        "delete": {
+          "description": "Deletes the specified hostname configuration from the specified Gateway.",
+          "operationId": "GatewayHostnameConfiguration_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayHostnameConfigurationIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Hostname configuration was successfully removed from Gateway."
+            },
+            "204": {
+              "description": "Hostname configuration successfully removed by previous request or does not exist in Gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayHostnameConfiguration"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteGatewayHostnameConfiguration": {
+              "$ref": "./examples/ApiManagementDeleteGatewayHostnameConfiguration.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get details of a hostname configuration",
+          "operationId": "GatewayHostnameConfiguration_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayHostnameConfigurationIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayHostnameConfigurationContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Gateway entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayHostnameConfiguration"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetGatewayHostnameConfiguration": {
+              "$ref": "./examples/ApiManagementGetGatewayHostnameConfiguration.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Checks that hostname configuration entity specified by identifier exists for specified Gateway entity.",
+          "operationId": "GatewayHostnameConfiguration_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayHostnameConfigurationIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Specified Gateway entity exists and current entity state version is present in the ETag header.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayHostnameConfiguration"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadGatewayHostnameConfiguration": {
+              "$ref": "./examples/ApiManagementHeadGatewayHostnameConfiguration.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates of updates hostname configuration for a Gateway.",
+          "operationId": "GatewayHostnameConfiguration_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayHostnameConfigurationIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayHostnameConfigurationContract_2"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayHostnameConfigurationContract_2"
+                  }
+                }
+              },
+              "description": "The Gateway hostname configuration details were successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayHostnameConfigurationContract_2"
+                  }
+                }
+              },
+              "description": "The new Gateway hostname configuration was successfully created.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayHostnameConfiguration"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateGatewayHostnameConfiguration": {
+              "$ref": "./examples/ApiManagementCreateGatewayHostnameConfiguration.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/invalidateDebugCredentials": {
+        "post": {
+          "description": "Action is invalidating all debug credentials issued for gateway.",
+          "operationId": "Gateway_InvalidateDebugCredentials",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "All debug credentials for gateway are now invalidated."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayInvalidateDebugCredentials"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayInvalidateDebugCredentials": {
+              "$ref": "./examples/ApiManagementGatewayInvalidateDebugCredentials.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/listDebugCredentials": {
+        "post": {
+          "description": "Create new debug credentials for gateway.",
+          "operationId": "Gateway_ListDebugCredentials",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayListDebugCredentialsContract"
+                }
+              }
+            },
+            "description": "List debug credentials properties.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayDebugCredentialsContract"
+                  }
+                }
+              },
+              "description": "The response body contains debug credentials to use in gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayListDebugCredentials"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayListDebugCredentials": {
+              "$ref": "./examples/ApiManagementGatewayListDebugCredentials.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/listKeys": {
+        "post": {
+          "description": "Retrieves gateway keys.",
+          "operationId": "Gateway_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayKeysContract"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Gateway keys.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayListKeys"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayListKeys": {
+              "$ref": "./examples/ApiManagementGatewayListKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/listTrace": {
+        "post": {
+          "description": "Fetches trace collected by gateway.",
+          "operationId": "Gateway_ListTrace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayListTraceContract"
+                }
+              }
+            },
+            "description": "List trace properties.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GatewayTraceContract"
+                  }
+                }
+              },
+              "description": "The response body contains trace collected by gateway."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayListTrace"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayListTrace": {
+              "$ref": "./examples/ApiManagementGatewayListTrace.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/{gatewayId}/regenerateKey": {
+        "post": {
+          "description": "Regenerates specified gateway key invalidating any tokens created with it.",
+          "operationId": "Gateway_RegenerateKey",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/GatewayIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayKeyRegenerationRequestContract"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "204": {
+              "description": "Key successfully regenerated"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "GatewayRegenerateKey"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGatewayRegenerateKey": {
+              "$ref": "./examples/ApiManagementGatewayRegenerateKey.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

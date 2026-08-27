@@ -1,0 +1,763 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_domainservices_oucontainer",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "Client Api Version.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "DomainServiceNameParameter": {
+          "description": "The name of the domain service.",
+          "in": "path",
+          "name": "domainServiceName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "OuContainerNameParameter": {
+          "description": "The name of the OuContainer.",
+          "in": "path",
+          "name": "ouContainerName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group within the user's subscription. The name is case insensitive.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "maxLength": 90,
+            "minLength": 1,
+            "pattern": "^[-\\w\\._\\(\\)]+$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "Gets subscription credentials which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "CloudError": {
+          "description": "An error response from the Domain Services.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/CloudErrorBody"
+            }
+          },
+          "type": "object",
+          "x-ms-external": true
+        },
+        "CloudErrorBody": {
+          "description": "An error response from the Domain Services.",
+          "properties": {
+            "code": {
+              "description": "An identifier for the error. Codes are invariant and are intended to be consumed programmatically.",
+              "type": "string"
+            },
+            "details": {
+              "description": "A list of additional details about the error.",
+              "items": {
+                "$ref": "#/components/schemas/CloudErrorBody"
+              },
+              "type": "array"
+            },
+            "message": {
+              "description": "A message describing the error, intended to be suitable for display in a user interface.",
+              "type": "string"
+            },
+            "target": {
+              "description": "The target of the particular error. For example, the name of the property in error.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-external": true
+        },
+        "ContainerAccount": {
+          "description": "Container Account Description",
+          "properties": {
+            "accountName": {
+              "description": "The account name",
+              "type": "string"
+            },
+            "password": {
+              "description": "The account password",
+              "type": "string"
+            },
+            "spn": {
+              "description": "The account spn",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplayInfo": {
+          "description": "The operation supported by Domain Services.",
+          "properties": {
+            "description": {
+              "description": "The description of the operation.",
+              "type": "string"
+            },
+            "operation": {
+              "description": "The action that users can perform, based on their permission level.",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Service provider: Domain Services.",
+              "type": "string"
+            },
+            "resource": {
+              "description": "Resource on which the operation is performed.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationEntity": {
+          "description": "The operation supported by Domain Services.",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplayInfo"
+            },
+            "name": {
+              "description": "Operation name: {provider}/{resource}/{operation}.",
+              "type": "string"
+            },
+            "origin": {
+              "description": "The origin of the operation.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationEntityListResult": {
+          "description": "The list of domain service operation response.",
+          "properties": {
+            "nextLink": {
+              "description": "The continuation token for the next page of results.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of operations.",
+              "items": {
+                "$ref": "#/components/schemas/OperationEntity"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "OuContainer": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "Resource for OuContainer.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/OuContainerProperties"
+            }
+          },
+          "type": "object"
+        },
+        "OuContainerListResult": {
+          "description": "The response from the List OuContainer operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The continuation token for the next page of results.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of OuContainer.",
+              "items": {
+                "$ref": "#/components/schemas/OuContainer"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "OuContainerProperties": {
+          "description": "Properties of the OuContainer.",
+          "properties": {
+            "accounts": {
+              "description": "The list of container accounts",
+              "items": {
+                "$ref": "#/components/schemas/ContainerAccount"
+              },
+              "type": "array"
+            },
+            "containerId": {
+              "description": "The OuContainer name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "deploymentId": {
+              "description": "The Deployment id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "distinguishedName": {
+              "description": "Distinguished Name of OuContainer instance",
+              "readOnly": true,
+              "type": "string"
+            },
+            "domainName": {
+              "description": "The domain name of Domain Services.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "description": "The current deployment or provisioning state, which only appears in the response.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serviceStatus": {
+              "description": "Status of OuContainer instance",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Azure Active Directory tenant id",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "The Resource model definition.",
+          "properties": {
+            "etag": {
+              "description": "Resource etag",
+              "type": "string"
+            },
+            "id": {
+              "description": "Resource Id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "location": {
+              "description": "Resource location",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "name": {
+              "description": "Resource name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            },
+            "type": {
+              "description": "Resource type",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The AAD Domain Services API.",
+      "title": "Domain Services Resource Provider",
+      "version": "2022-12-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Aad/operations": {
+        "get": {
+          "description": "Lists all the available OuContainer operations.",
+          "operationId": "OuContainerOperations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationEntityListResult"
+                  }
+                }
+              },
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "Get Operations": {
+              "$ref": "./examples/GetOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Aad/domainServices/{domainServiceName}/ouContainer": {
+        "get": {
+          "description": "The List of OuContainers in DomainService instance.",
+          "operationId": "OuContainer_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DomainServiceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainerListResult"
+                  }
+                }
+              },
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "List of OuContainers in DomainService instance",
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "List of OuContainers": {
+              "$ref": "./examples/ListOuContainers.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Aad/domainServices/{domainServiceName}/ouContainer/{ouContainerName}": {
+        "delete": {
+          "description": "The Delete OuContainer operation deletes specified OuContainer.",
+          "operationId": "OuContainer_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DomainServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/OuContainerNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "202": {
+              "description": "HTTP 202 (Accepted) if the operation was successfully started and will complete asynchronously."
+            },
+            "204": {
+              "description": "HTTP 204 (Not Content) should be used if the resource does not exist and the request is well formed."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Delete OuContainer",
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "Delete OuContainer": {
+              "$ref": "./examples/DeleteOuContainer.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "get": {
+          "description": "Get OuContainer in DomainService instance.",
+          "operationId": "OuContainer_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DomainServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/OuContainerNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Get particular OuContainer in DomainService instance",
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "List of OuContainers": {
+              "$ref": "./examples/GetOuContainer.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "The Update OuContainer operation can be used to update the existing OuContainers.",
+          "operationId": "OuContainer_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DomainServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/OuContainerNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerAccount"
+                }
+              }
+            },
+            "description": "Container Account Description.",
+            "required": true,
+            "x-originalParamName": "containerAccount"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 202 (Accepted) if the operation was successfully started and will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Update OuContainer (PATCH Resource)",
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "Update Domain Service": {
+              "$ref": "./examples/UpdateOuContainer.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "put": {
+          "description": "The Create OuContainer operation creates a new OuContainer under the specified Domain Service instance.",
+          "operationId": "OuContainer_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DomainServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/OuContainerNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContainerAccount"
+                }
+              }
+            },
+            "description": "Container Account Description.",
+            "required": true,
+            "x-originalParamName": "containerAccount"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 200 (OK) if the operation was successful."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 201 (Created) if the operation completed successfully."
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OuContainer"
+                  }
+                }
+              },
+              "description": "HTTP 202 (Accepted) if the operation was successfully started and will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Create OuContainer",
+          "tags": [
+            "OuContainer"
+          ],
+          "x-ms-examples": {
+            "Create Domain Service": {
+              "$ref": "./examples/CreateOuContainer.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

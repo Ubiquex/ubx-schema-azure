@@ -1,0 +1,3730 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_mongocluster",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "LocationParameter": {
+          "description": "The name of the Azure region.",
+          "in": "path",
+          "minLength": 1,
+          "name": "location",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "PrivateEndpointConnectionName": {
+          "description": "The name of the private endpoint connection associated with the Azure resource.",
+          "in": "path",
+          "name": "privateEndpointConnectionName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AdministratorProperties": {
+          "description": "The local administrator login properties.",
+          "properties": {
+            "password": {
+              "description": "The administrator password.",
+              "format": "password",
+              "type": "string",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ],
+              "x-ms-secret": true
+            },
+            "userName": {
+              "description": "The administrator user name.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "AuthConfigProperties": {
+          "description": "The authentication configuration for the Mongo cluster.",
+          "properties": {
+            "allowedModes": {
+              "description": "Allowed authentication modes for data access on the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/AuthenticationMode"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "AuthenticationMode": {
+          "description": "The authentication modes supporting on the Mongo cluster.",
+          "enum": [
+            "NativeAuth",
+            "MicrosoftEntraID"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AuthenticationMode",
+            "values": [
+              {
+                "description": "Native mongo authentication mode using username and password with auth mechanism 'SCRAM-SHA-256'.",
+                "name": "NativeAuth",
+                "value": "NativeAuth"
+              },
+              {
+                "description": "Microsoft Entra ID authentication mode using Entra users assigned to the cluster and auth mechanism 'MONGODB-OIDC'.",
+                "name": "MicrosoftEntraID",
+                "value": "MicrosoftEntraID"
+              }
+            ]
+          }
+        },
+        "Azure.Core.azureLocation": {
+          "description": "Represents an Azure geography region where supported resource providers live.",
+          "type": "string"
+        },
+        "BackupProperties": {
+          "description": "The backup properties of the cluster. This includes the earliest restore time and retention settings.",
+          "properties": {
+            "earliestRestoreTime": {
+              "description": "Earliest restore timestamp in UTC ISO8601 format.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityRequest": {
+          "description": "The check availability request body.",
+          "properties": {
+            "name": {
+              "description": "The name of the resource for which availability needs to be checked.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The resource type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityResponse": {
+          "description": "The check availability result.",
+          "properties": {
+            "message": {
+              "description": "Detailed reason why the given name is available.",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Indicates if the resource name is available.",
+              "type": "boolean"
+            },
+            "reason": {
+              "description": "The reason why the given name is not available.",
+              "enum": [
+                "Invalid",
+                "AlreadyExists"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "CheckNameAvailabilityReason"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ComputeProperties": {
+          "description": "The compute properties of the cluster. This includes the virtual-cores/memory and scaling options applied to servers in the cluster.",
+          "properties": {
+            "tier": {
+              "description": "The compute tier to assign to the cluster, where each tier maps to a virtual-core and memory size. Example values: 'M30', 'M40'.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ConnectionString": {
+          "description": "Connection string for the mongo cluster",
+          "properties": {
+            "connectionString": {
+              "description": "Value of the connection string",
+              "readOnly": true,
+              "type": "string"
+            },
+            "description": {
+              "description": "Description of the connection string",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of the connection string.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CreateMode": {
+          "description": "The mode that the Mongo Cluster is created with.",
+          "enum": [
+            "Default",
+            "PointInTimeRestore",
+            "GeoReplica",
+            "Replica"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CreateMode",
+            "values": [
+              {
+                "description": "Create a new mongo cluster.",
+                "name": "Default",
+                "value": "Default"
+              },
+              {
+                "description": "Create a mongo cluster from a restore point-in-time.",
+                "name": "PointInTimeRestore",
+                "value": "PointInTimeRestore"
+              },
+              {
+                "description": "Create a replica cluster in distinct geographic region from the source cluster.",
+                "name": "GeoReplica",
+                "value": "GeoReplica"
+              },
+              {
+                "description": "Create a replica cluster in the same geographic region as the source cluster.",
+                "name": "Replica",
+                "value": "Replica"
+              }
+            ]
+          }
+        },
+        "CustomerManagedKeyEncryptionProperties": {
+          "description": "Customer managed key encryption settings.",
+          "properties": {
+            "keyEncryptionKeyIdentity": {
+              "$ref": "#/components/schemas/KeyEncryptionKeyIdentity"
+            },
+            "keyEncryptionKeyUrl": {
+              "description": "The URI of the key vault key used for encryption.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DataApiMode": {
+          "description": "The mode to apply to the Mongo Data API.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DataApiMode",
+            "values": [
+              {
+                "description": "Mongo Data API is enabled for the cluster.",
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "description": "Mongo Data API is disabled for the cluster.",
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "DataApiProperties": {
+          "description": "Data API properties.",
+          "properties": {
+            "mode": {
+              "$ref": "#/components/schemas/DataApiMode"
+            }
+          },
+          "type": "object"
+        },
+        "DatabaseRole": {
+          "description": "Database role definition that is assigned to a user.",
+          "properties": {
+            "db": {
+              "description": "Database scope that the role is assigned to.",
+              "type": "string"
+            },
+            "role": {
+              "$ref": "#/components/schemas/UserRole"
+            }
+          },
+          "required": [
+            "db",
+            "role"
+          ],
+          "type": "object"
+        },
+        "EncryptionProperties": {
+          "description": "The encryption configuration for the mongo cluster.",
+          "properties": {
+            "customerManagedKeyEncryption": {
+              "$ref": "#/components/schemas/CustomerManagedKeyEncryptionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "EntraIdentityProvider": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/IdentityProvider"
+            }
+          ],
+          "description": "Defines a Microsoft Entra ID Mongo user.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/EntraIdentityProviderProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "MicrosoftEntraID"
+        },
+        "EntraIdentityProviderProperties": {
+          "description": "Microsoft Entra ID provider properties.",
+          "properties": {
+            "principalType": {
+              "$ref": "#/components/schemas/EntraPrincipalType"
+            }
+          },
+          "required": [
+            "principalType"
+          ],
+          "type": "object"
+        },
+        "EntraPrincipalType": {
+          "description": "Microsoft Entra ID principal types available for a Mongo user.",
+          "enum": [
+            "user",
+            "servicePrincipal"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "EntraPrincipalType",
+            "values": [
+              {
+                "description": "Entra user type.",
+                "name": "User",
+                "value": "user"
+              },
+              {
+                "description": "Entra service principal type.",
+                "name": "ServicePrincipal",
+                "value": "servicePrincipal"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "FirewallRule": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Represents a mongo cluster firewall rule.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/FirewallRuleProperties"
+            }
+          },
+          "type": "object"
+        },
+        "FirewallRuleListResult": {
+          "description": "The response of a FirewallRule list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The FirewallRule items on this page",
+              "items": {
+                "$ref": "#/components/schemas/FirewallRule"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "FirewallRuleProperties": {
+          "description": "The properties of a mongo cluster firewall rule.",
+          "properties": {
+            "endIpAddress": {
+              "description": "The end IP address of the mongo cluster firewall rule. Must be IPv4 format.",
+              "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "startIpAddress": {
+              "description": "The start IP address of the mongo cluster firewall rule. Must be IPv4 format.",
+              "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "startIpAddress",
+            "endIpAddress"
+          ],
+          "type": "object"
+        },
+        "HighAvailabilityMode": {
+          "description": "The high availability modes for a cluster.",
+          "enum": [
+            "Disabled",
+            "SameZone",
+            "ZoneRedundantPreferred"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HighAvailabilityMode",
+            "values": [
+              {
+                "description": "High availability mode is disabled. This mode is can see availability impact during faults or maintenance and is not recommended for production.",
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "description": "High availability mode is enabled, where each server in a shard is placed in the same availability zone.",
+                "name": "SameZone",
+                "value": "SameZone"
+              },
+              {
+                "description": "High availability mode is enabled and preferences ZoneRedundant if availability zones capacity is available in the region, otherwise falls-back to provisioning with SameZone.",
+                "name": "ZoneRedundantPreferred",
+                "value": "ZoneRedundantPreferred"
+              }
+            ]
+          }
+        },
+        "HighAvailabilityProperties": {
+          "description": "The high availability properties of the cluster.",
+          "properties": {
+            "targetMode": {
+              "$ref": "#/components/schemas/HighAvailabilityMode"
+            }
+          },
+          "type": "object"
+        },
+        "IdentityProvider": {
+          "description": "Defines a user's identity provider definition.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "type": {
+              "$ref": "#/components/schemas/IdentityProviderType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "IdentityProviderType": {
+          "description": "Identity provider types that a a user identity can belong to.",
+          "enum": [
+            "MicrosoftEntraID"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IdentityProviderType",
+            "values": [
+              {
+                "description": "Microsoft Entra ID provider.",
+                "name": "MicrosoftEntraID",
+                "value": "MicrosoftEntraID"
+              }
+            ]
+          }
+        },
+        "IdentityUserProperties": {
+          "description": "Identity provider Mongo user properties.",
+          "properties": {
+            "identityProvider": {
+              "$ref": "#/components/schemas/IdentityProvider"
+            },
+            "roles": {
+              "description": "Database roles that are assigned to the user.",
+              "items": {
+                "$ref": "#/components/schemas/DatabaseRole"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "KeyEncryptionKeyIdentity": {
+          "description": "The identity used for key encryption key.",
+          "properties": {
+            "identityType": {
+              "$ref": "#/components/schemas/KeyEncryptionKeyIdentityType"
+            },
+            "userAssignedIdentityResourceId": {
+              "description": "The user assigned identity resource id.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "KeyEncryptionKeyIdentityType": {
+          "description": "The type of identity for key encryption key.",
+          "enum": [
+            "UserAssignedIdentity"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "KeyEncryptionKeyIdentityType",
+            "values": [
+              {
+                "description": "User assigned identity.",
+                "name": "UserAssignedIdentity",
+                "value": "UserAssignedIdentity"
+              }
+            ]
+          }
+        },
+        "ListConnectionStringsResult": {
+          "description": "The connection strings for the given mongo cluster.",
+          "properties": {
+            "connectionStrings": {
+              "description": "An array that contains the connection strings for a mongo cluster.",
+              "items": {
+                "$ref": "#/components/schemas/ConnectionString"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "$ref": "#/components/schemas/UserAssignedIdentities"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "MongoCluster": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Represents a mongo cluster resource.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/MongoClusterProperties"
+            }
+          },
+          "type": "object"
+        },
+        "MongoClusterListResult": {
+          "description": "The response of a MongoCluster list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The MongoCluster items on this page",
+              "items": {
+                "$ref": "#/components/schemas/MongoCluster"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "MongoClusterProperties": {
+          "description": "The properties of a mongo cluster.",
+          "properties": {
+            "administrator": {
+              "$ref": "#/components/schemas/AdministratorProperties"
+            },
+            "authConfig": {
+              "$ref": "#/components/schemas/AuthConfigProperties"
+            },
+            "backup": {
+              "$ref": "#/components/schemas/BackupProperties"
+            },
+            "clusterStatus": {
+              "$ref": "#/components/schemas/MongoClusterStatus"
+            },
+            "compute": {
+              "$ref": "#/components/schemas/ComputeProperties"
+            },
+            "connectionString": {
+              "description": "The default mongo connection string for the cluster.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createMode": {
+              "$ref": "#/components/schemas/CreateMode"
+            },
+            "dataApi": {
+              "$ref": "#/components/schemas/DataApiProperties"
+            },
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionProperties"
+            },
+            "highAvailability": {
+              "$ref": "#/components/schemas/HighAvailabilityProperties"
+            },
+            "infrastructureVersion": {
+              "description": "The infrastructure version the cluster is provisioned on.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "networkBypassMode": {
+              "$ref": "#/components/schemas/NetworkBypassMode"
+            },
+            "previewFeatures": {
+              "description": "List of private endpoint connections.",
+              "items": {
+                "$ref": "#/components/schemas/PreviewFeature"
+              },
+              "type": "array"
+            },
+            "privateEndpointConnections": {
+              "description": "List of private endpoint connections.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/PublicNetworkAccess"
+            },
+            "replica": {
+              "$ref": "#/components/schemas/ReplicationProperties"
+            },
+            "replicaParameters": {
+              "$ref": "#/components/schemas/MongoClusterReplicaParameters"
+            },
+            "restoreParameters": {
+              "$ref": "#/components/schemas/MongoClusterRestoreParameters"
+            },
+            "serverVersion": {
+              "description": "The Mongo DB server version. Defaults to the latest available version if not specified.",
+              "type": "string"
+            },
+            "sharding": {
+              "$ref": "#/components/schemas/ShardingProperties"
+            },
+            "storage": {
+              "$ref": "#/components/schemas/StorageProperties"
+            }
+          },
+          "type": "object"
+        },
+        "MongoClusterReplicaParameters": {
+          "description": "Parameters used for replica operations.",
+          "properties": {
+            "sourceLocation": {
+              "$ref": "#/components/schemas/Azure.Core.azureLocation"
+            },
+            "sourceResourceId": {
+              "$ref": "#/components/schemas/MongoClusterResourceId"
+            }
+          },
+          "required": [
+            "sourceResourceId",
+            "sourceLocation"
+          ],
+          "type": "object"
+        },
+        "MongoClusterResourceId": {
+          "description": "Identifier for a mongo cluster resource.",
+          "format": "arm-id",
+          "type": "string",
+          "x-ms-arm-id-details": {
+            "allowedResources": [
+              {
+                "type": "Microsoft.DocumentDB/mongoClusters"
+              }
+            ]
+          }
+        },
+        "MongoClusterRestoreParameters": {
+          "description": "Parameters used for restore operations",
+          "properties": {
+            "pointInTimeUTC": {
+              "description": "UTC point in time to restore a mongo cluster",
+              "format": "date-time",
+              "type": "string"
+            },
+            "sourceResourceId": {
+              "$ref": "#/components/schemas/MongoClusterResourceId"
+            }
+          },
+          "type": "object"
+        },
+        "MongoClusterStatus": {
+          "description": "The status of the Mongo cluster resource.",
+          "enum": [
+            "Ready",
+            "Provisioning",
+            "Updating",
+            "Starting",
+            "Stopping",
+            "Stopped",
+            "Dropping"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MongoClusterStatus",
+            "values": [
+              {
+                "description": "The mongo cluster resource is ready for use.",
+                "name": "Ready",
+                "value": "Ready"
+              },
+              {
+                "description": "The mongo cluster resource is being provisioned.",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "The mongo cluster resource is being updated.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "The mongo cluster resource is being started.",
+                "name": "Starting",
+                "value": "Starting"
+              },
+              {
+                "description": "The mongo cluster resource is being stopped.",
+                "name": "Stopping",
+                "value": "Stopping"
+              },
+              {
+                "description": "The mongo cluster resource is stopped.",
+                "name": "Stopped",
+                "value": "Stopped"
+              },
+              {
+                "description": "The mongo cluster resource is being dropped.",
+                "name": "Dropping",
+                "value": "Dropping"
+              }
+            ]
+          }
+        },
+        "MongoClusterUpdate": {
+          "description": "The type used for update operations of the MongoCluster.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/MongoClusterUpdateProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "MongoClusterUpdateProperties": {
+          "description": "The updatable properties of the MongoCluster.",
+          "properties": {
+            "administrator": {
+              "$ref": "#/components/schemas/AdministratorProperties"
+            },
+            "authConfig": {
+              "$ref": "#/components/schemas/AuthConfigProperties"
+            },
+            "backup": {
+              "$ref": "#/components/schemas/BackupProperties"
+            },
+            "compute": {
+              "$ref": "#/components/schemas/ComputeProperties"
+            },
+            "dataApi": {
+              "$ref": "#/components/schemas/DataApiProperties"
+            },
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionProperties"
+            },
+            "highAvailability": {
+              "$ref": "#/components/schemas/HighAvailabilityProperties"
+            },
+            "networkBypassMode": {
+              "$ref": "#/components/schemas/NetworkBypassMode"
+            },
+            "previewFeatures": {
+              "description": "List of private endpoint connections.",
+              "items": {
+                "$ref": "#/components/schemas/PreviewFeature"
+              },
+              "type": "array"
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/PublicNetworkAccess"
+            },
+            "serverVersion": {
+              "description": "The Mongo DB server version. Defaults to the latest available version if not specified.",
+              "type": "string"
+            },
+            "sharding": {
+              "$ref": "#/components/schemas/ShardingProperties"
+            },
+            "storage": {
+              "$ref": "#/components/schemas/StorageProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkBypassMode": {
+          "description": "The network bypass mode for the Mongo cluster.",
+          "enum": [
+            "None",
+            "AzureCosmosDB"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NetworkBypassMode",
+            "values": [
+              {
+                "description": "No network bypass is enabled.",
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "description": "Allows Azure Cosmos DB service to bypass network restrictions.",
+                "name": "AzureCosmosDB",
+                "value": "AzureCosmosDB"
+              }
+            ]
+          }
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PreviewFeature": {
+          "description": "Preview features that can be enabled on a mongo cluster.",
+          "enum": [
+            "GeoReplicas"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PreviewFeature",
+            "values": [
+              {
+                "description": "Enables geo replicas preview feature. The feature must be set at create-time on new cluster to enable linking a geo-replica cluster to it.",
+                "name": "GeoReplicas",
+                "value": "GeoReplicas"
+              }
+            ]
+          }
+        },
+        "PrivateEndpoint": {
+          "description": "The private endpoint resource.",
+          "properties": {
+            "id": {
+              "description": "The ARM identifier for private endpoint.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource_2"
+            }
+          ],
+          "description": "The private endpoint connection resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "Properties of the private endpoint connection.",
+          "properties": {
+            "groupIds": {
+              "description": "The group ids for the private endpoint resource.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionState"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProvisioningState"
+            }
+          },
+          "required": [
+            "privateLinkServiceConnectionState"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties_2": {
+          "description": "Properties of the private endpoint connection.",
+          "properties": {
+            "groupIds": {
+              "description": "The group ids for the private endpoint resource.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionState"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProvisioningState"
+            }
+          },
+          "required": [
+            "privateLinkServiceConnectionState"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProvisioningState": {
+          "description": "The current provisioning state.",
+          "enum": [
+            "Succeeded",
+            "Creating",
+            "Deleting",
+            "Failed"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateEndpointConnectionProvisioningState"
+          }
+        },
+        "PrivateEndpointConnectionResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties_2"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionResourceListResult": {
+          "description": "The response of a PrivateEndpointConnectionResource list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The PrivateEndpointConnectionResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnectionResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointServiceConnectionStatus": {
+          "description": "The private endpoint connection status.",
+          "enum": [
+            "Pending",
+            "Approved",
+            "Rejected"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateEndpointServiceConnectionStatus"
+          }
+        },
+        "PrivateLinkResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Concrete proxy resource types can be created by aliasing this type using a specific property type.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateLinkResourceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkResourceListResult": {
+          "description": "The response of a PrivateLinkResource list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The PrivateLinkResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/PrivateLinkResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateLinkResourceProperties": {
+          "description": "Properties of a private link resource.",
+          "properties": {
+            "groupId": {
+              "description": "The private link resource group id.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requiredMembers": {
+              "description": "The private link resource required member names.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "requiredZoneNames": {
+              "description": "The private link resource private link DNS zone name.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkServiceConnectionState": {
+          "description": "A collection of information about the state of the connection between service consumer and provider.",
+          "properties": {
+            "actionsRequired": {
+              "description": "A message indicating if changes on the service provider require any updates on the consumer.",
+              "type": "string"
+            },
+            "description": {
+              "description": "The reason for approval/rejection of the connection.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/PrivateEndpointServiceConnectionStatus"
+            }
+          },
+          "type": "object"
+        },
+        "PromoteMode": {
+          "description": "The mode to apply to a promote operation.",
+          "enum": [
+            "Switchover"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PromoteMode",
+            "values": [
+              {
+                "description": "Promotion will switch the current replica cluster to the primary role and the original primary will be switched to a replica role, maintaining the replication link.",
+                "name": "Switchover",
+                "value": "Switchover"
+              }
+            ]
+          }
+        },
+        "PromoteOption": {
+          "description": "The option to apply to a promote operation.",
+          "enum": [
+            "Forced"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PromoteOption",
+            "values": [
+              {
+                "description": "Promote option forces the promotion without waiting for the replica to be caught up to the primary. This can result in data-loss so should only be used during disaster recovery scenarios.",
+                "name": "Forced",
+                "value": "Forced"
+              }
+            ]
+          }
+        },
+        "PromoteReplicaRequest": {
+          "description": "Promote replica request properties.",
+          "properties": {
+            "mode": {
+              "$ref": "#/components/schemas/PromoteMode"
+            },
+            "promoteOption": {
+              "$ref": "#/components/schemas/PromoteOption"
+            }
+          },
+          "required": [
+            "promoteOption"
+          ],
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "The provisioning state of the last accepted operation.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "InProgress",
+            "Updating",
+            "Dropping"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Resource has been created.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Resource creation failed.",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Resource creation was canceled.",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "An operation is in-progress on the resource.",
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "description": "An update operation is in-progress on the resource.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "A drop operation is in-progress on the resource.",
+                "name": "Dropping",
+                "value": "Dropping"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "PublicNetworkAccess": {
+          "description": "Whether or not public endpoint access is allowed for this Mongo cluster.  Value is optional and default value is 'Enabled'",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PublicNetworkAccess",
+            "values": [
+              {
+                "description": "If set, mongo cluster can be accessed through private and public methods.",
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "description": "If set, the private endpoints are the exclusive access method.",
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "Replica": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Represents a mongo cluster replica.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/MongoClusterProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ReplicaListResult": {
+          "description": "The response of a Replica list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Replica items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Replica"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ReplicationProperties": {
+          "description": "Replica properties of the mongo cluster.",
+          "properties": {
+            "replicationState": {
+              "$ref": "#/components/schemas/ReplicationState"
+            },
+            "role": {
+              "$ref": "#/components/schemas/ReplicationRole"
+            },
+            "sourceResourceId": {
+              "$ref": "#/components/schemas/MongoClusterResourceId"
+            }
+          },
+          "type": "object"
+        },
+        "ReplicationRole": {
+          "description": "Replication role of the mongo cluster.",
+          "enum": [
+            "Primary",
+            "AsyncReplica",
+            "GeoAsyncReplica"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReplicationRole",
+            "values": [
+              {
+                "description": "The cluster is a primary replica.",
+                "name": "Primary",
+                "value": "Primary"
+              },
+              {
+                "description": "The cluster is a local asynchronous replica.",
+                "name": "AsyncReplica",
+                "value": "AsyncReplica"
+              },
+              {
+                "description": "The cluster is a geo-asynchronous replica.",
+                "name": "GeoAsyncReplica",
+                "value": "GeoAsyncReplica"
+              }
+            ]
+          }
+        },
+        "ReplicationState": {
+          "description": "The state of the replication link between the replica and source cluster.",
+          "enum": [
+            "Active",
+            "Catchup",
+            "Provisioning",
+            "Updating",
+            "Broken",
+            "Reconfiguring"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReplicationState",
+            "values": [
+              {
+                "description": "Replication link is active.",
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "description": "Replica is catching-up with the primary. This can occur after the replica is created or after a promotion is triggered.",
+                "name": "Catchup",
+                "value": "Catchup"
+              },
+              {
+                "description": "Replica and replication link to the primary is being created.",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "Replication link is being updated due to a change on the replica or an upgrade.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Replication link is broken and the replica may need to be recreated.",
+                "name": "Broken",
+                "value": "Broken"
+              },
+              {
+                "description": "Replication link is re-configuring due to a promotion event.",
+                "name": "Reconfiguring",
+                "value": "Reconfiguring"
+              }
+            ]
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Resource_2": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ShardingProperties": {
+          "description": "The sharding properties of the cluster. This includes the shard count and scaling options for the cluster.",
+          "properties": {
+            "shardCount": {
+              "description": "Number of shards to provision on the cluster.",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "StorageProperties": {
+          "description": "The storage properties of the cluster. This includes the data storage size and scaling applied to servers in the cluster.",
+          "properties": {
+            "sizeGb": {
+              "description": "The size of the data disk assigned to each server.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "type": {
+              "$ref": "#/components/schemas/StorageType"
+            }
+          },
+          "type": "object"
+        },
+        "StorageType": {
+          "description": "The type of storage that a mongo cluster can be provisioned with.",
+          "enum": [
+            "PremiumSSD",
+            "PremiumSSDv2"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "StorageType",
+            "values": [
+              {
+                "description": "Premium SSD for high performance workloads.",
+                "name": "PremiumSSD",
+                "value": "PremiumSSD"
+              },
+              {
+                "description": "Premium SSD v2 for very IO-intensive workloads. This is a preview option and has additional limitations.",
+                "name": "PremiumSSDv2",
+                "value": "PremiumSSDv2"
+              }
+            ]
+          }
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "User": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Represents a Mongo cluster user.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/UserProperties"
+            }
+          },
+          "type": "object"
+        },
+        "UserAssignedIdentities": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/UserAssignedIdentity",
+            "x-nullable": true
+          },
+          "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+          "title": "User-Assigned Identities",
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UserListResult": {
+          "description": "The response of a User list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The User items on this page",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "UserProperties": {
+          "description": "Definition of Mongo user resource on a cluster.",
+          "properties": {
+            "identityProvider": {
+              "$ref": "#/components/schemas/IdentityProvider"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "roles": {
+              "description": "Database roles that are assigned to the user.",
+              "items": {
+                "$ref": "#/components/schemas/DatabaseRole"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "UserRole": {
+          "description": "Built-in database role that can be assigned to a user.",
+          "enum": [
+            "root"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UserRole",
+            "values": [
+              {
+                "description": "Root role permissions on the target scope.",
+                "name": "Root",
+                "value": "root"
+              }
+            ]
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Microsoft Azure management API provides create, read, update, and delete functionality for Azure Cosmos DB for MongoDB vCore resources including clusters and firewall rules.",
+      "title": "MongoClusterManagementClient",
+      "version": "2026-06-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.DocumentDB/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Operations_List": {
+              "$ref": "./examples/Operations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/locations/{location}/checkMongoClusterNameAvailability": {
+        "post": {
+          "description": "Check if mongo cluster name is available for use.",
+          "operationId": "MongoClusters_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+                }
+              }
+            },
+            "description": "The CheckAvailability request",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Checks and confirms the Mongo Cluster name is available for use.": {
+              "$ref": "./examples/MongoClusters_NameAvailability.json"
+            },
+            "Checks and returns that the Mongo Cluster name is already in-use.": {
+              "$ref": "./examples/MongoClusters_NameAvailability_AlreadyExists.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/mongoClusters": {
+        "get": {
+          "description": "List all the mongo clusters in a given subscription.",
+          "operationId": "MongoClusters_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoClusterListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Lists the Mongo Cluster resources in a subscription.": {
+              "$ref": "./examples/MongoClusters_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters": {
+        "get": {
+          "description": "List all the mongo clusters in a given resource group.",
+          "operationId": "MongoClusters_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoClusterListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Lists the Mongo Cluster resources in a resource group.": {
+              "$ref": "./examples/MongoClusters_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}": {
+        "delete": {
+          "description": "Deletes a mongo cluster.",
+          "operationId": "MongoClusters_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Deletes a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets information about a mongo cluster.",
+          "operationId": "MongoClusters_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoCluster"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Gets a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates an existing mongo cluster. The request body can contain one to many of the properties present in the normal mongo cluster definition.",
+          "operationId": "MongoClusters_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MongoClusterUpdate"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoCluster"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Disables public network access on a Mongo Cluster resource with a private endpoint connection.": {
+              "$ref": "./examples/MongoClusters_PatchPrivateNetworkAccess.json"
+            },
+            "Enables data API on a mongo cluster resource.": {
+              "$ref": "./examples/MongoClusters_PatchDataApi.json"
+            },
+            "Enables network bypass mode on a Mongo Cluster resource to allow Azure Cosmos DB service to bypass network restrictions.": {
+              "$ref": "./examples/MongoClusters_PatchNetworkBypassMode.json"
+            },
+            "Resets the administrator login password.": {
+              "$ref": "./examples/MongoClusters_ResetPassword.json"
+            },
+            "Updates a Mongo Cluster resource": {
+              "$ref": "./examples/MongoClusters_Update.json"
+            },
+            "Updates the Premium SSDv2 size on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PatchSSDv2.json"
+            },
+            "Updates the allowed authentication modes to include Microsoft Entra ID authentication.": {
+              "$ref": "./examples/MongoClusters_PatchEnableEntraIDAuth.json"
+            },
+            "Updates the allowed authentication modes to remove Native authentication.": {
+              "$ref": "./examples/MongoClusters_PatchDisableNativeAuth.json"
+            },
+            "Updates the customer managed encryption key on a mongo cluster resource.": {
+              "$ref": "./examples/MongoClusters_PatchCMK.json"
+            },
+            "Updates the disk size on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PatchDiskSize.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Create or update a mongo cluster. Update overwrites all properties for the resource. To only modify some of the properties, use PATCH.",
+          "operationId": "MongoClusters_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MongoCluster"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoCluster"
+                  }
+                }
+              },
+              "description": "Resource 'MongoCluster' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MongoCluster"
+                  }
+                }
+              },
+              "description": "Resource 'MongoCluster' create operation succeeded",
+              "headers": {
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Creates a Mongo Cluster resource from a point in time restore": {
+              "$ref": "./examples/MongoClusters_CreatePITR.json"
+            },
+            "Creates a Mongo Cluster resource from a point in time restore with Microsoft Entra ID authentication mode enabled.": {
+              "$ref": "./examples/MongoClusters_CreatePITR_EntraAuth.json"
+            },
+            "Creates a Mongo Cluster resource with Customer Managed Key encryption from a point in time restore": {
+              "$ref": "./examples/MongoClusters_CreatePITR_CMK.json"
+            },
+            "Creates a new Mongo Cluster resource with Customer Managed Key encryption.": {
+              "$ref": "./examples/MongoClusters_Create_CMK.json"
+            },
+            "Creates a new Mongo Cluster resource with Premium SSDv2 storage.": {
+              "$ref": "./examples/MongoClusters_Create_SSDv2.json"
+            },
+            "Creates a new Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_Create.json"
+            },
+            "Creates a replica Mongo Cluster resource from a source resource.": {
+              "$ref": "./examples/MongoClusters_CreateGeoReplica.json"
+            },
+            "Creates a replica Mongo Cluster resource with Customer Managed Key encryption from a source resource.": {
+              "$ref": "./examples/MongoClusters_CreateGeoReplica_CMK.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "original-uri"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/firewallRules": {
+        "get": {
+          "description": "List all the firewall rules in a given mongo cluster.",
+          "operationId": "FirewallRules_ListByMongoCluster",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FirewallRuleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FirewallRules"
+          ],
+          "x-ms-examples": {
+            "List the firewall rules on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_FirewallRuleList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/firewallRules/{firewallRuleName}": {
+        "delete": {
+          "description": "Deletes a mongo cluster firewall rule.",
+          "operationId": "FirewallRules_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster firewall rule.",
+              "in": "path",
+              "name": "firewallRuleName",
+              "required": true,
+              "schema": {
+                "maxLength": 80,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9][-_.a-zA-Z0-9]*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FirewallRules"
+          ],
+          "x-ms-examples": {
+            "Deletes a firewall rule on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_FirewallRuleDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets information about a mongo cluster firewall rule.",
+          "operationId": "FirewallRules_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster firewall rule.",
+              "in": "path",
+              "name": "firewallRuleName",
+              "required": true,
+              "schema": {
+                "maxLength": 80,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9][-_.a-zA-Z0-9]*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FirewallRule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FirewallRules"
+          ],
+          "x-ms-examples": {
+            "Gets a firewall rule on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_FirewallRuleGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a new firewall rule or updates an existing firewall rule on a mongo cluster.",
+          "operationId": "FirewallRules_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster firewall rule.",
+              "in": "path",
+              "name": "firewallRuleName",
+              "required": true,
+              "schema": {
+                "maxLength": 80,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9][-_.a-zA-Z0-9]*",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FirewallRule"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FirewallRule"
+                  }
+                }
+              },
+              "description": "Resource 'FirewallRule' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FirewallRule"
+                  }
+                }
+              },
+              "description": "Resource 'FirewallRule' create operation succeeded"
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FirewallRules"
+          ],
+          "x-ms-examples": {
+            "Creates a firewall rule on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_FirewallRuleCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/listConnectionStrings": {
+        "post": {
+          "description": "List mongo cluster connection strings. This includes the default connection string using SCRAM-SHA-256, as well as other connection strings supported by the cluster.",
+          "operationId": "MongoClusters_ListConnectionStrings",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ListConnectionStringsResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "List the available connection strings for the Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_ListConnectionStrings.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/privateEndpointConnections": {
+        "get": {
+          "description": "List existing private connections",
+          "operationId": "PrivateEndpointConnections_ListByMongoCluster",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionResourceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Lists the private endpoint connection resources on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PrivateEndpointConnectionList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/privateEndpointConnections/{privateEndpointConnectionName}": {
+        "delete": {
+          "description": "Delete the private endpoint connection",
+          "operationId": "PrivateEndpointConnections_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionName"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Delete a private endpoint connection on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PrivateEndpointConnectionDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a specific private connection",
+          "operationId": "PrivateEndpointConnections_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionName"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Get a private endpoint connection on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PrivateEndpointConnectionGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a Private endpoint connection",
+          "operationId": "PrivateEndpointConnections_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionName"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateEndpointConnectionResource"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionResource"
+                  }
+                }
+              },
+              "description": "Resource 'PrivateEndpointConnectionResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionResource"
+                  }
+                }
+              },
+              "description": "Resource 'PrivateEndpointConnectionResource' create operation succeeded"
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Approves a private endpoint connection on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PrivateEndpointConnectionPut.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/privateLinkResources": {
+        "get": {
+          "description": "list private links on the given resource",
+          "operationId": "PrivateLinks_ListByMongoCluster",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateLinkResourceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateLinks"
+          ],
+          "x-ms-examples": {
+            "Lists the private link resources available on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_PrivateLinkResourceList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/promote": {
+        "post": {
+          "description": "Promotes a replica mongo cluster to a primary role.",
+          "operationId": "MongoClusters_Promote",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoteReplicaRequest"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MongoClusters"
+          ],
+          "x-ms-examples": {
+            "Promotes a replica Mongo Cluster resource to a primary role.": {
+              "$ref": "./examples/MongoClusters_ForcePromoteReplica.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/replicas": {
+        "get": {
+          "description": "List all the replicas for the mongo cluster.",
+          "operationId": "Replicas_ListByParent",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReplicaListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Replicas"
+          ],
+          "x-ms-examples": {
+            "List the replicas linked to a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_ReplicaList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/users": {
+        "get": {
+          "description": "List all the users on a mongo cluster.",
+          "operationId": "Users_ListByMongoCluster",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Users"
+          ],
+          "x-ms-examples": {
+            "List the users on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_UserList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DocumentDB/mongoClusters/{mongoClusterName}/users/{userName}": {
+        "delete": {
+          "description": "Deletes a mongo cluster user.",
+          "operationId": "Users_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster user.",
+              "in": "path",
+              "name": "userName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9\\-]*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Users"
+          ],
+          "x-ms-examples": {
+            "Deletes a user on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_UserDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets the defintion of a Mongo cluster user.",
+          "operationId": "Users_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster user.",
+              "in": "path",
+              "name": "userName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9\\-]*",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Users"
+          ],
+          "x-ms-examples": {
+            "Gets a user on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_UserGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a new user or updates an existing user on a mongo cluster.",
+          "operationId": "Users_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the mongo cluster.",
+              "in": "path",
+              "name": "mongoClusterName",
+              "required": true,
+              "schema": {
+                "maxLength": 40,
+                "minLength": 3,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the mongo cluster user.",
+              "in": "path",
+              "name": "userName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9\\-]*",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              },
+              "description": "Resource 'User' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              },
+              "description": "Resource 'User' create operation succeeded",
+              "headers": {
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Users"
+          ],
+          "x-ms-examples": {
+            "Creates a user on a Mongo Cluster resource.": {
+              "$ref": "./examples/MongoClusters_UserCreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "MongoClusters"
+      },
+      {
+        "name": "FirewallRules"
+      },
+      {
+        "name": "PrivateEndpointConnections"
+      },
+      {
+        "name": "PrivateLinks"
+      },
+      {
+        "name": "Replicas"
+      },
+      {
+        "name": "Users"
+      }
+    ]
+  }
+}

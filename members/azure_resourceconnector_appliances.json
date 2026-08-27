@@ -1,0 +1,1663 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_resourceconnector_appliances",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AccessProfileType": {
+          "description": "Name which contains the role of the kubeconfig.",
+          "enum": [
+            "clusterUser",
+            "clusterCustomerUser"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AccessProfileType",
+            "values": [
+              {
+                "name": "clusterUser",
+                "value": "clusterUser"
+              },
+              {
+                "name": "clusterCustomerUser",
+                "value": "clusterCustomerUser"
+              }
+            ]
+          }
+        },
+        "ArtifactProfile": {
+          "description": "Appliance ArtifactProfile definition.",
+          "properties": {
+            "endpoint": {
+              "description": "Endpoint is the URL to upload artifacts to.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "HybridConnectionConfig": {
+          "description": "Contains the REP (rendezvous endpoint) and “Listener” access token from notification service (NS).",
+          "properties": {
+            "expirationTime": {
+              "description": "Timestamp when this token will be expired.",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "hybridConnectionName": {
+              "description": "Name of the connection",
+              "readOnly": true,
+              "type": "string"
+            },
+            "relay": {
+              "description": "Name of the notification service.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "token": {
+              "description": "Listener access token",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Identity": {
+          "description": "Identity for the resource.",
+          "properties": {
+            "principalId": {
+              "description": "The principal ID of resource identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ResourceIdentityType"
+            }
+          },
+          "type": "object"
+        },
+        "Provider": {
+          "description": "Information about the connected appliance.",
+          "enum": [
+            "VMWare",
+            "HCI",
+            "SCVMM"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Provider",
+            "values": [
+              {
+                "name": "VMWare",
+                "value": "VMWare"
+              },
+              {
+                "name": "HCI",
+                "value": "HCI"
+              },
+              {
+                "name": "SCVMM",
+                "value": "SCVMM"
+              }
+            ]
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceIdentityType": {
+          "description": "The identity type.",
+          "enum": [
+            "SystemAssigned",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceIdentityType",
+            "values": [
+              {
+                "name": "SystemAssigned",
+                "value": "SystemAssigned"
+              },
+              {
+                "name": "None",
+                "value": "None"
+              }
+            ]
+          }
+        },
+        "SSHKey": {
+          "description": "Appliance SSHKey definition.",
+          "properties": {
+            "certificate": {
+              "description": "Certificate associated with the public key if the key is signed.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "creationTimeStamp": {
+              "description": "Certificate creation timestamp (Unix).",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "expirationTimeStamp": {
+              "description": "Certificate expiration timestamp (Unix).",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "privateKey": {
+              "description": "Private Key.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publicKey": {
+              "description": "Public Key.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Status": {
+          "description": "Appliance’s health and state of connection to on-prem. This list of values is not exhaustive.",
+          "enum": [
+            "WaitingForHeartbeat",
+            "Validating",
+            "Connecting",
+            "Connected",
+            "Running",
+            "PreparingForUpgrade",
+            "ETCDSnapshotFailed",
+            "UpgradePrerequisitesCompleted",
+            "ValidatingSFSConnectivity",
+            "ValidatingImageDownload",
+            "ValidatingImageUpload",
+            "ValidatingETCDHealth",
+            "PreUpgrade",
+            "UpgradingKVAIO",
+            "WaitingForKVAIO",
+            "ImagePending",
+            "ImageProvisioning",
+            "ImageProvisioned",
+            "ImageDownloading",
+            "ImageDownloaded",
+            "ImageDeprovisioning",
+            "ImageUnknown",
+            "UpdatingCloudOperator",
+            "WaitingForCloudOperator",
+            "UpdatingCAPI",
+            "UpdatingCluster",
+            "PostUpgrade",
+            "UpgradeComplete",
+            "UpgradeClusterExtensionFailedToDelete",
+            "UpgradeFailed",
+            "Offline",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Status",
+            "values": [
+              {
+                "name": "WaitingForHeartbeat",
+                "value": "WaitingForHeartbeat"
+              },
+              {
+                "name": "Validating",
+                "value": "Validating"
+              },
+              {
+                "name": "Connecting",
+                "value": "Connecting"
+              },
+              {
+                "name": "Connected",
+                "value": "Connected"
+              },
+              {
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "name": "PreparingForUpgrade",
+                "value": "PreparingForUpgrade"
+              },
+              {
+                "name": "ETCDSnapshotFailed",
+                "value": "ETCDSnapshotFailed"
+              },
+              {
+                "name": "UpgradePrerequisitesCompleted",
+                "value": "UpgradePrerequisitesCompleted"
+              },
+              {
+                "name": "ValidatingSFSConnectivity",
+                "value": "ValidatingSFSConnectivity"
+              },
+              {
+                "name": "ValidatingImageDownload",
+                "value": "ValidatingImageDownload"
+              },
+              {
+                "name": "ValidatingImageUpload",
+                "value": "ValidatingImageUpload"
+              },
+              {
+                "name": "ValidatingETCDHealth",
+                "value": "ValidatingETCDHealth"
+              },
+              {
+                "name": "PreUpgrade",
+                "value": "PreUpgrade"
+              },
+              {
+                "name": "UpgradingKVAIO",
+                "value": "UpgradingKVAIO"
+              },
+              {
+                "name": "WaitingForKVAIO",
+                "value": "WaitingForKVAIO"
+              },
+              {
+                "name": "ImagePending",
+                "value": "ImagePending"
+              },
+              {
+                "name": "ImageProvisioning",
+                "value": "ImageProvisioning"
+              },
+              {
+                "name": "ImageProvisioned",
+                "value": "ImageProvisioned"
+              },
+              {
+                "name": "ImageDownloading",
+                "value": "ImageDownloading"
+              },
+              {
+                "name": "ImageDownloaded",
+                "value": "ImageDownloaded"
+              },
+              {
+                "name": "ImageDeprovisioning",
+                "value": "ImageDeprovisioning"
+              },
+              {
+                "name": "ImageUnknown",
+                "value": "ImageUnknown"
+              },
+              {
+                "name": "UpdatingCloudOperator",
+                "value": "UpdatingCloudOperator"
+              },
+              {
+                "name": "WaitingForCloudOperator",
+                "value": "WaitingForCloudOperator"
+              },
+              {
+                "name": "UpdatingCAPI",
+                "value": "UpdatingCAPI"
+              },
+              {
+                "name": "UpdatingCluster",
+                "value": "UpdatingCluster"
+              },
+              {
+                "name": "PostUpgrade",
+                "value": "PostUpgrade"
+              },
+              {
+                "name": "UpgradeComplete",
+                "value": "UpgradeComplete"
+              },
+              {
+                "name": "UpgradeClusterExtensionFailedToDelete",
+                "value": "UpgradeClusterExtensionFailedToDelete"
+              },
+              {
+                "name": "UpgradeFailed",
+                "value": "UpgradeFailed"
+              },
+              {
+                "name": "Offline",
+                "value": "Offline"
+              },
+              {
+                "name": "None",
+                "value": "None"
+              }
+            ]
+          }
+        },
+        "SupportedVersion": {
+          "description": "The SupportedVersion object for appliance.",
+          "properties": {
+            "metadata": {
+              "$ref": "#/components/schemas/SupportedVersionMetadata"
+            },
+            "version": {
+              "description": "The newer version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SupportedVersionCatalogVersion": {
+          "description": "The SupportedVersionCatalogVersion object for appliance.",
+          "properties": {
+            "data": {
+              "$ref": "#/components/schemas/SupportedVersionCatalogVersionData"
+            },
+            "name": {
+              "description": "The catalog version name for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "namespace": {
+              "description": "The catalog version namespace for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SupportedVersionCatalogVersionData": {
+          "description": "The SupportedVersionCatalogVersionData object for appliance.",
+          "properties": {
+            "audience": {
+              "description": "The image audience name for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "catalog": {
+              "description": "The image catalog name for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "offer": {
+              "description": "The image offer name for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "version": {
+              "description": "The image version for the version available for upgrade.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SupportedVersionMetadata": {
+          "description": "The SupportedVersionMetadata object for appliance.",
+          "properties": {
+            "catalogVersion": {
+              "$ref": "#/components/schemas/SupportedVersionCatalogVersion"
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UpgradeGraph": {
+          "description": "The Upgrade Graph for appliance.",
+          "properties": {
+            "id": {
+              "description": "The appliance resource path",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The release train name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/UpgradeGraphProperties"
+            }
+          },
+          "type": "object"
+        },
+        "UpgradeGraphProperties": {
+          "description": "The Upgrade Graph Properties for appliance.",
+          "properties": {
+            "applianceVersion": {
+              "description": "The current appliance version",
+              "readOnly": true,
+              "type": "string"
+            },
+            "supportedVersions": {
+              "description": "This contains the current version and supported upgrade versions.",
+              "items": {
+                "$ref": "#/components/schemas/SupportedVersion"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "appliance": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Appliances definition.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/applianceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "applianceCredentialKubeconfig": {
+          "description": "Cluster User Credential appliance.",
+          "properties": {
+            "name": {
+              "$ref": "#/components/schemas/AccessProfileType"
+            },
+            "value": {
+              "description": "Contains the kubeconfig value.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "applianceGetTelemetryConfigResult": {
+          "description": "The Get Telemetry Config Result appliance.",
+          "properties": {
+            "telemetryInstrumentationKey": {
+              "description": "Telemetry instrumentation key.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "applianceListCredentialResults": {
+          "description": "The List Cluster User Credential appliance.",
+          "properties": {
+            "hybridConnectionConfig": {
+              "$ref": "#/components/schemas/HybridConnectionConfig"
+            },
+            "kubeconfigs": {
+              "description": "The list of appliance kubeconfigs.",
+              "items": {
+                "$ref": "#/components/schemas/applianceCredentialKubeconfig"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "applianceListKeysResults": {
+          "description": "The List Cluster Keys Results appliance.",
+          "properties": {
+            "artifactProfiles": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/ArtifactProfile"
+              },
+              "description": "Map of artifacts that contains a list of ArtifactProfile used to upload artifacts such as logs.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "kubeconfigs": {
+              "description": "The list of appliance kubeconfigs.",
+              "items": {
+                "$ref": "#/components/schemas/applianceCredentialKubeconfig"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "sshKeys": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/SSHKey"
+              },
+              "description": "Map of Customer User Public, Private SSH Keys and Certificate when available.",
+              "readOnly": true,
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "applianceListResult": {
+          "description": "Paged collection of Appliance items",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Appliance items on this page",
+              "items": {
+                "$ref": "#/components/schemas/appliance"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "applianceOperation": {
+          "description": "Appliances operation.",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/applianceOperationValueDisplay"
+            },
+            "isDataAction": {
+              "description": "Is this Operation a data plane operation",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the compute operation.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The origin of the compute operation.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "applianceOperationValueDisplay": {
+          "description": "Describes the properties of an Appliances Operation Value Display.",
+          "properties": {
+            "description": {
+              "description": "The description of the operation.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "operation": {
+              "description": "The display name of the compute operation.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provider": {
+              "description": "The resource provider for the operation.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "resource": {
+              "description": "The display name of the resource the operation applies to.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "applianceOperationsList": {
+          "description": "Paged collection of ApplianceOperation items",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ApplianceOperation items on this page",
+              "items": {
+                "$ref": "#/components/schemas/applianceOperation"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "applianceProperties": {
+          "description": "Properties for an appliance.",
+          "properties": {
+            "distro": {
+              "default": "AKSEdge",
+              "description": "Represents a supported Fabric/Infra. (AKSEdge etc...).",
+              "enum": [
+                "AKSEdge"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Distro",
+                "values": [
+                  {
+                    "name": "AKSEdge",
+                    "value": "AKSEdge"
+                  }
+                ]
+              }
+            },
+            "infrastructureConfig": {
+              "$ref": "#/components/schemas/appliancePropertiesInfrastructureConfig"
+            },
+            "provisioningState": {
+              "description": "The current deployment or provisioning state, which only appears in the response.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publicKey": {
+              "description": "Certificates pair used to download MSI certificate from HIS. Can only be set once.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/Status"
+            },
+            "version": {
+              "description": "Version of the Appliance",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "appliancePropertiesInfrastructureConfig": {
+          "description": "Contains infrastructure information about the Appliance",
+          "properties": {
+            "provider": {
+              "$ref": "#/components/schemas/Provider"
+            }
+          },
+          "type": "object"
+        },
+        "patchableAppliance": {
+          "description": "The Appliances patchable resource definition.",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The appliances Rest API spec.",
+      "title": "appliances",
+      "version": "2022-10-27",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.ResourceConnector/operations": {
+        "get": {
+          "description": "Lists all available Appliances operations.",
+          "operationId": "Appliances_ListOperations",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceOperationsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "List Appliances operations": {
+              "$ref": "./examples/AppliancesListOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ResourceConnector/appliances": {
+        "get": {
+          "description": "Gets a list of Appliances in the specified subscription. The operation returns properties of each Appliance",
+          "operationId": "Appliances_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets a list of Appliances in a subscription.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "List Appliances by subscription": {
+              "$ref": "./examples/AppliancesListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ResourceConnector/telemetryconfig": {
+        "get": {
+          "description": "Gets the telemetry config.",
+          "operationId": "Appliances_GetTelemetryConfig",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceGetTelemetryConfigResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets the telemetry config.",
+          "x-ms-examples": {
+            "GetTelemetryConfig Appliance": {
+              "$ref": "./examples/TelemetryConfig.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ResourceConnector/appliances": {
+        "get": {
+          "description": "Gets a list of Appliances in the specified subscription and resource group. The operation returns properties of each Appliance.",
+          "operationId": "Appliances_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets a list of Appliances in the specified subscription and resource group.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "List Appliances by resource group": {
+              "$ref": "./examples/AppliancesListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ResourceConnector/appliances/{resourceName}": {
+        "delete": {
+          "description": "Deletes an Appliance with the specified Resource Name, Resource Group, and Subscription Id.",
+          "operationId": "Appliances_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Deletes an Appliance.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "Delete Appliance": {
+              "$ref": "./examples/AppliancesDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets the details of an Appliance with a specified resource group and name.",
+          "operationId": "Appliances_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/appliance"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets an Appliance.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "Get Appliance": {
+              "$ref": "./examples/AppliancesGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates an Appliance with the specified Resource Name in the specified Resource Group and Subscription.",
+          "operationId": "Appliances_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patchableAppliance"
+                }
+              }
+            },
+            "description": "The updatable fields of an existing Appliance.",
+            "required": true,
+            "x-ms-client-flatten": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/appliance"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Updates an Appliance.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "Update Appliance": {
+              "$ref": "./examples/AppliancesPatch.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an Appliance in the specified Subscription and Resource Group.",
+          "operationId": "Appliances_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/appliance"
+                }
+              }
+            },
+            "description": "Parameters supplied to create or update an Appliance.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/appliance"
+                  }
+                }
+              },
+              "description": "Resource 'Appliance' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/appliance"
+                  }
+                }
+              },
+              "description": "Resource 'Appliance' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Creates or updates an Appliance.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "Create/Update Appliance": {
+              "$ref": "./examples/AppliancesCreate_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/appliance",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ResourceConnector/appliances/{resourceName}/listClusterUserCredential": {
+        "post": {
+          "description": "Returns the cluster user credentials for the dedicated appliance.",
+          "operationId": "Appliances_ListClusterUserCredential",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceListCredentialResults"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Returns the cluster user credential.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "ListClusterUserCredentialAppliance": {
+              "$ref": "./examples/AppliancesListClusterUserCredential.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ResourceConnector/appliances/{resourceName}/listkeys": {
+        "post": {
+          "description": "Returns the cluster customer credentials for the dedicated appliance.",
+          "operationId": "Appliances_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "This sets the type of artifact being returned, when empty no artifact endpoint is returned.",
+              "in": "query",
+              "name": "artifactType",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applianceListKeysResults"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets the management config.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "ListKeys Appliance": {
+              "$ref": "./examples/AppliancesListKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ResourceConnector/appliances/{resourceName}/upgradeGraphs/{upgradeGraph}": {
+        "get": {
+          "description": "Gets the upgrade graph of an Appliance with a specified resource group and name and specific release train.",
+          "operationId": "Appliances_GetUpgradeGraph",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Appliances name.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-_a-zA-Z0-9]{0,61}[a-zA-Z0-9]$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Upgrade graph version, ex - stable",
+              "in": "path",
+              "name": "upgradeGraph",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UpgradeGraph"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Gets an Appliance upgrade graph.",
+          "tags": [
+            "Appliances"
+          ],
+          "x-ms-examples": {
+            "Get Appliance Upgrade Graph": {
+              "$ref": "./examples/UpgradeGraph.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Appliances"
+      },
+      {
+        "name": "Operations"
+      }
+    ]
+  }
+}

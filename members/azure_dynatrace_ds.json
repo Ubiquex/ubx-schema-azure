@@ -1,0 +1,4323 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_dynatrace",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AccountInfo": {
+          "description": "Dynatrace Account Information",
+          "properties": {
+            "accountId": {
+              "description": "Account Id of the account this environment is linked to",
+              "type": "string"
+            },
+            "companyName": {
+              "description": "Name of the customer account / company",
+              "type": "string"
+            },
+            "regionId": {
+              "description": "Region in which the account is created",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Action": {
+          "description": "Install/Uninstall action.",
+          "enum": [
+            "Install",
+            "Uninstall"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Action",
+            "values": [
+              {
+                "name": "Install",
+                "value": "Install"
+              },
+              {
+                "name": "Uninstall",
+                "value": "Uninstall"
+              }
+            ]
+          }
+        },
+        "AppServiceInfo": {
+          "description": "Details of App Services having Dynatrace OneAgent installed",
+          "properties": {
+            "autoUpdateSetting": {
+              "$ref": "#/components/schemas/AutoUpdateSetting"
+            },
+            "availabilityState": {
+              "$ref": "#/components/schemas/AvailabilityState"
+            },
+            "hostGroup": {
+              "description": "The name of the host group",
+              "type": "string"
+            },
+            "hostName": {
+              "description": "The name of the host",
+              "type": "string"
+            },
+            "logModule": {
+              "$ref": "#/components/schemas/LogModule"
+            },
+            "monitoringType": {
+              "$ref": "#/components/schemas/MonitoringType"
+            },
+            "resourceId": {
+              "description": "App service resource ID",
+              "type": "string"
+            },
+            "updateStatus": {
+              "$ref": "#/components/schemas/UpdateStatus"
+            },
+            "version": {
+              "description": "Version of the Dynatrace agent installed on the App Service.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AppServiceListResponse": {
+          "description": "Response of a list App Services Operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AppServiceInfo items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AppServiceInfo"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AutoUpdateSetting": {
+          "description": "Update settings of OneAgent.",
+          "enum": [
+            "ENABLED",
+            "DISABLED"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AutoUpdateSetting",
+            "values": [
+              {
+                "name": "ENABLED",
+                "value": "ENABLED"
+              },
+              {
+                "name": "DISABLED",
+                "value": "DISABLED"
+              }
+            ]
+          }
+        },
+        "AvailabilityState": {
+          "description": "The availability state of OneAgent.",
+          "enum": [
+            "CRASHED",
+            "LOST",
+            "MONITORED",
+            "PRE_MONITORED",
+            "SHUTDOWN",
+            "UNEXPECTED_SHUTDOWN",
+            "UNKNOWN",
+            "UNMONITORED"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AvailabilityState",
+            "values": [
+              {
+                "name": "CRASHED",
+                "value": "CRASHED"
+              },
+              {
+                "name": "LOST",
+                "value": "LOST"
+              },
+              {
+                "name": "MONITORED",
+                "value": "MONITORED"
+              },
+              {
+                "name": "PRE_MONITORED",
+                "value": "PRE_MONITORED"
+              },
+              {
+                "name": "SHUTDOWN",
+                "value": "SHUTDOWN"
+              },
+              {
+                "name": "UNEXPECTED_SHUTDOWN",
+                "value": "UNEXPECTED_SHUTDOWN"
+              },
+              {
+                "name": "UNKNOWN",
+                "value": "UNKNOWN"
+              },
+              {
+                "name": "UNMONITORED",
+                "value": "UNMONITORED"
+              }
+            ]
+          }
+        },
+        "ConnectedResourcesCountResponse": {
+          "description": "Response for getting Connected resources for a MP SaaS Resource",
+          "properties": {
+            "connectedResourcesCount": {
+              "description": "Count of the connected resources",
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "CreateResourceSupportedProperties": {
+          "description": "Properties related to the support for creating Dynatrace resources.",
+          "properties": {
+            "creationSupported": {
+              "description": "Indicates if selected subscription supports Dynatrace resource creation, if not it is already being monitored for the selected organization via multi subscription feature.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The ARM id of the subscription.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CreateResourceSupportedResponse": {
+          "description": "Dynatrace resource can be created or not.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "type": "string"
+            },
+            "value": {
+              "description": "Represents the properties of the resource.",
+              "items": {
+                "$ref": "#/components/schemas/CreateResourceSupportedProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "DynatraceEnvironmentProperties": {
+          "description": "Properties of the Dynatrace environment.",
+          "properties": {
+            "accountInfo": {
+              "$ref": "#/components/schemas/AccountInfo"
+            },
+            "environmentInfo": {
+              "$ref": "#/components/schemas/EnvironmentInfo"
+            },
+            "singleSignOnProperties": {
+              "$ref": "#/components/schemas/DynatraceSingleSignOnProperties"
+            },
+            "userId": {
+              "description": "User id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DynatraceSingleSignOnProperties": {
+          "description": "The details of a Dynatrace single sign-on.",
+          "properties": {
+            "aadDomains": {
+              "description": "array of Aad(azure active directory) domains",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "enterpriseAppId": {
+              "description": "Version of the Dynatrace agent installed on the VM.",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "singleSignOnState": {
+              "$ref": "#/components/schemas/SingleSignOnStates"
+            },
+            "singleSignOnUrl": {
+              "description": "The login URL specific to this Dynatrace Environment",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DynatraceSingleSignOnResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Single sign-on configurations for a given monitor resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DynatraceSingleSignOnProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "DynatraceSingleSignOnResourceListResult": {
+          "description": "The response of a DynatraceSingleSignOnResource list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The DynatraceSingleSignOnResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/DynatraceSingleSignOnResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "EnvironmentInfo": {
+          "description": "Dynatrace Environment Information",
+          "properties": {
+            "environmentId": {
+              "description": "Id of the environment created",
+              "type": "string"
+            },
+            "ingestionKey": {
+              "$ref": "#/components/schemas/SecretIngestionKey"
+            },
+            "landingURL": {
+              "description": "Landing URL for Dynatrace environment",
+              "type": "string"
+            },
+            "logsIngestionEndpoint": {
+              "description": "Ingestion endpoint used for sending logs",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "FilteringTag": {
+          "description": "The definition of a filtering tag. Filtering tags are used for capturing resources and include/exclude them from being monitored.",
+          "properties": {
+            "action": {
+              "$ref": "#/components/schemas/TagAction"
+            },
+            "name": {
+              "description": "The name (also known as the key) of the tag.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The value of the tag.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IdentityProperties": {
+          "description": "The properties of the managed service identities assigned to this resource.",
+          "properties": {
+            "principalId": {
+              "description": "The active directory identifier of this principal.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The Active Directory tenant id of the principal.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedIdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity_2"
+              },
+              "description": "The identities assigned to this resource by the user.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "LiftrResourceCategories": {
+          "description": "Liftr resource category",
+          "enum": [
+            "Unknown",
+            "MonitorLogs"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "LiftrResourceCategories",
+            "values": [
+              {
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "name": "MonitorLogs",
+                "value": "MonitorLogs"
+              }
+            ]
+          }
+        },
+        "LinkableEnvironmentListResponse": {
+          "description": "Response for getting all the linkable environments",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The LinkableEnvironmentResponse items on this page",
+              "items": {
+                "$ref": "#/components/schemas/LinkableEnvironmentResponse"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "LinkableEnvironmentRequest": {
+          "description": "Request for getting all the linkable environments for a user",
+          "properties": {
+            "region": {
+              "description": "Azure region in which we want to link the environment",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Tenant Id of the user in which they want to link the environment",
+              "type": "string"
+            },
+            "userPrincipal": {
+              "description": "user principal id of the user",
+              "type": "string"
+            }
+          },
+          "required": [
+            "tenantId",
+            "userPrincipal",
+            "region"
+          ],
+          "type": "object"
+        },
+        "LinkableEnvironmentResponse": {
+          "description": "Response for getting all the linkable environments",
+          "properties": {
+            "environmentId": {
+              "description": "environment id for which user is an admin",
+              "type": "string"
+            },
+            "environmentName": {
+              "description": "Name of the environment",
+              "type": "string"
+            },
+            "planData": {
+              "$ref": "#/components/schemas/PlanData"
+            }
+          },
+          "type": "object"
+        },
+        "LogModule": {
+          "description": "Tells whether log modules are enabled or not",
+          "enum": [
+            "ENABLED",
+            "DISABLED"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "LogModule",
+            "values": [
+              {
+                "name": "ENABLED",
+                "value": "ENABLED"
+              },
+              {
+                "name": "DISABLED",
+                "value": "DISABLED"
+              }
+            ]
+          }
+        },
+        "LogRules": {
+          "description": "Set of rules for sending logs for the Monitor resource.",
+          "properties": {
+            "filteringTags": {
+              "description": "List of filtering tags to be used for capturing logs. This only takes effect if SendActivityLogs flag is enabled. If empty, all resources will be captured.\nIf only Exclude action is specified, the rules will apply to the list of all available resources. If Include actions are specified, the rules will only include resources with the associated tags.",
+              "items": {
+                "$ref": "#/components/schemas/FilteringTag"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "sendAadLogs": {
+              "$ref": "#/components/schemas/SendAadLogsStatus"
+            },
+            "sendActivityLogs": {
+              "$ref": "#/components/schemas/SendActivityLogsStatus"
+            },
+            "sendSubscriptionLogs": {
+              "$ref": "#/components/schemas/SendSubscriptionLogsStatus"
+            }
+          },
+          "type": "object"
+        },
+        "LogStatusRequest": {
+          "description": "Request for getting log status for given monitored resource Ids",
+          "properties": {
+            "monitoredResourceIds": {
+              "description": "List of azure resource Id of monitored resources for which we get the log status",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ManageAgentInstallationRequest": {
+          "description": "Request for performing Dynatrace agent install/uninstall action through the Azure Dynatrace resource on the provided list of agent resources.",
+          "properties": {
+            "action": {
+              "$ref": "#/components/schemas/Action"
+            },
+            "manageAgentInstallationList": {
+              "description": "The list of resources.",
+              "items": {
+                "$ref": "#/components/schemas/ManageAgentList"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "manageAgentInstallationList",
+            "action"
+          ],
+          "type": "object"
+        },
+        "ManageAgentList": {
+          "description": "Details of resource that has Dynatrace agent installed through the Azure Dynatrace resource.",
+          "properties": {
+            "id": {
+              "description": "The ARM id of the resource to install/uninstall agent.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIdentityType": {
+          "description": "The kind of managed identity assigned to this resource.",
+          "enum": [
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAndUserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedIdentityType",
+            "values": [
+              {
+                "name": "SystemAssigned",
+                "value": "SystemAssigned"
+              },
+              {
+                "name": "UserAssigned",
+                "value": "UserAssigned"
+              },
+              {
+                "name": "SystemAndUserAssigned",
+                "value": "SystemAndUserAssigned"
+              }
+            ]
+          }
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "$ref": "#/components/schemas/UserAssignedIdentities"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "MarketplaceSaaSResourceDetailsRequest": {
+          "description": "Request for getting Marketplace SaaS resource details for a tenant Id",
+          "properties": {
+            "tenantId": {
+              "description": "Tenant Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "tenantId"
+          ],
+          "type": "object"
+        },
+        "MarketplaceSaaSResourceDetailsResponse": {
+          "description": "Marketplace SaaS resource details linked to the given tenant Id",
+          "properties": {
+            "marketplaceSaaSResourceId": {
+              "description": "Id of the Marketplace SaaS Resource",
+              "type": "string"
+            },
+            "marketplaceSaaSResourceName": {
+              "description": "Name of the Marketplace SaaS Resource",
+              "type": "string"
+            },
+            "marketplaceSubscriptionStatus": {
+              "$ref": "#/components/schemas/MarketplaceSubscriptionStatus"
+            },
+            "planId": {
+              "description": "Id of the plan",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "MarketplaceSaasAutoRenew": {
+          "description": "Marketplace resource autorenew flag",
+          "enum": [
+            "On",
+            "Off"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MarketplaceSaasAutoRenew",
+            "values": [
+              {
+                "name": "On",
+                "value": "On"
+              },
+              {
+                "name": "Off",
+                "value": "Off"
+              }
+            ]
+          }
+        },
+        "MarketplaceSubscriptionIdRequest": {
+          "description": "Request for getting connected resources count for a Marketplace Subscription Id",
+          "properties": {
+            "marketplaceSubscriptionId": {
+              "description": "Marketplace Subscription Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "marketplaceSubscriptionId"
+          ],
+          "type": "object"
+        },
+        "MarketplaceSubscriptionStatus": {
+          "description": "Flag specifying the Marketplace Subscription Status of the resource. If payment is not made in time, the resource will go in Suspended state.",
+          "enum": [
+            "Active",
+            "Suspended",
+            "Unsubscribed"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MarketplaceSubscriptionStatus",
+            "values": [
+              {
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "name": "Suspended",
+                "value": "Suspended"
+              },
+              {
+                "name": "Unsubscribed",
+                "value": "Unsubscribed"
+              }
+            ]
+          }
+        },
+        "MetricRules": {
+          "description": "Set of rules for sending metrics for the Monitor resource.",
+          "properties": {
+            "filteringTags": {
+              "description": "List of filtering tags to be used for capturing metrics. If empty, all resources will be captured. If only Exclude action is specified, the rules will apply to the list of all available resources. If Include actions are specified, the rules will only include resources with the associated tags.",
+              "items": {
+                "$ref": "#/components/schemas/FilteringTag"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "sendingMetrics": {
+              "$ref": "#/components/schemas/SendingMetricsStatus"
+            }
+          },
+          "type": "object"
+        },
+        "MetricStatusRequest": {
+          "description": "Request for getting metric status for given monitored resource Ids",
+          "properties": {
+            "monitoredResourceIds": {
+              "description": "List of azure resource Id of monitored resources for which we get the metric status",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "MetricsStatusResponse": {
+          "description": "Response of get metrics status operation",
+          "properties": {
+            "azureResourceIds": {
+              "description": "Azure resource IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "MonitorProperties": {
+          "description": "Properties specific to the monitor resource.",
+          "properties": {
+            "dynatraceEnvironmentProperties": {
+              "$ref": "#/components/schemas/DynatraceEnvironmentProperties"
+            },
+            "liftrResourceCategory": {
+              "$ref": "#/components/schemas/LiftrResourceCategories"
+            },
+            "liftrResourcePreference": {
+              "description": "The priority of the resource.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "marketplaceSaasAutoRenew": {
+              "$ref": "#/components/schemas/MarketplaceSaasAutoRenew"
+            },
+            "marketplaceSubscriptionStatus": {
+              "$ref": "#/components/schemas/MarketplaceSubscriptionStatus"
+            },
+            "monitoringStatus": {
+              "$ref": "#/components/schemas/MonitoringStatus"
+            },
+            "planData": {
+              "$ref": "#/components/schemas/PlanData"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "userInfo": {
+              "$ref": "#/components/schemas/UserInfo"
+            }
+          },
+          "type": "object"
+        },
+        "MonitorResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Dynatrace Monitor Resource",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/IdentityProperties"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/MonitorProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "MonitorResourceListResult": {
+          "description": "The response of a MonitorResource list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The MonitorResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/MonitorResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "MonitorResourceUpdate": {
+          "description": "The updatable properties of the MonitorResource.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/MonitorUpdateProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "MonitorUpdateProperties": {
+          "description": "The set of properties that can be updated in a PATCH request to a monitor resource.",
+          "properties": {
+            "planData": {
+              "$ref": "#/components/schemas/PlanData"
+            }
+          },
+          "type": "object"
+        },
+        "MonitoredResource": {
+          "description": "Details of resource being monitored by Dynatrace monitor resource",
+          "properties": {
+            "id": {
+              "description": "The ARM id of the resource.",
+              "type": "string"
+            },
+            "reasonForLogsStatus": {
+              "description": "Reason for why the resource is sending logs (or why it is not sending).",
+              "type": "string"
+            },
+            "reasonForMetricsStatus": {
+              "description": "Reason for why the resource is sending metrics (or why it is not sending).",
+              "type": "string"
+            },
+            "sendingLogs": {
+              "$ref": "#/components/schemas/SendingLogsStatus"
+            },
+            "sendingMetrics": {
+              "$ref": "#/components/schemas/SendingMetricsStatus"
+            }
+          },
+          "type": "object"
+        },
+        "MonitoredResourceListResponse": {
+          "description": "List of all the resources being monitored by Dynatrace monitor resource",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The MonitoredResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/MonitoredResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "MonitoredSubscription": {
+          "description": "The list of subscriptions and it's monitoring status by current Dynatrace monitor.",
+          "properties": {
+            "error": {
+              "description": "The reason of not monitoring the subscription.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/Status"
+            },
+            "subscriptionId": {
+              "description": "The subscriptionId to be monitored.",
+              "type": "string"
+            },
+            "tagRules": {
+              "$ref": "#/components/schemas/MonitoringTagRulesProperties"
+            }
+          },
+          "required": [
+            "subscriptionId"
+          ],
+          "type": "object"
+        },
+        "MonitoredSubscriptionProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The request to update subscriptions needed to be monitored by the Dynatrace monitor resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SubscriptionList"
+            }
+          },
+          "type": "object"
+        },
+        "MonitoredSubscriptionPropertiesList": {
+          "description": "Paged collection of MonitoredSubscriptionProperties items",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The MonitoredSubscriptionProperties items on this page",
+              "items": {
+                "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "MonitoringStatus": {
+          "description": "Flag specifying if the resource monitoring is enabled or disabled.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MonitoringStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "MonitoringTagRulesProperties": {
+          "description": "Properties for the Tag rules resource of a Monitor account.",
+          "properties": {
+            "logRules": {
+              "$ref": "#/components/schemas/LogRules"
+            },
+            "metricRules": {
+              "$ref": "#/components/schemas/MetricRules"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "MonitoringType": {
+          "description": "The monitoring mode of OneAgent",
+          "enum": [
+            "CLOUD_INFRASTRUCTURE",
+            "FULL_STACK",
+            "DISCOVERY"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MonitoringType",
+            "values": [
+              {
+                "name": "CLOUD_INFRASTRUCTURE",
+                "value": "CLOUD_INFRASTRUCTURE"
+              },
+              {
+                "name": "FULL_STACK",
+                "value": "FULL_STACK"
+              },
+              {
+                "name": "DISCOVERY",
+                "value": "DISCOVERY"
+              }
+            ]
+          }
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PlanData": {
+          "description": "Billing plan information.",
+          "properties": {
+            "billingCycle": {
+              "description": "different billing cycles like MONTHLY/WEEKLY. this could be enum",
+              "type": "string"
+            },
+            "effectiveDate": {
+              "description": "date when plan was applied",
+              "format": "date-time",
+              "type": "string"
+            },
+            "planDetails": {
+              "description": "plan id as published by Dynatrace",
+              "type": "string"
+            },
+            "usageType": {
+              "description": "different usage type like PAYG/COMMITTED. this could be enum",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Provisioning state of the monitoring resource",
+          "enum": [
+            "Accepted",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Deleted",
+            "NotSpecified"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "name": "Accepted",
+                "value": "Accepted"
+              },
+              {
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "name": "Deleted",
+                "value": "Deleted"
+              },
+              {
+                "name": "NotSpecified",
+                "value": "NotSpecified"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SSODetailsRequest": {
+          "description": "Request for getting sso details for a user",
+          "properties": {
+            "userPrincipal": {
+              "description": "user principal id of the user",
+              "type": "string"
+            }
+          },
+          "required": [
+            "userPrincipal"
+          ],
+          "type": "object"
+        },
+        "SSODetailsResponse": {
+          "description": "SSO details from the Dynatrace partner",
+          "properties": {
+            "aadDomains": {
+              "description": "array of Aad(azure active directory) domains",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "adminUsers": {
+              "description": "Array of admin user emails.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "isSsoEnabled": {
+              "$ref": "#/components/schemas/SSOStatus"
+            },
+            "metadataUrl": {
+              "description": "URL for Azure AD metadata",
+              "type": "string"
+            },
+            "singleSignOnUrl": {
+              "description": "The login URL specific to this Dynatrace Environment",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SSOStatus": {
+          "description": "Indicates whether SSO is enabled or not",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SSOStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SecretIngestionKey": {
+          "description": "Ingestion key with secret and read-only attributes for all API versions.",
+          "format": "password",
+          "readOnly": true,
+          "type": "string",
+          "x-ms-secret": true
+        },
+        "SendAadLogsStatus": {
+          "description": "Indicates whether AAD logs are being sent.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SendAadLogsStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SendActivityLogsStatus": {
+          "description": "Indicates whether activity logs are being sent.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SendActivityLogsStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SendSubscriptionLogsStatus": {
+          "description": "Indicates whether subscription logs are being sent.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SendSubscriptionLogsStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SendingLogsStatus": {
+          "description": "Indicates whether logs are being sent.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SendingLogsStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SendingMetricsStatus": {
+          "description": "Indicates whether metrics are being sent.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SendingMetricsStatus",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "SingleSignOnStates": {
+          "description": "Various states of the SSO resource",
+          "enum": [
+            "Initial",
+            "Enable",
+            "Disable",
+            "Existing"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SingleSignOnStates",
+            "values": [
+              {
+                "name": "Initial",
+                "value": "Initial"
+              },
+              {
+                "name": "Enable",
+                "value": "Enable"
+              },
+              {
+                "name": "Disable",
+                "value": "Disable"
+              },
+              {
+                "name": "Existing",
+                "value": "Existing"
+              }
+            ]
+          }
+        },
+        "Status": {
+          "description": "The state of monitoring.",
+          "enum": [
+            "InProgress",
+            "Active",
+            "Failed",
+            "Deleting"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Status",
+            "values": [
+              {
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "name": "Deleting",
+                "value": "Deleting"
+              }
+            ]
+          }
+        },
+        "SubscriptionList": {
+          "description": "The request to update subscriptions needed to be monitored by the Dynatrace monitor resource.",
+          "properties": {
+            "monitoredSubscriptionList": {
+              "description": "List of subscriptions and the state of the monitoring.",
+              "items": {
+                "$ref": "#/components/schemas/MonitoredSubscription"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "operation": {
+              "$ref": "#/components/schemas/SubscriptionListOperation"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "SubscriptionListOperation": {
+          "description": "The operation for the patch on the resource.",
+          "enum": [
+            "AddBegin",
+            "AddComplete",
+            "DeleteBegin",
+            "DeleteComplete",
+            "Active"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SubscriptionListOperation",
+            "values": [
+              {
+                "name": "AddBegin",
+                "value": "AddBegin"
+              },
+              {
+                "name": "AddComplete",
+                "value": "AddComplete"
+              },
+              {
+                "name": "DeleteBegin",
+                "value": "DeleteBegin"
+              },
+              {
+                "name": "DeleteComplete",
+                "value": "DeleteComplete"
+              },
+              {
+                "name": "Active",
+                "value": "Active"
+              }
+            ]
+          }
+        },
+        "TagAction": {
+          "description": "Valid actions for a filtering tag. Exclusion takes priority over inclusion.",
+          "enum": [
+            "Include",
+            "Exclude"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "TagAction",
+            "values": [
+              {
+                "name": "Include",
+                "value": "Include"
+              },
+              {
+                "name": "Exclude",
+                "value": "Exclude"
+              }
+            ]
+          }
+        },
+        "TagRule": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Tag rules for a monitor resource",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/MonitoringTagRulesProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "TagRuleListResult": {
+          "description": "The response of a TagRule list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The TagRule items on this page",
+              "items": {
+                "$ref": "#/components/schemas/TagRule"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UpdateStatus": {
+          "description": "The current update status of OneAgent.",
+          "enum": [
+            "INCOMPATIBLE",
+            "OUTDATED",
+            "SCHEDULED",
+            "SUPPRESSED",
+            "UNKNOWN",
+            "UP2DATE",
+            "UPDATE_IN_PROGRESS",
+            "UPDATE_PENDING",
+            "UPDATE_PROBLEM"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UpdateStatus",
+            "values": [
+              {
+                "name": "INCOMPATIBLE",
+                "value": "INCOMPATIBLE"
+              },
+              {
+                "name": "OUTDATED",
+                "value": "OUTDATED"
+              },
+              {
+                "name": "SCHEDULED",
+                "value": "SCHEDULED"
+              },
+              {
+                "name": "SUPPRESSED",
+                "value": "SUPPRESSED"
+              },
+              {
+                "name": "UNKNOWN",
+                "value": "UNKNOWN"
+              },
+              {
+                "name": "UP2DATE",
+                "value": "UP2DATE"
+              },
+              {
+                "name": "UPDATE_IN_PROGRESS",
+                "value": "UPDATE_IN_PROGRESS"
+              },
+              {
+                "name": "UPDATE_PENDING",
+                "value": "UPDATE_PENDING"
+              },
+              {
+                "name": "UPDATE_PROBLEM",
+                "value": "UPDATE_PROBLEM"
+              }
+            ]
+          }
+        },
+        "UpgradePlanRequest": {
+          "description": "The billing plan properties for the upgrade plan call.",
+          "properties": {
+            "planData": {
+              "$ref": "#/components/schemas/PlanData"
+            }
+          },
+          "type": "object"
+        },
+        "UserAssignedIdentities": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/UserAssignedIdentity",
+            "x-nullable": true
+          },
+          "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+          "title": "User-Assigned Identities",
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UserAssignedIdentity_2": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UserInfo": {
+          "description": "User info.",
+          "properties": {
+            "country": {
+              "description": "Country of the user",
+              "type": "string"
+            },
+            "emailAddress": {
+              "description": "Email of the user used by Dynatrace for contacting them if needed",
+              "pattern": "^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$",
+              "type": "string"
+            },
+            "firstName": {
+              "description": "First Name of the user",
+              "type": "string"
+            },
+            "lastName": {
+              "description": "Last Name of the user",
+              "type": "string"
+            },
+            "phoneNumber": {
+              "description": "Phone number of the user used by Dynatrace for contacting them if needed",
+              "maxLength": 40,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "VMExtensionPayload": {
+          "description": "Response of payload to be passed while installing VM agent.",
+          "properties": {
+            "environmentId": {
+              "description": "Id of the environment created",
+              "type": "string"
+            },
+            "ingestionKey": {
+              "description": "Ingestion key of the environment",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "VMHostsListResponse": {
+          "description": "Response of a list VM Host Operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The VMInfo items on this page",
+              "items": {
+                "$ref": "#/components/schemas/VMInfo"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "VMInfo": {
+          "description": "Details of VM Resource having Dynatrace OneAgent installed",
+          "properties": {
+            "autoUpdateSetting": {
+              "$ref": "#/components/schemas/AutoUpdateSetting"
+            },
+            "availabilityState": {
+              "$ref": "#/components/schemas/AvailabilityState"
+            },
+            "hostGroup": {
+              "description": "The name of the host group",
+              "type": "string"
+            },
+            "hostName": {
+              "description": "The name of the host",
+              "type": "string"
+            },
+            "logModule": {
+              "$ref": "#/components/schemas/LogModule"
+            },
+            "monitoringType": {
+              "$ref": "#/components/schemas/MonitoringType"
+            },
+            "resourceId": {
+              "description": "Azure VM resource ID",
+              "type": "string"
+            },
+            "updateStatus": {
+              "$ref": "#/components/schemas/UpdateStatus"
+            },
+            "version": {
+              "description": "Version of the Dynatrace agent installed on the VM.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "title": "Dynatrace.Observability",
+      "version": "2024-04-24",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Dynatrace.Observability/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Operations_List_MaximumSet_Gen": {
+              "$ref": "./examples/Operations_List_MaximumSet_Gen.json"
+            },
+            "Operations_List_MinimumSet_Gen": {
+              "$ref": "./examples/Operations_List_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/getAllConnectedResourcesCount": {
+        "post": {
+          "description": "Get the total number of connected resources for the given marketplace subscription Id",
+          "operationId": "Monitors_GetAllConnectedResourcesCount",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceSubscriptionIdRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ConnectedResourcesCountResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "Monitors_GetAllConnectedResourcesCount_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_GetAllConnectedResourcesCount_MaximumSet_Gen.json"
+            },
+            "Monitors_GetAllConnectedResourcesCount_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_GetAllConnectedResourcesCount_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/getMarketplaceSaaSResourceDetails": {
+        "post": {
+          "description": "Get Marketplace SaaS resource details",
+          "operationId": "Monitors_GetMarketplaceSaaSResourceDetails",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceSaaSResourceDetailsRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceSaaSResourceDetailsResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "Monitors_GetMarketplaceSaaSResourceDetails_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_GetMarketplaceSaaSResourceDetails_MaximumSet_Gen.json"
+            },
+            "Monitors_GetMarketplaceSaaSResourceDetails_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_GetMarketplaceSaaSResourceDetails_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/monitors": {
+        "get": {
+          "description": "List all MonitorResource by subscriptionId",
+          "operationId": "Monitors_ListBySubscriptionId",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResourceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListBySubscriptionId_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListBySubscriptionId_MaximumSet_Gen.json"
+            },
+            "Monitors_ListBySubscriptionId_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListBySubscriptionId_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/subscriptionStatuses/{dynatraceEnvironmentId}": {
+        "get": {
+          "description": "Informs if the current subscription is being already monitored for selected Dynatrace environment.",
+          "operationId": "CreationSupported_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Dynatrace Environment Id",
+              "in": "path",
+              "name": "dynatraceEnvironmentId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreateResourceSupportedResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Informs if the current subscription is being already monitored for selected Dynatrace environment.",
+          "x-ms-examples": {
+            "CreationSupported_List": {
+              "$ref": "./examples/CreationSupported_List.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Dynatrace.Observability/subscriptionStatuses/{dynatraceEnvironmentId}/default": {
+        "get": {
+          "description": "Informs if the current subscription is being already monitored for selected Dynatrace environment.",
+          "operationId": "CreationSupported_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Dynatrace Environment Id",
+              "in": "path",
+              "name": "dynatraceEnvironmentId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreateResourceSupportedResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Informs if the current subscription is being already monitored for selected Dynatrace environment.",
+          "x-ms-examples": {
+            "CreationSupported_Get": {
+              "$ref": "./examples/CreationSupported_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors": {
+        "get": {
+          "description": "List MonitorResource resources by resource group",
+          "operationId": "Monitors_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResourceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListByResourceGroup_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListByResourceGroup_MaximumSet_Gen.json"
+            },
+            "Monitors_ListByResourceGroup_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListByResourceGroup_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}": {
+        "delete": {
+          "description": "Delete a MonitorResource",
+          "operationId": "Monitors_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_Delete_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_Delete_MaximumSet_Gen.json"
+            },
+            "Monitors_Delete_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_Delete_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Get a MonitorResource",
+          "operationId": "Monitors_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_Get_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_Get_MaximumSet_Gen.json"
+            },
+            "Monitors_Get_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_Get_MinimumSet_Gen.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update a MonitorResource",
+          "operationId": "Monitors_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorResourceUpdate"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_Update_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_Update_MaximumSet_Gen.json"
+            },
+            "Monitors_Update_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_Update_MinimumSet_Gen.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a MonitorResource",
+          "operationId": "Monitors_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorResource"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResource"
+                  }
+                }
+              },
+              "description": "Resource 'MonitorResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitorResource"
+                  }
+                }
+              },
+              "description": "Resource 'MonitorResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_CreateOrUpdate_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_CreateOrUpdate_MaximumSet_Gen.json"
+            },
+            "Monitors_CreateOrUpdate_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_CreateOrUpdate_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/MonitorResource",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/getMetricStatus": {
+        "post": {
+          "description": "Get metric status",
+          "operationId": "Monitors_GetMetricStatus",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricStatusRequest"
+                }
+              }
+            },
+            "description": "The details of the metric status request.",
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MetricsStatusResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_GetMetricStatus_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_GetMetricStatus_MaximumSet_Gen.json"
+            },
+            "Monitors_GetMetricStatus_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_GetMetricStatus_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/getSSODetails": {
+        "post": {
+          "description": "Gets the SSO configuration details from the partner.",
+          "operationId": "Monitors_GetSSODetails",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSODetailsRequest"
+                }
+              }
+            },
+            "description": "The details of the get sso details request.",
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SSODetailsResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_GetSSODetails_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_GetSSODetails_MaximumSet_Gen.json"
+            },
+            "Monitors_GetSSODetails_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_GetSSODetails_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/getVMHostPayload": {
+        "post": {
+          "description": "Returns the payload that needs to be passed in the request body for installing Dynatrace agent on a VM.",
+          "operationId": "Monitors_GetVMHostPayload",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/VMExtensionPayload"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_GetVMHostPayload_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_GetVMHostPayload_MaximumSet_Gen.json"
+            },
+            "Monitors_GetVMHostPayload_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_GetVMHostPayload_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listAppServices": {
+        "post": {
+          "description": "Gets list of App Services with Dynatrace PaaS OneAgent enabled",
+          "operationId": "Monitors_ListAppServices",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AppServiceListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListAppServices_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListAppServices_MaximumSet_Gen.json"
+            },
+            "Monitors_ListAppServices_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListAppServices_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listHosts": {
+        "post": {
+          "description": "List the VM/VMSS resources currently being monitored by the Dynatrace resource.",
+          "operationId": "Monitors_ListHosts",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/VMHostsListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListHosts_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListHosts_MaximumSet_Gen.json"
+            },
+            "Monitors_ListHosts_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListHosts_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listLinkableEnvironments": {
+        "post": {
+          "description": "Gets all the Dynatrace environments that a user can link a azure resource to",
+          "operationId": "Monitors_ListLinkableEnvironments",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkableEnvironmentRequest"
+                }
+              }
+            },
+            "description": "The details of the linkable environment request.",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LinkableEnvironmentListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListLinkableEnvironments_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListLinkableEnvironments_MaximumSet_Gen.json"
+            },
+            "Monitors_ListLinkableEnvironments_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListLinkableEnvironments_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/listMonitoredResources": {
+        "post": {
+          "description": "List the resources currently being monitored by the Dynatrace monitor resource.",
+          "operationId": "Monitors_ListMonitoredResources",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogStatusRequest"
+                }
+              }
+            },
+            "description": "The details of the log status request.",
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredResourceListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ListMonitoredResources_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ListMonitoredResources_MaximumSet_Gen.json"
+            },
+            "Monitors_ListMonitoredResources_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ListMonitoredResources_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/manageAgentInstallation": {
+        "post": {
+          "description": "Performs Dynatrace agent install/uninstall action through the Azure Dynatrace resource on the provided list of resources.",
+          "operationId": "Monitors_ManageAgentInstallation",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManageAgentInstallationRequest"
+                }
+              }
+            },
+            "description": "List of resources and action",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "204": {
+              "description": "There is no content to send for this request, but the headers may be useful."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_ManageAgentInstallation_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_ManageAgentInstallation_MaximumSet_Gen.json"
+            },
+            "Monitors_ManageAgentInstallation_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_ManageAgentInstallation_MinimumSet_Gen.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/monitoredSubscriptions": {
+        "get": {
+          "description": "List the subscriptions currently being monitored by the Dynatrace monitor resource.",
+          "operationId": "MonitoredSubscriptions_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredSubscriptionPropertiesList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitoredSubscriptions"
+          ],
+          "x-ms-examples": {
+            "Monitors_GetMonitoredSubscriptions": {
+              "$ref": "./examples/MonitoredSubscriptions_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/monitoredSubscriptions/default": {
+        "delete": {
+          "description": "Updates the subscriptions that are being monitored by the Dynatrace monitor resource",
+          "operationId": "MonitoredSubscriptions_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitoredSubscriptions"
+          ],
+          "x-ms-examples": {
+            "Monitors_DeleteMonitoredSubscriptions": {
+              "$ref": "./examples/MonitoredSubscriptions_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "List the subscriptions currently being monitored by the Dynatrace monitor resource.",
+          "operationId": "MonitoredSubscriptions_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitoredSubscriptions"
+          ],
+          "x-ms-examples": {
+            "Monitors_GetMonitoredSubscriptions": {
+              "$ref": "./examples/MonitoredSubscriptions_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the subscriptions that are being monitored by the Dynatrace monitor resource",
+          "operationId": "MonitoredSubscriptions_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                }
+              }
+            },
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitoredSubscriptions"
+          ],
+          "x-ms-examples": {
+            "Monitors_UpdateMonitoredSubscriptions": {
+              "$ref": "./examples/MonitoredSubscriptions_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/MonitoredSubscriptionProperties",
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Add the subscriptions that should be monitored by the Dynatrace monitor resource.",
+          "operationId": "MonitoredSubscriptions_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                }
+              }
+            },
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                  }
+                }
+              },
+              "description": "Resource 'MonitoredSubscriptionProperties' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MonitoredSubscriptionProperties"
+                  }
+                }
+              },
+              "description": "Resource 'MonitoredSubscriptionProperties' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitoredSubscriptions"
+          ],
+          "x-ms-examples": {
+            "Monitors_AddMonitoredSubscriptions": {
+              "$ref": "./examples/MonitoredSubscriptions_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/MonitoredSubscriptionProperties",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/singleSignOnConfigurations": {
+        "get": {
+          "description": "List all DynatraceSingleSignOnResource by monitorName",
+          "operationId": "SingleSignOn_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DynatraceSingleSignOnResourceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DynatraceSingleSignOnResources"
+          ],
+          "x-ms-examples": {
+            "SingleSignOn_List_MaximumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_List_MaximumSet_Gen.json"
+            },
+            "SingleSignOn_List_MinimumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_List_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/singleSignOnConfigurations/{configurationName}": {
+        "get": {
+          "description": "Get a DynatraceSingleSignOnResource",
+          "operationId": "SingleSignOn_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Single Sign On Configuration Name",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DynatraceSingleSignOnResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DynatraceSingleSignOnResources"
+          ],
+          "x-ms-examples": {
+            "SingleSignOn_Get_MaximumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_Get_MaximumSet_Gen.json"
+            },
+            "SingleSignOn_Get_MinimumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_Get_MinimumSet_Gen.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a DynatraceSingleSignOnResource",
+          "operationId": "SingleSignOn_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Single Sign On Configuration Name",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DynatraceSingleSignOnResource"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DynatraceSingleSignOnResource"
+                  }
+                }
+              },
+              "description": "Resource 'DynatraceSingleSignOnResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DynatraceSingleSignOnResource"
+                  }
+                }
+              },
+              "description": "Resource 'DynatraceSingleSignOnResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DynatraceSingleSignOnResources"
+          ],
+          "x-ms-examples": {
+            "SingleSignOn_CreateOrUpdate_MaximumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_CreateOrUpdate_MaximumSet_Gen.json"
+            },
+            "SingleSignOn_CreateOrUpdate_MinimumSet_Gen": {
+              "$ref": "./examples/SingleSignOn_CreateOrUpdate_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/DynatraceSingleSignOnResource",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/tagRules": {
+        "get": {
+          "description": "List all TagRule by monitorName",
+          "operationId": "TagRules_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TagRuleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TagRules"
+          ],
+          "x-ms-examples": {
+            "TagRules_List_MaximumSet_Gen": {
+              "$ref": "./examples/TagRules_List_MaximumSet_Gen.json"
+            },
+            "TagRules_List_MinimumSet_Gen": {
+              "$ref": "./examples/TagRules_List_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/tagRules/{ruleSetName}": {
+        "delete": {
+          "description": "Delete a TagRule",
+          "operationId": "TagRules_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "ruleSetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TagRules"
+          ],
+          "x-ms-examples": {
+            "TagRules_Delete_MaximumSet_Gen": {
+              "$ref": "./examples/TagRules_Delete_MaximumSet_Gen.json"
+            },
+            "TagRules_Delete_MinimumSet_Gen": {
+              "$ref": "./examples/TagRules_Delete_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Get a TagRule",
+          "operationId": "TagRules_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "ruleSetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TagRule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TagRules"
+          ],
+          "x-ms-examples": {
+            "TagRules_Get_MaximumSet_Gen": {
+              "$ref": "./examples/TagRules_Get_MaximumSet_Gen.json"
+            },
+            "TagRules_Get_MinimumSet_Gen": {
+              "$ref": "./examples/TagRules_Get_MinimumSet_Gen.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a TagRule",
+          "operationId": "TagRules_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "ruleSetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagRule"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TagRule"
+                  }
+                }
+              },
+              "description": "Resource 'TagRule' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TagRule"
+                  }
+                }
+              },
+              "description": "Resource 'TagRule' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TagRules"
+          ],
+          "x-ms-examples": {
+            "TagRules_CreateOrUpdate_MaximumSet_Gen": {
+              "$ref": "./examples/TagRules_CreateOrUpdate_MaximumSet_Gen.json"
+            },
+            "TagRules_CreateOrUpdate_MinimumSet_Gen": {
+              "$ref": "./examples/TagRules_CreateOrUpdate_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/TagRule",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Dynatrace.Observability/monitors/{monitorName}/upgradePlan": {
+        "post": {
+          "description": "Upgrades the billing Plan for Dynatrace monitor resource.",
+          "operationId": "Monitors_UpgradePlan",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Monitor resource name",
+              "in": "path",
+              "name": "monitorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradePlanRequest"
+                }
+              }
+            },
+            "description": "The details of the upgrade plan request.",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "MonitorResources"
+          ],
+          "x-ms-examples": {
+            "Monitors_UpgradePlan_MaximumSet_Gen": {
+              "$ref": "./examples/Monitors_UpgradePlan_MaximumSet_Gen.json"
+            },
+            "Monitors_UpgradePlan_MinimumSet_Gen": {
+              "$ref": "./examples/Monitors_UpgradePlan_MinimumSet_Gen.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "MonitorResources"
+      },
+      {
+        "name": "MonitoredSubscriptions"
+      },
+      {
+        "name": "TagRules"
+      },
+      {
+        "name": "DynatraceSingleSignOnResources"
+      }
+    ]
+  }
+}

@@ -1,0 +1,976 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_help",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "Client Api Version.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "client"
+        },
+        "DiagnosticsResourceNameParameter": {
+          "description": "Unique resource name for insight resources",
+          "in": "path",
+          "name": "diagnosticsResourceName",
+          "required": true,
+          "schema": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9-+@()_]+$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "FilterParameter": {
+          "description": "Can be used to filter solutionIds by 'ProblemClassificationId'. The filter supports only 'and' and 'eq' operators. Example: $filter=ProblemClassificationId eq '1ddda5b4-cf6c-4d4f-91ad-bc38ab0e811e' and ProblemClassificationId eq '0a9673c2-7af6-4e19-90d3-4ee2461076d9'.",
+          "in": "query",
+          "name": "$filter",
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method",
+          "x-ms-skip-url-encoding": true
+        },
+        "ScopeParameter": {
+          "description": "This is an extension resource provider and only resource level extension is supported at the moment.",
+          "in": "path",
+          "name": "scope",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method",
+          "x-ms-skip-url-encoding": true
+        },
+        "SkipTokenParameter": {
+          "description": "Skiptoken is only used if a previous operation returned a partial result. If a previous response contains a nextLink element, the value of the nextLink element will include a skiptoken parameter that specifies a starting point to use for subsequent calls.",
+          "in": "query",
+          "name": "$skiptoken",
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "CheckNameAvailabilityRequest": {
+          "description": "The check availability request body.",
+          "properties": {
+            "name": {
+              "description": "The name of the resource for which availability needs to be checked.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The resource type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityResponse": {
+          "description": "Response for whether the requested resource name is available or not.",
+          "properties": {
+            "message": {
+              "description": "Gets an error message explaining the 'reason' value with more details. This field is returned iif nameAvailable is false.",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Returns true or false depending on the availability of the name",
+              "type": "boolean"
+            },
+            "reason": {
+              "description": "Reason for why value is not available. This field is returned if nameAvailable is false.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Diagnostic": {
+          "description": "Properties returned with in an insight.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "insights": {
+              "description": "The problems (if any) detected by this insight.",
+              "items": {
+                "$ref": "#/components/schemas/Insight"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "solutionId": {
+              "description": "Solution Id",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/DiagnosticStatus"
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticInvocation": {
+          "description": "Solution Invocation with additional params needed for invocation.",
+          "properties": {
+            "additionalParameters": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Additional parameters required to invoke the solutionId.",
+              "type": "object"
+            },
+            "solutionId": {
+              "description": "Solution Id to invoke.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Diagnostic resource",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DiagnosticResourceProperties"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "DiagnosticResourceProperties": {
+          "description": "Diagnostic resource properties.",
+          "properties": {
+            "acceptedAt": {
+              "description": "Diagnostic Request Accepted time.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "diagnostics": {
+              "description": "Array of Diagnostics.",
+              "items": {
+                "$ref": "#/components/schemas/Diagnostic"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "solutionId"
+              ]
+            },
+            "globalParameters": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Global parameters that can be passed to all solutionIds.",
+              "type": "object"
+            },
+            "insights": {
+              "description": "SolutionIds that are needed to be invoked.",
+              "items": {
+                "$ref": "#/components/schemas/DiagnosticInvocation"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "solutionId"
+              ]
+            },
+            "provisioningState": {
+              "description": "Status of diagnostic provisioning.",
+              "enum": [
+                "Succeeded",
+                "PartialComplete",
+                "Failed",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "provisioningState",
+                "values": [
+                  {
+                    "description": "All Diagnostics in the Batch succeeded.",
+                    "value": "Succeeded"
+                  },
+                  {
+                    "description": "Some Diagnostics are still running or failed.",
+                    "value": "PartialComplete"
+                  },
+                  {
+                    "description": "All Diagnostics failed to run.",
+                    "value": "Failed"
+                  },
+                  {
+                    "description": "When Diagnostic request gets canceled.",
+                    "value": "Canceled"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticStatus": {
+          "description": "Denotes the status of the diagnostic resource.",
+          "enum": [
+            "Failed",
+            "MissingInputs",
+            "Running",
+            "Succeeded",
+            "Timeout"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Status",
+            "values": [
+              {
+                "description": "Diagnostic creation failed.",
+                "value": "Failed"
+              },
+              {
+                "description": "Request is missing required inputs to run.",
+                "value": "MissingInputs"
+              },
+              {
+                "description": "Diagnostic is still running.",
+                "value": "Running"
+              },
+              {
+                "description": "Diagnostic creation succeeded.",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Diagnostic was timed out.",
+                "value": "Timeout"
+              }
+            ]
+          }
+        },
+        "DiscoveryResponse": {
+          "description": "Discovery response.",
+          "properties": {
+            "nextLink": {
+              "description": "The link used to get the next page of solution metadata.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of solution metadata.",
+              "items": {
+                "$ref": "#/components/schemas/SolutionMetadataResource"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "Error": {
+          "description": "Error definition.",
+          "properties": {
+            "code": {
+              "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "An array of additional nested error response info objects, as described by this contract.",
+              "items": {
+                "$ref": "#/components/schemas/Error"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "type",
+                "message"
+              ]
+            },
+            "message": {
+              "description": "Description of the error.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "Service specific error type which serves as additional context for the error herein.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "Insight": {
+          "description": "Detailed insights(s) obtained via the invocation of an insight diagnostic troubleshooter.",
+          "properties": {
+            "id": {
+              "description": "Article id.",
+              "type": "string"
+            },
+            "importanceLevel": {
+              "description": "Importance level of the insight.",
+              "enum": [
+                "Critical",
+                "Warning",
+                "Information"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "importanceLevel",
+                "values": [
+                  {
+                    "description": "A critical insight has been found after running the diagnostic.",
+                    "value": "Critical"
+                  },
+                  {
+                    "description": "A warning insight has been found after running the diagnostic.",
+                    "value": "Warning"
+                  },
+                  {
+                    "description": "An information insight has been found after running the diagnostic.",
+                    "value": "Information"
+                  }
+                ]
+              }
+            },
+            "results": {
+              "description": "Detailed result content.",
+              "type": "string"
+            },
+            "title": {
+              "description": "This insight's title.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SolutionMetadataProperties": {
+          "description": "Diagnostic solution metadata.",
+          "properties": {
+            "description": {
+              "description": "A detailed description of solution.",
+              "type": "string"
+            },
+            "requiredParameterSets": {
+              "description": "Required parameters for invoking this particular solution.",
+              "items": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "x-ms-identifiers": []
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "solutionId": {
+              "description": "Solution Id.",
+              "type": "string"
+            },
+            "solutionType": {
+              "description": "Solution Type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SolutionMetadataResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Solution Metadata resource",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SolutionMetadataProperties"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Help RP provider",
+      "title": "HelpRP",
+      "version": "2023-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Help/operations": {
+        "get": {
+          "description": "Returns list of operations.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Operation details."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "operations"
+          ],
+          "x-ms-examples": {
+            "List All Operations": {
+              "$ref": "./examples/ListOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Help/checkNameAvailability": {
+        "post": {
+          "description": "This API is used to check the uniqueness of a resource name used for a diagnostic check.",
+          "operationId": "Diagnostics_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ScopeParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+                }
+              }
+            },
+            "description": "The required parameters for availability check.",
+            "x-originalParamName": "CheckNameAvailabilityRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "Response for the availability of the requested resource name."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "diagnostics"
+          ],
+          "x-ms-examples": {
+            "Example when name is available for a Diagnostic resource": {
+              "$ref": "./examples/CheckNameAvailabilityForDiagnosticWhenNameIsAvailable.json"
+            },
+            "Example when name is not available for a Diagnostic resource": {
+              "$ref": "./examples/CheckNameAvailabilityForDiagnosticWhenNameIsNotAvailable.json"
+            }
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Help/diagnostics/{diagnosticsResourceName}": {
+        "get": {
+          "description": "Get the diagnostics using the 'diagnosticsResourceName' you chose while creating the diagnostic.",
+          "operationId": "Diagnostics_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ScopeParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticsResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticResource"
+                  }
+                }
+              },
+              "description": "Successful fetched insight diagnostic (may contain errors)."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "diagnostics"
+          ],
+          "x-ms-examples": {
+            "Gets a Diagnostic for a KeyVault resource": {
+              "$ref": "./examples/GetDiagnosticForKeyVaultResource.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Diagnostics tells you precisely the root cause of the issue and how to address it. You can get diagnostics once you discover and identify the relevant solution for your Azure issue.\u003cbr/\u003e\u003cbr/\u003e You can create diagnostics using the ‘solutionId’  from Solution Discovery API response and ‘additionalParameters’ \u003cbr/\u003e\u003cbr/\u003e \u003cb\u003eNote: \u003c/b\u003e‘requiredParameterSets’ from Solutions Discovery API response must be passed via ‘additionalParameters’ as an input to Diagnostics API",
+          "operationId": "Diagnostics_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ScopeParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticsResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticResource"
+                }
+              }
+            },
+            "description": "The required request body for this insightResource invocation.",
+            "x-originalParamName": "diagnosticResourceRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticResource"
+                  }
+                }
+              },
+              "description": "Update diagnostics successfully (may contain errors)."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticResource"
+                  }
+                }
+              },
+              "description": "Create diagnostics successfully (may contain errors)."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "diagnostics"
+          ],
+          "x-ms-examples": {
+            "Creates a Diagnostic for a KeyVault resource": {
+              "$ref": "./examples/CreateDiagnosticForKeyVaultResource.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Help/discoverySolutions": {
+        "get": {
+          "description": "Solutions Discovery is the initial point of entry within Help API, which helps you identify the relevant solutions for your Azure issue.\u003cbr/\u003e\u003cbr/\u003e You can discover solutions using resourceUri OR resourceUri + problemClassificationId.\u003cbr/\u003e\u003cbr/\u003eWe will do our best in returning relevant diagnostics for your Azure issue.\u003cbr/\u003e\u003cbr/\u003e Get the problemClassificationId(s) using this [reference](https://learn.microsoft.com/rest/api/support/problem-classifications/list?tabs=HTTP).\u003cbr/\u003e\u003cbr/\u003e \u003cb\u003eNote: \u003c/b\u003e ‘requiredParameterSets’ from Solutions Discovery API response must be passed via ‘additionalParameters’ as an input to Diagnostics API.",
+          "operationId": "DiscoverySolution_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ScopeParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/FilterParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipTokenParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiscoveryResponse"
+                  }
+                }
+              },
+              "description": "Successful fetched list of solution metadata."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "discoverySolutions"
+          ],
+          "x-ms-examples": {
+            "List DiscoverySolutions for a KeyVault resource": {
+              "$ref": "./examples/ListDiscoverySolutionsForKeyVaultResource.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

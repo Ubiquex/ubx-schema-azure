@@ -1,0 +1,1073 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_monitor_scheduledqueryrule_api",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "RuleNameParameter": {
+          "description": "The name of the rule.",
+          "in": "path",
+          "name": "ruleName",
+          "required": true,
+          "schema": {
+            "pattern": "^[^#\u003c\u003e%\u0026:\\?/{}*]{1,260}$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Actions": {
+          "description": "Actions to invoke when the alert fires.",
+          "properties": {
+            "actionGroups": {
+              "description": "Action Group resource Ids to invoke when the alert fires.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "actionProperties": {
+              "additionalProperties": {
+                "description": "The dictionary of action properties to include with the post operation. This data customizes the actions.",
+                "type": "string"
+              },
+              "description": "The properties of an action properties.",
+              "type": "object"
+            },
+            "customProperties": {
+              "additionalProperties": {
+                "description": "The dictionary of custom properties to include with the post operation. These data are appended to the alert payload.",
+                "type": "string"
+              },
+              "description": "The properties of an alert payload.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "Condition": {
+          "description": "A condition of the scheduled query rule.",
+          "properties": {
+            "alertSensitivity": {
+              "description": "The extent of deviation required to trigger an alert. Allowed values are 'Low', 'Medium' and 'High'. This will affect how tight the threshold is to the metric series pattern. Relevant only for dynamic threshold rules of the kind LogAlert.",
+              "type": "string"
+            },
+            "criterionType": {
+              "description": "Specifies the type of threshold criteria",
+              "enum": [
+                "StaticThresholdCriterion",
+                "DynamicThresholdCriterion"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "criterionType"
+              }
+            },
+            "dimensions": {
+              "description": "List of Dimensions conditions. Relevant only for rules of the kind LogAlert and LogToMetric.",
+              "items": {
+                "$ref": "#/components/schemas/Dimension"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "failingPeriods": {
+              "description": "The minimum number of violations required within the selected lookback time window required to raise an alert. Relevant only for rules of the kind LogAlert.",
+              "properties": {
+                "minFailingPeriodsToAlert": {
+                  "default": 1,
+                  "description": "The number of violations to trigger an alert. Should be smaller or equal to numberOfEvaluationPeriods. Default value is 1",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "numberOfEvaluationPeriods": {
+                  "default": 1,
+                  "description": "The number of aggregated lookback points. The lookback time window is calculated based on the aggregation granularity (windowSize) and the selected number of aggregated points. Default value is 1",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "ignoreDataBefore": {
+              "description": "Use this option to set the date from which to start learning the metric historical data and calculate the dynamic thresholds (in ISO8601 format). Relevant only for dynamic threshold rules of the kind LogAlert.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "metricMeasureColumn": {
+              "description": "The column containing the metric measure number. Relevant only for rules of the kind LogAlert.",
+              "type": "string"
+            },
+            "metricName": {
+              "description": "The name of the metric to be sent. Relevant and required only for rules of the kind LogToMetric.",
+              "type": "string"
+            },
+            "minRecurrenceCount": {
+              "description": "The minimum results count that should be found for triggering an alert. Relevant only for rules of the kind SimpleLogAlert.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "operator": {
+              "description": "The criteria operator. Relevant and required only for rules of the kind LogAlert.",
+              "enum": [
+                "Equals",
+                "GreaterThan",
+                "GreaterThanOrEqual",
+                "LessThan",
+                "LessThanOrEqual",
+                "GreaterOrLessThan"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "conditionOperator"
+              }
+            },
+            "query": {
+              "description": "Log query alert",
+              "type": "string"
+            },
+            "resourceIdColumn": {
+              "description": "The column containing the resource id. The content of the column must be a uri formatted as resource id. Relevant only for rules of the kind LogAlert.",
+              "type": "string"
+            },
+            "threshold": {
+              "description": "the criteria threshold value that activates the alert. Relevant and required only for static threshold rules of the kind LogAlert.",
+              "format": "double",
+              "type": "number"
+            },
+            "timeAggregation": {
+              "description": "Aggregation type. Relevant and required only for rules of the kind LogAlert.",
+              "enum": [
+                "Count",
+                "Average",
+                "Minimum",
+                "Maximum",
+                "Total"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "timeAggregation"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "Dimension": {
+          "description": "Dimension splitting and filtering definition",
+          "properties": {
+            "name": {
+              "description": "Name of the dimension",
+              "type": "string"
+            },
+            "operator": {
+              "description": "Operator for dimension values",
+              "enum": [
+                "Include",
+                "Exclude"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "dimensionOperator"
+              }
+            },
+            "values": {
+              "description": "List of dimension values",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "name",
+            "operator",
+            "values"
+          ],
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorContract": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorResponse_2"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "ErrorResponse_2": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "Identity": {
+          "description": "Identity for the resource.",
+          "properties": {
+            "principalId": {
+              "description": "The principal ID of resource identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of managed service identity.",
+              "enum": [
+                "SystemAssigned",
+                "UserAssigned",
+                "None"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "IdentityType"
+              }
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserIdentityProperties"
+              },
+              "description": "The list of user identities associated with the resource. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "RuleResolveConfiguration": {
+          "description": "TBD. Relevant only for rules of the kind LogAlert.",
+          "properties": {
+            "autoResolved": {
+              "description": "The flag that indicates whether or not to auto resolve a fired alert.",
+              "type": "boolean"
+            },
+            "timeToResolve": {
+              "description": "The duration a rule must evaluate as healthy before the fired alert is automatically resolved represented in ISO 8601 duration format.",
+              "format": "duration",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduledQueryRuleCriteria": {
+          "description": "The rule criteria that defines the conditions of the scheduled query rule.",
+          "properties": {
+            "allOf": {
+              "description": "A list of conditions to evaluate against the specified scopes",
+              "items": {
+                "$ref": "#/components/schemas/Condition"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ScheduledQueryRuleProperties": {
+          "description": "scheduled query rule Definition",
+          "properties": {
+            "actions": {
+              "$ref": "#/components/schemas/Actions"
+            },
+            "autoMitigate": {
+              "description": "The flag that indicates whether the alert should be automatically resolved or not. The default is true. Relevant only for rules of kinds LogAlert and SimpleLogAlert.",
+              "type": "boolean"
+            },
+            "checkWorkspaceAlertsStorageConfigured": {
+              "description": "The flag which indicates whether this scheduled query rule should be stored in the customer's storage. The default is false. Relevant only for rules of the kind LogAlert.",
+              "type": "boolean"
+            },
+            "createdWithApiVersion": {
+              "description": "The api-version used when creating this alert rule",
+              "readOnly": true,
+              "type": "string"
+            },
+            "criteria": {
+              "$ref": "#/components/schemas/ScheduledQueryRuleCriteria"
+            },
+            "description": {
+              "description": "The description of the scheduled query rule.",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "The display name of the alert rule",
+              "type": "string"
+            },
+            "enabled": {
+              "description": "The flag which indicates whether this scheduled query rule is enabled. Value should be true or false",
+              "type": "boolean"
+            },
+            "evaluationFrequency": {
+              "description": "How often the scheduled query rule is evaluated represented in ISO 8601 duration format. Relevant and required only for rules of the kind LogAlert.",
+              "format": "duration",
+              "type": "string"
+            },
+            "isLegacyLogAnalyticsRule": {
+              "description": "True if alert rule is legacy Log Analytic rule",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "isWorkspaceAlertsStorageConfigured": {
+              "description": "The flag which indicates whether this scheduled query rule has been configured to be stored in the customer's storage. The default is false.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "muteActionsDuration": {
+              "description": "Mute actions for the chosen period of time (in ISO 8601 duration format) after the alert is fired. Relevant only for rules of the kind LogAlert.",
+              "format": "duration",
+              "type": "string"
+            },
+            "overrideQueryTimeRange": {
+              "description": "If specified then overrides the query time range (default is WindowSize*NumberOfEvaluationPeriods). Relevant only for rules of the kind LogAlert.",
+              "format": "duration",
+              "type": "string"
+            },
+            "resolveConfiguration": {
+              "$ref": "#/components/schemas/RuleResolveConfiguration"
+            },
+            "scopes": {
+              "description": "The list of resource id's that this scheduled query rule is scoped to.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "severity": {
+              "description": "Severity of the alert. Should be an integer between [0-4]. Value of 0 is severest. Relevant and required only for rules of the kind LogAlert.",
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "format": "int64",
+              "type": "integer",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "AlertSeverity"
+              }
+            },
+            "skipQueryValidation": {
+              "description": "The flag which indicates whether the provided query should be validated or not. The default is false. Relevant only for rules of the kind LogAlert.",
+              "type": "boolean"
+            },
+            "targetResourceTypes": {
+              "description": "List of resource type of the target resource(s) on which the alert is created/updated. For example if the scope is a resource group and targetResourceTypes is Microsoft.Compute/virtualMachines, then a different alert will be fired for each virtual machine in the resource group which meet the alert criteria. Relevant only for rules of the kind LogAlert",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "windowSize": {
+              "description": "The period of time (in ISO 8601 duration format) on which the Alert query will be executed (bin size). Relevant and required only for rules of the kind LogAlert.",
+              "format": "duration",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduledQueryRuleResource": {
+          "description": "The scheduled query rule resource.",
+          "properties": {
+            "etag": {
+              "description": "The etag field is *not* required. If it is provided in the response body, it must also be provided as a header per the normal etag convention.  Entity tags are used for comparing two or more entities from the same requested resource. HTTP/1.1 uses entity tags in the etag (section 14.19), If-Match (section 14.24), If-None-Match (section 14.26), and If-Range (section 14.27) header fields. ",
+              "readOnly": true,
+              "type": "string"
+            },
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "kind": {
+              "description": "Indicates the type of scheduled query rule. The default is LogAlert.",
+              "enum": [
+                "LogAlert",
+                "SimpleLogAlert",
+                "LogToMetric"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Kind"
+              }
+            },
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ScheduledQueryRuleProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "properties",
+            "location"
+          ],
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ScheduledQueryRuleResourceCollection": {
+          "description": "Represents a collection of scheduled query rule resources.",
+          "properties": {
+            "nextLink": {
+              "description": "Provides the link to retrieve the next set of elements.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The values for the scheduled query rule resources.",
+              "items": {
+                "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduledQueryRuleResourcePatch": {
+          "description": "The scheduled query rule resource for patch operations.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ScheduledQueryRuleProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "UserIdentityProperties": {
+          "description": "User assigned identity properties.",
+          "properties": {
+            "clientId": {
+              "description": "The client id of user assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal id of user assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Monitor client to create/update/delete Scheduled Query Rules.",
+      "title": "Scheduled Query Rules API",
+      "version": "2026-03-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Insights/scheduledQueryRules": {
+        "get": {
+          "description": "Retrieve a scheduled query rule definitions in a subscription.",
+          "operationId": "ScheduledQueryRules_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResourceCollection"
+                  }
+                }
+              },
+              "description": "Successful request for a list of scheduled query rules"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "BadRequest"
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "List scheduled query rules by subscription": {
+              "$ref": "./examples/listScheduledQueryRulesBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/scheduledQueryRules": {
+        "get": {
+          "description": "Retrieve scheduled query rule definitions in a resource group.",
+          "operationId": "ScheduledQueryRules_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResourceCollection"
+                  }
+                }
+              },
+              "description": "Successful request for a list of scheduled query rules"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "BadRequest"
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "List scheduled query rules by resource group": {
+              "$ref": "./examples/listScheduledQueryRulesByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Insights/scheduledQueryRules/{ruleName}": {
+        "delete": {
+          "description": "Deletes a scheduled query rule.",
+          "operationId": "ScheduledQueryRules_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/RuleNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful request to delete a scheduled query rule"
+            },
+            "204": {
+              "description": "No content: the request was successful, but the response is empty"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "Delete a scheduled query rule": {
+              "$ref": "./examples/deleteScheduledQueryRule.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Retrieve an scheduled query rule definition.",
+          "operationId": "ScheduledQueryRules_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/RuleNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+                  }
+                }
+              },
+              "description": "Successful request to get a scheduled query rule"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "BadRequest"
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "Get a scheduled query rule for single resource": {
+              "$ref": "./examples/getScheduledQueryRule.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update a scheduled query rule.",
+          "operationId": "ScheduledQueryRules_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/RuleNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledQueryRuleResourcePatch"
+                }
+              }
+            },
+            "description": "The parameters of the rule to update.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+                  }
+                }
+              },
+              "description": "Successful request to update a scheduled query rule"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "Create or update a scheduled query rule": {
+              "$ref": "./examples/patchScheduledQueryRule.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a scheduled query rule.",
+          "operationId": "ScheduledQueryRules_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/RuleNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+                }
+              }
+            },
+            "description": "The parameters of the rule to create or update.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+                  }
+                }
+              },
+              "description": "Successful request to update a scheduled query rule"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduledQueryRuleResource"
+                  }
+                }
+              },
+              "description": "Created a scheduled query rule"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorContract"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ScheduledQueryRules"
+          ],
+          "x-ms-examples": {
+            "Create or update a scheduled query rule for Single Resource": {
+              "$ref": "./examples/createOrUpdateScheduledQueryRule.json"
+            },
+            "Create or update a scheduled query rule on Resource group(s)": {
+              "$ref": "./examples/createOrUpdateScheduledQueryRuleResourceGroup.json"
+            },
+            "Create or update a scheduled query rule on Subscription ": {
+              "$ref": "./examples/createOrUpdateScheduledQueryRuleSubscription.json"
+            },
+            "Create or update a simple log alert scheduled query rule on Subscription ": {
+              "$ref": "./examples/createOrUpdateSimpleLogAlertScheduledQueryRule.json"
+            },
+            "create or update dynamic threshold scheduled query rule on Subscription ": {
+              "$ref": "./examples/createOrUpdateDynamicThresholdScheduledQueryRule.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

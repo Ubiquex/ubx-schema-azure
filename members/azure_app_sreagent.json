@@ -1,0 +1,3446 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_app_sreagent",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "LocationParameter": {
+          "description": "The name of the Azure region.",
+          "in": "path",
+          "minLength": 1,
+          "name": "location",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ActionConfiguration": {
+          "description": "Configuration for action",
+          "properties": {
+            "accessLevel": {
+              "$ref": "#/components/schemas/AgentAccessLevel"
+            },
+            "identity": {
+              "description": "The identity used by the action",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "mode": {
+              "$ref": "#/components/schemas/AgentMode"
+            }
+          },
+          "type": "object"
+        },
+        "Agent": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Site Reliability Engineer (SRE) Agent resource",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AgentProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AgentAccessLevel": {
+          "description": "Agent access level",
+          "enum": [
+            "Low",
+            "High"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AgentAccessLevel",
+            "values": [
+              {
+                "description": "Agent has read-only permissions on managed resource groups",
+                "name": "Low",
+                "value": "Low"
+              },
+              {
+                "description": "Agent can take approved actions on resources using its own managed identity",
+                "name": "High",
+                "value": "High"
+              }
+            ]
+          }
+        },
+        "AgentConnector": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Agent Connector used to connect to data sources",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AgentConnectorProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AgentConnectorCollection": {
+          "description": "Collection of Agent Connectors",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AgentConnector items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AgentConnector"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentConnectorListResult": {
+          "description": "The response of a AgentConnector list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AgentConnector items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AgentConnector"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentConnectorProperties": {
+          "description": "Agent Connector Properties",
+          "properties": {
+            "dataConnectorType": {
+              "description": "The type of the data connector",
+              "type": "string"
+            },
+            "dataSource": {
+              "description": "Data source connection string or endpoint",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "deploymentError": {
+              "description": "Deployment error message if provisioning failed",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "Endpoint of the connector",
+              "format": "uri",
+              "type": "string"
+            },
+            "extendedProperties": {
+              "additionalProperties": {},
+              "description": "Additional properties for the data connector which can be used to store custom key-value pairs",
+              "type": "object"
+            },
+            "identity": {
+              "description": "Identity used to access the data source",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ConnectorProvisioningState"
+            },
+            "source": {
+              "description": "Source of the data connector - \"Agent\" when directly stored in agent, \"AgentSpace\" when inherited",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AgentIdentity": {
+          "description": "Agent identity configuration",
+          "properties": {
+            "clientId": {
+              "description": "Client ID (GUID) for the agent identity",
+              "readOnly": true,
+              "type": "string"
+            },
+            "enabled": {
+              "description": "Indicates whether the agent identity is enabled",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "initialSponsorGroupId": {
+              "description": "Initial sponsor group ID (required for agent identity)",
+              "type": "string"
+            }
+          },
+          "required": [
+            "initialSponsorGroupId"
+          ],
+          "type": "object"
+        },
+        "AgentIdentityPatch": {
+          "description": "Agent identity configuration for PATCH requests",
+          "properties": {
+            "initialSponsorGroupId": {
+              "description": "Initial sponsor group ID (required for PUT but optional for PATCH)",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AgentListResult": {
+          "description": "The response of a Agent list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Agent items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Agent"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentMode": {
+          "description": "Agent mode",
+          "enum": [
+            "Autonomous",
+            "Review",
+            "ReadOnly"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AgentMode",
+            "values": [
+              {
+                "description": "Write actions are executed automatically without user approval",
+                "name": "Autonomous",
+                "value": "Autonomous"
+              },
+              {
+                "description": "Write actions require user approval before execution",
+                "name": "Review",
+                "value": "Review"
+              },
+              {
+                "description": "No write actions are executed",
+                "name": "ReadOnly",
+                "value": "ReadOnly"
+              }
+            ]
+          }
+        },
+        "AgentPatch": {
+          "description": "Agent update model",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AgentPatchProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "AgentPatchProperties": {
+          "description": "Agent specific properties for PATCH requests.\n\nPATCH request bodies must not include required properties and should not include read-only properties.",
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/components/schemas/ActionConfiguration"
+            },
+            "agentIdentity": {
+              "$ref": "#/components/schemas/AgentIdentityPatch"
+            },
+            "agentSpaceId": {
+              "description": "The agent space ID referenced by the agent",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.App/agentSpaces"
+                  }
+                ]
+              }
+            },
+            "defaultModel": {
+              "$ref": "#/components/schemas/DefaultModel"
+            },
+            "incidentManagementConfiguration": {
+              "$ref": "#/components/schemas/IncidentManagementConfiguration"
+            },
+            "knowledgeGraphConfiguration": {
+              "$ref": "#/components/schemas/KnowledgeGraphConfiguration"
+            },
+            "logConfiguration": {
+              "$ref": "#/components/schemas/LogConfiguration"
+            },
+            "upgradeChannel": {
+              "$ref": "#/components/schemas/UpgradeChannel"
+            }
+          },
+          "type": "object"
+        },
+        "AgentPowerState": {
+          "description": "Power state of the Agent",
+          "enum": [
+            "Running",
+            "Stopped"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AgentPowerState",
+            "values": [
+              {
+                "description": "The Agent is running",
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "description": "The Agent is stopped",
+                "name": "Stopped",
+                "value": "Stopped"
+              }
+            ]
+          }
+        },
+        "AgentProperties": {
+          "description": "Properties of the Agent",
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/components/schemas/ActionConfiguration"
+            },
+            "agentEndpoint": {
+              "description": "The endpoint of the Agent",
+              "readOnly": true,
+              "type": "string"
+            },
+            "agentIdentity": {
+              "$ref": "#/components/schemas/AgentIdentity"
+            },
+            "agentSpaceId": {
+              "description": "The agent space ID referenced by the agent",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.App/agentSpaces"
+                  }
+                ]
+              }
+            },
+            "defaultModel": {
+              "$ref": "#/components/schemas/DefaultModel"
+            },
+            "incidentManagementConfiguration": {
+              "$ref": "#/components/schemas/IncidentManagementConfiguration"
+            },
+            "knowledgeGraphConfiguration": {
+              "$ref": "#/components/schemas/KnowledgeGraphConfiguration"
+            },
+            "logConfiguration": {
+              "$ref": "#/components/schemas/LogConfiguration"
+            },
+            "powerState": {
+              "$ref": "#/components/schemas/AgentPowerState"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/AgentProvisioningState"
+            },
+            "runningState": {
+              "description": "The running state of the Agent",
+              "readOnly": true,
+              "type": "string"
+            },
+            "upgradeChannel": {
+              "$ref": "#/components/schemas/UpgradeChannel"
+            }
+          },
+          "type": "object"
+        },
+        "AgentProvisioningState": {
+          "description": "Provisioning state of the Agent",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "InProgress",
+            "Deleting"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AgentProvisioningState",
+            "values": [
+              {
+                "description": "The Agent provisioning succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "The Agent provisioning failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "The Agent provisioning was canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "The Agent is being provisioned",
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "description": "The Agent is being deleted",
+                "name": "Deleting",
+                "value": "Deleting"
+              }
+            ]
+          }
+        },
+        "AgentSpace": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "SRE Agent Space resource",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AgentSpaceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpaceComplianceStatus": {
+          "description": "Compliance status of the Agent Space",
+          "properties": {
+            "complianceIssues": {
+              "description": "List of compliance issues found in the Agent Space",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "isCompliant": {
+              "description": "Indicates whether the Agent Space is compliant",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "lastComplianceCheck": {
+              "description": "Timestamp of the last compliance check",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "isCompliant"
+          ],
+          "type": "object"
+        },
+        "AgentSpaceConnector": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Agent Space Connector used to connect to data sources",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AgentSpaceConnectorProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpaceConnectorCollection": {
+          "description": "Collection of Agent Space Connectors",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AgentSpaceConnector items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AgentSpaceConnector"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentSpaceConnectorListResult": {
+          "description": "The response of a AgentSpaceConnector list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AgentSpaceConnector items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AgentSpaceConnector"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentSpaceConnectorProperties": {
+          "description": "Agent Space Connector Properties",
+          "properties": {
+            "dataConnectorType": {
+              "description": "The type of the data connector",
+              "type": "string"
+            },
+            "dataSource": {
+              "description": "Data source connection string or endpoint",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "deploymentError": {
+              "description": "Deployment error message if provisioning failed",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "Endpoint of the connector",
+              "format": "uri",
+              "type": "string"
+            },
+            "extendedProperties": {
+              "additionalProperties": {},
+              "description": "Additional properties for the data connector which can be used to store custom key-value pairs",
+              "type": "object"
+            },
+            "identity": {
+              "description": "Identity used to access the data source",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ConnectorProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpaceListResult": {
+          "description": "The response of a AgentSpace list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AgentSpace items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AgentSpace"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AgentSpacePatch": {
+          "description": "Agent Space update model",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AgentSpacePatchProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpacePatchProperties": {
+          "description": "Agent Space specific properties for PATCH requests.\n\nPATCH request bodies must not include required properties and should not include read-only properties.",
+          "properties": {
+            "description": {
+              "description": "Description of the Agent Space",
+              "type": "string"
+            },
+            "maxAgentCount": {
+              "description": "Maximum number of agents allowed in the Agent Space",
+              "format": "int32",
+              "type": "integer"
+            },
+            "policies": {
+              "$ref": "#/components/schemas/AgentSpacePoliciesPatch"
+            },
+            "serviceTreeId": {
+              "description": "Universal unique ID (UUID) of the Service Tree associated with this Agent Space",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpacePolicies": {
+          "description": "Policy configurations for an Agent Space",
+          "properties": {
+            "genevaActionsConfiguration": {
+              "$ref": "#/components/schemas/GenevaActionsPolicy"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpacePoliciesPatch": {
+          "description": "Policy configurations for an Agent Space (PATCH request model)",
+          "properties": {
+            "genevaActionsConfiguration": {
+              "$ref": "#/components/schemas/GenevaActionsPolicyPatch"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpaceProperties": {
+          "description": "Agent Space specific properties",
+          "properties": {
+            "complianceStatus": {
+              "$ref": "#/components/schemas/AgentSpaceComplianceStatus"
+            },
+            "currentAgentCount": {
+              "description": "Current number of agents in the Agent Space",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "description": {
+              "description": "Description of the Agent Space",
+              "type": "string"
+            },
+            "lastPolicyPropagation": {
+              "description": "Timestamp of the last policy propagation to agents in this Agent Space",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "maxAgentCount": {
+              "description": "Maximum number of agents allowed in the Agent Space",
+              "format": "int32",
+              "type": "integer"
+            },
+            "memberAgents": {
+              "description": "List of agents referencing the Agent Space",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "policies": {
+              "$ref": "#/components/schemas/AgentSpacePolicies"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/AgentSpaceProvisioningState"
+            },
+            "serviceTreeId": {
+              "description": "Universal unique ID (UUID) of the Service Tree associated with this Agent Space",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AgentSpaceProvisioningState": {
+          "description": "Provisioning state of the Agent Space",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "InProgress",
+            "Deleting"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AgentSpaceProvisioningState",
+            "values": [
+              {
+                "description": "The Agent Space provisioning succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "The Agent Space provisioning failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "The Agent Space provisioning was canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "The Agent Space is being provisioned",
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "description": "The Agent Space is being deleted",
+                "name": "Deleting",
+                "value": "Deleting"
+              }
+            ]
+          }
+        },
+        "ApplicationInsightsConfiguration": {
+          "description": "Application Insights Configuration",
+          "properties": {
+            "appId": {
+              "description": "The Application ID for the Application Insights resource",
+              "type": "string"
+            },
+            "connectionString": {
+              "description": "The connection string for the Application Insights resource",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            }
+          },
+          "type": "object"
+        },
+        "Connector": {
+          "description": "Base connector properties shared across Agent and AgentSpace connectors",
+          "properties": {
+            "dataSource": {
+              "description": "Data source connection string or endpoint",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "deploymentError": {
+              "description": "Deployment error message if provisioning failed",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "Endpoint of the connector",
+              "format": "uri",
+              "type": "string"
+            },
+            "extendedProperties": {
+              "additionalProperties": {},
+              "description": "Additional properties for the data connector which can be used to store custom key-value pairs",
+              "type": "object"
+            },
+            "identity": {
+              "description": "Identity used to access the data source",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ConnectorProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "ConnectorProvisioningState": {
+          "description": "Provisioning state of a connector",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "InProgress",
+            "Deleting"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ConnectorProvisioningState",
+            "values": [
+              {
+                "description": "The connector provisioning succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "The connector provisioning failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "The connector provisioning was canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "The connector is being provisioned",
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "description": "The connector is being deleted",
+                "name": "Deleting",
+                "value": "Deleting"
+              }
+            ]
+          }
+        },
+        "DefaultModel": {
+          "description": "Default AI model configuration",
+          "properties": {
+            "name": {
+              "description": "Model name (e.g., gpt-5, claude-opus-4-5, claude-sonnet-4-5)",
+              "type": "string"
+            },
+            "provider": {
+              "description": "AI provider name (e.g., MicrosoftFoundry, Anthropic)",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "GenevaActionAuthenticationMode": {
+          "description": "Geneva Action authentication mode",
+          "enum": [
+            "OAuth",
+            "WS-Trust"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "GenevaActionAuthenticationMode",
+            "values": [
+              {
+                "description": "OAuth authentication mode",
+                "name": "OAuth",
+                "value": "OAuth"
+              },
+              {
+                "description": "WS-Trust authentication mode",
+                "name": "WSTrust",
+                "value": "WS-Trust"
+              }
+            ]
+          }
+        },
+        "GenevaActionConfig": {
+          "description": "Configuration for a Geneva action",
+          "properties": {
+            "actionName": {
+              "description": "Name of the Geneva action",
+              "type": "string"
+            },
+            "actionParameters": {
+              "description": "Parameters for the Geneva action",
+              "items": {
+                "$ref": "#/components/schemas/GenevaActionParameter"
+              },
+              "type": "array"
+            },
+            "approvalRequired": {
+              "description": "Indicates whether approval is required for this action",
+              "type": "boolean"
+            },
+            "extension": {
+              "description": "Extension associated with the action",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "GenevaActionParameter": {
+          "description": "Parameter for a Geneva action",
+          "properties": {
+            "name": {
+              "description": "Name of the parameter",
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of the parameter",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "GenevaActionsPolicy": {
+          "description": "Geneva Actions policy configuration for Agent Space",
+          "properties": {
+            "acisEndpoint": {
+              "description": "ACIS (Azure Container Instance Service) endpoint URL",
+              "format": "uri",
+              "type": "string"
+            },
+            "allowedActions": {
+              "description": "Collection of allowed Geneva actions",
+              "items": {
+                "$ref": "#/components/schemas/GenevaActionConfig"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "actionName",
+                "extension"
+              ]
+            },
+            "authenticationMode": {
+              "$ref": "#/components/schemas/GenevaActionAuthenticationMode"
+            },
+            "certificateSubjectAlternativeName": {
+              "description": "Subject alternative name of the certificate used for authentication",
+              "readOnly": true,
+              "type": "string"
+            },
+            "certificateSubjectName": {
+              "description": "Subject name of the certificate used for authentication",
+              "type": "string"
+            },
+            "clientId": {
+              "description": "Client ID for authentication",
+              "type": "string"
+            },
+            "extensionName": {
+              "description": "Name of the Geneva extension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "extensionName"
+          ],
+          "type": "object"
+        },
+        "GenevaActionsPolicyPatch": {
+          "description": "Geneva Actions policy configuration for Agent Space (PATCH request model)",
+          "properties": {
+            "acisEndpoint": {
+              "description": "ACIS (Azure Container Instance Service) endpoint URL",
+              "format": "uri",
+              "type": "string"
+            },
+            "allowedActions": {
+              "description": "Collection of allowed Geneva actions",
+              "items": {
+                "$ref": "#/components/schemas/GenevaActionConfig"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "actionName",
+                "extension"
+              ]
+            },
+            "authenticationMode": {
+              "$ref": "#/components/schemas/GenevaActionAuthenticationMode"
+            },
+            "certificateSubjectName": {
+              "description": "Subject name of the certificate used for authentication",
+              "type": "string"
+            },
+            "clientId": {
+              "description": "Client ID for authentication",
+              "type": "string"
+            },
+            "extensionName": {
+              "description": "Name of the Geneva extension",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IncidentManagementConfiguration": {
+          "description": "Incident Management Configurations",
+          "properties": {
+            "connectionKey": {
+              "description": "The key for the connection",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "connectionName": {
+              "description": "The name of the connection",
+              "type": "string"
+            },
+            "connectionUrl": {
+              "description": "The URL of the connection",
+              "type": "string"
+            },
+            "oboUser": {
+              "description": "The user for the connection",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of incident management system",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "KnowledgeGraphConfiguration": {
+          "description": "Knowledge graph configuration for agent",
+          "properties": {
+            "identity": {
+              "description": "The identity used to access the knowledge graph",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "managedResources": {
+              "description": "The list of resources managed by agent",
+              "items": {
+                "description": "A type definition that refers the id to an Azure Resource Manager resource.",
+                "format": "arm-id",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "LogConfiguration": {
+          "description": "Log Configurations",
+          "properties": {
+            "applicationInsightsConfiguration": {
+              "$ref": "#/components/schemas/ApplicationInsightsConfiguration"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity",
+                "x-nullable": true
+              },
+              "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceTags": {
+          "description": "Resource tags update model",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "SupportedAgentModel": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Collection of supported AI models",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SupportedAgentModelProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SupportedAgentModelListResult": {
+          "description": "The response of a SupportedAgentModel list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SupportedAgentModel items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SupportedAgentModel"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SupportedAgentModelProperties": {
+          "description": "Supported AI model properties",
+          "properties": {
+            "default": {
+              "description": "Indicates whether this is the default model",
+              "type": "boolean"
+            },
+            "model": {
+              "description": "The model name (e.g., gpt-5.2, claude-sonnet-4-5)",
+              "type": "string"
+            },
+            "modelDisplayName": {
+              "description": "The display name of the model (e.g., GPT-5.2, Claude Sonnet 4.5)",
+              "type": "string"
+            },
+            "multiplier": {
+              "description": "Billing multiplier for the model (e.g., 1x, 2x)",
+              "type": "string"
+            },
+            "provider": {
+              "description": "The provider name (e.g., MicrosoftFoundry, Anthropic)",
+              "type": "string"
+            },
+            "providerDisplayName": {
+              "description": "The display name of the provider (e.g., Microsoft Foundry, Anthropic)",
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider",
+            "model",
+            "default"
+          ],
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UpgradeChannel": {
+          "description": "Upgrade channel for Agent",
+          "enum": [
+            "Preview",
+            "Stable"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UpgradeChannel",
+            "values": [
+              {
+                "description": "Preview upgrade channel",
+                "name": "Preview",
+                "value": "Preview"
+              },
+              {
+                "description": "Stable upgrade channel",
+                "name": "Stable",
+                "value": "Stable"
+              }
+            ]
+          }
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Microsoft.App Resource Provider management API.",
+      "title": "Microsoft.App SreAgent management service",
+      "version": "2026-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.App/agentSpaces": {
+        "get": {
+          "description": "Get all agent spaces for a subscription",
+          "operationId": "AgentSpaces_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_ListBySubscription": {
+              "$ref": "./examples/AgentSpaces_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.App/agents": {
+        "get": {
+          "description": "Get all agents for a subscription",
+          "operationId": "Agents_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_ListBySubscription": {
+              "$ref": "./examples/Agents_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.App/locations/{location}/supportedAgentModels": {
+        "get": {
+          "description": "List SupportedAgentModel resources by SubscriptionLocationResource",
+          "operationId": "SupportedAgentModels_ListByLocation",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SupportedAgentModelListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SupportedAgentModels"
+          ],
+          "x-ms-examples": {
+            "SupportedAgentModels_ListByLocation": {
+              "$ref": "./examples/SupportedAgentModels_ListByLocation.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces": {
+        "get": {
+          "description": "Get all the agent spaces in a resource group",
+          "operationId": "AgentSpaces_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_ListByResourceGroup": {
+              "$ref": "./examples/AgentSpaces_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces/{agentSpaceName}": {
+        "delete": {
+          "description": "Delete an Agent Space",
+          "operationId": "AgentSpaces_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_Delete": {
+              "$ref": "./examples/AgentSpaces_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the properties of an Agent Space",
+          "operationId": "AgentSpaces_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpace"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_Get": {
+              "$ref": "./examples/AgentSpaces_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update Agent Space's properties",
+          "operationId": "AgentSpaces_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSpacePatch"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpace"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_Update": {
+              "$ref": "./examples/AgentSpaces_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates an Agent Space",
+          "operationId": "AgentSpaces_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSpace"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpace"
+                  }
+                }
+              },
+              "description": "Resource 'AgentSpace' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpace"
+                  }
+                }
+              },
+              "description": "Resource 'AgentSpace' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpaces"
+          ],
+          "x-ms-examples": {
+            "AgentSpaces_CreateOrUpdate": {
+              "$ref": "./examples/AgentSpaces_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces/{agentSpaceName}/connectors": {
+        "get": {
+          "description": "Get all the connectors for an Agent Space",
+          "operationId": "AgentSpacesConnectors_ListByAgentSpace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnectorListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_ListByAgentSpace": {
+              "$ref": "./examples/AgentSpacesConnectors_ListByAgentSpace.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces/{agentSpaceName}/connectors/{connectorName}": {
+        "delete": {
+          "description": "Delete an Agent Space Connector",
+          "operationId": "AgentSpacesConnectors_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentSpaceConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_Delete": {
+              "$ref": "./examples/AgentSpacesConnectors_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the properties of an Agent Space Connector",
+          "operationId": "AgentSpacesConnectors_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentSpaceConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnector"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_Get": {
+              "$ref": "./examples/AgentSpacesConnectors_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an Agent Space Connector",
+          "operationId": "AgentSpacesConnectors_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentSpaceConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSpaceConnector"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnector"
+                  }
+                }
+              },
+              "description": "Resource 'AgentSpaceConnector' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnector"
+                  }
+                }
+              },
+              "description": "Resource 'AgentSpaceConnector' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_CreateOrUpdate": {
+              "$ref": "./examples/AgentSpacesConnectors_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces/{agentSpaceName}/connectors/{connectorName}/listSecrets": {
+        "post": {
+          "description": "List secrets for an Agent Space Connector",
+          "operationId": "AgentSpacesConnectors_ListSecrets",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentSpaceConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnector"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_ListSecrets": {
+              "$ref": "./examples/AgentSpacesConnectors_ListSecrets.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agentSpaces/{agentSpaceName}/listConnectorsWithSecrets": {
+        "post": {
+          "description": "List all secrets for AgentSpace Connectors",
+          "operationId": "AgentSpacesConnectors_ListAllSecrets",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the AgentSpace",
+              "in": "path",
+              "name": "agentSpaceName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]*[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentSpaceConnectorCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentSpacesConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentSpacesConnectors_ListAllSecrets": {
+              "$ref": "./examples/AgentSpacesConnectors_ListAllSecrets.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents": {
+        "get": {
+          "description": "Get all the agents in a resource group",
+          "operationId": "Agents_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_ListByResourceGroup": {
+              "$ref": "./examples/Agents_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}": {
+        "delete": {
+          "description": "Delete an Agent",
+          "operationId": "Agents_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_Delete": {
+              "$ref": "./examples/Agents_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the properties of an Agent",
+          "operationId": "Agents_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_Get": {
+              "$ref": "./examples/Agents_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update Agent's properties",
+          "operationId": "Agents_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentPatch"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_Update": {
+              "$ref": "./examples/Agents_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates an Agent",
+          "operationId": "Agents_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Resource 'Agent' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Resource 'Agent' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_CreateOrUpdate": {
+              "$ref": "./examples/Agents_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/connectors": {
+        "get": {
+          "description": "Get all the connectors for an Agent",
+          "operationId": "AgentsConnectors_ListByAgent",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnectorListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_ListByAgent": {
+              "$ref": "./examples/AgentsConnectors_ListByAgent.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/connectors/{connectorName}": {
+        "delete": {
+          "description": "Delete an Agent Connector",
+          "operationId": "AgentsConnectors_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_Delete": {
+              "$ref": "./examples/AgentsConnectors_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the properties of an Agent Connector",
+          "operationId": "AgentsConnectors_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnector"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_Get": {
+              "$ref": "./examples/AgentsConnectors_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an Agent Connector",
+          "operationId": "AgentsConnectors_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentConnector"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnector"
+                  }
+                }
+              },
+              "description": "Resource 'AgentConnector' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnector"
+                  }
+                }
+              },
+              "description": "Resource 'AgentConnector' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_CreateOrUpdate": {
+              "$ref": "./examples/AgentsConnectors_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/connectors/{connectorName}/listSecrets": {
+        "post": {
+          "description": "Get a Data Connector with secrets from an Agent",
+          "operationId": "AgentsConnectors_ListSecrets",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the AgentConnector",
+              "in": "path",
+              "name": "connectorName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnector"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_ListSecrets": {
+              "$ref": "./examples/AgentsConnectors_ListSecrets.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/listConnectorsWithSecrets": {
+        "post": {
+          "description": "List all Data Connectors with secrets from an Agent",
+          "operationId": "AgentsConnectors_ListWithSecretsByAgent",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AgentConnectorCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AgentsConnectors"
+          ],
+          "x-ms-examples": {
+            "AgentsConnectors_ListWithSecretsByAgent": {
+              "$ref": "./examples/AgentsConnectors_ListWithSecretsByAgent.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/start": {
+        "post": {
+          "description": "Start an Agent",
+          "operationId": "Agents_Start",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_Start": {
+              "$ref": "./examples/Agents_Start.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.App/agents/{agentName}/stop": {
+        "post": {
+          "description": "Stop an Agent",
+          "operationId": "Agents_Stop",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Agent",
+              "in": "path",
+              "name": "agentName",
+              "required": true,
+              "schema": {
+                "pattern": "^[A-Za-z]([-A-Za-z0-9]{0,30}[A-Za-z0-9])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Agent"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Agents"
+          ],
+          "x-ms-examples": {
+            "Agents_Stop": {
+              "$ref": "./examples/Agents_Stop.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Agents"
+      },
+      {
+        "name": "AgentsConnectors"
+      },
+      {
+        "name": "AgentSpaces"
+      },
+      {
+        "name": "AgentSpacesConnectors"
+      },
+      {
+        "name": "SupportedAgentModels"
+      }
+    ]
+  }
+}

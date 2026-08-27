@@ -1,0 +1,1577 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_resources_locks",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ManagementLockListResult": {
+          "description": "The list of locks.",
+          "properties": {
+            "nextLink": {
+              "description": "The URL to use for getting the next set of results.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of locks.",
+              "items": {
+                "$ref": "#/components/schemas/ManagementLockObject"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "ManagementLockObject": {
+          "description": "The lock information.",
+          "properties": {
+            "id": {
+              "description": "The resource ID of the lock.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the lock.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ManagementLockProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The resource type of the lock - Microsoft.Authorization/locks.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "x-ms-azure-resource": true
+        },
+        "ManagementLockOwner": {
+          "description": "Lock owner properties.",
+          "properties": {
+            "applicationId": {
+              "description": "The application ID of the lock owner.",
+              "type": "string"
+            }
+          }
+        },
+        "ManagementLockProperties": {
+          "description": "The lock properties.",
+          "properties": {
+            "level": {
+              "description": "The level of the lock. Possible values are: NotSpecified, CanNotDelete, ReadOnly. CanNotDelete means authorized users are able to read and modify the resources, but not delete. ReadOnly means authorized users can only read from a resource, but they can't modify or delete it.",
+              "enum": [
+                "NotSpecified",
+                "CanNotDelete",
+                "ReadOnly"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "LockLevel"
+              }
+            },
+            "notes": {
+              "description": "Notes about the lock. Maximum of 512 characters.",
+              "type": "string"
+            },
+            "owners": {
+              "description": "The owners of the lock.",
+              "items": {
+                "$ref": "#/components/schemas/ManagementLockOwner"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "applicationId"
+              ]
+            }
+          },
+          "required": [
+            "level"
+          ]
+        },
+        "Operation": {
+          "description": "Microsoft.Authorization operation",
+          "properties": {
+            "display": {
+              "description": "The object that represents the operation.",
+              "properties": {
+                "operation": {
+                  "description": "Operation type: Read, write, delete, etc.",
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "Service provider: Microsoft.Authorization",
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "Resource on which the operation is performed: Profile, endpoint, etc.",
+                  "type": "string"
+                }
+              }
+            },
+            "name": {
+              "description": "Operation name: {provider}/{resource}/{operation}",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "Result of the request to list Microsoft.Authorization operations. It contains a list of operations and a URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of Microsoft.Authorization operations.",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure resources can be locked to prevent other users in your organization from deleting or modifying resources.",
+      "title": "ManagementLockClient",
+      "version": "2020-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Authorization/operations": {
+        "get": {
+          "description": "Lists all of the available Microsoft.Authorization REST API operations.",
+          "operationId": "AuthorizationOperations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "List provider operations": {
+              "$ref": "./examples/ListProviderOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/locks": {
+        "get": {
+          "description": "Gets all the management locks for a subscription.",
+          "operationId": "ManagementLocks_ListAtSubscriptionLevel",
+          "parameters": [
+            {
+              "description": "The filter to apply on the operation.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockListResult"
+                  }
+                }
+              },
+              "description": "OK - Returns an array of resource locks."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "List management locks at subscription level": {
+              "$ref": "./examples/ManagementLocks_ListAtSubscriptionLevel.json"
+            }
+          },
+          "x-ms-odata": "#/definitions/ManagementLockObject",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/locks/{lockName}": {
+        "delete": {
+          "description": "To delete management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_DeleteAtSubscriptionLevel",
+          "parameters": [
+            {
+              "description": "The name of lock to delete.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "204": {
+              "description": "NoContent"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Deletes the management lock at the subscription level.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Delete management lock at subscription level": {
+              "$ref": "./examples/ManagementLocks_DeleteAtSubscriptionLevel.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a management lock at the subscription level.",
+          "operationId": "ManagementLocks_GetAtSubscriptionLevel",
+          "parameters": [
+            {
+              "description": "The name of the lock to get.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK - Returns information about the lock."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Get management lock at subscription level": {
+              "$ref": "./examples/ManagementLocks_GetAtSubscriptionLevel.json"
+            }
+          }
+        },
+        "put": {
+          "description": "When you apply a lock at a parent scope, all child resources inherit the same lock. To create management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_CreateOrUpdateAtSubscriptionLevel",
+          "parameters": [
+            {
+              "description": "The name of lock. The lock name can be a maximum of 260 characters. It cannot contain \u003c, \u003e %, \u0026, :, \\, ?, /, or any control characters.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagementLockObject"
+                }
+              }
+            },
+            "description": "The management lock parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK - Returns information about the lock."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "Created - Returns information about the lock."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Creates or updates a management lock at the subscription level.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Create management lock at subscription level": {
+              "$ref": "./examples/ManagementLocks_CreateOrUpdateAtSubscriptionLevel.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Authorization/locks": {
+        "get": {
+          "description": "Gets all the management locks for a resource group.",
+          "operationId": "ManagementLocks_ListAtResourceGroupLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group containing the locks to get.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The filter to apply on the operation.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockListResult"
+                  }
+                }
+              },
+              "description": "OK - Returns an array of resource locks."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "List management groups at resource group level": {
+              "$ref": "./examples/ManagementLocks_ListAtResourceGroupLevel.json"
+            }
+          },
+          "x-ms-odata": "#/definitions/ManagementLockObject",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Authorization/locks/{lockName}": {
+        "delete": {
+          "description": "To delete management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_DeleteAtResourceGroupLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group containing the lock.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock to delete.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "204": {
+              "description": "NoContent"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Deletes a management lock at the resource group level.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Delete management lock at resource group level": {
+              "$ref": "./examples/ManagementLocks_DeleteAtResourceGroupLevel.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a management lock at the resource group level.",
+          "operationId": "ManagementLocks_GetAtResourceGroupLevel",
+          "parameters": [
+            {
+              "description": "The name of the locked resource group.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the lock to get.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK - Returns information about the lock."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Get management lock at resource group level": {
+              "$ref": "./examples/ManagementLocks_GetAtResourceGroupLevel.json"
+            }
+          }
+        },
+        "put": {
+          "description": "When you apply a lock at a parent scope, all child resources inherit the same lock. To create management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_CreateOrUpdateAtResourceGroupLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group to lock.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The lock name. The lock name can be a maximum of 260 characters. It cannot contain \u003c, \u003e %, \u0026, :, \\, ?, /, or any control characters.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagementLockObject"
+                }
+              }
+            },
+            "description": "The management lock parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK - Returns information about the lock."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "Created - Returns information about the lock."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Creates or updates a management lock at the resource group level.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Create management lock at resource group level": {
+              "$ref": "./examples/ManagementLocks_CreateOrUpdateAtResourceGroupLevel.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{parentResourcePath}/{resourceType}/{resourceName}/providers/Microsoft.Authorization/locks": {
+        "get": {
+          "description": "Gets all the management locks for a resource or any level below resource.",
+          "operationId": "ManagementLocks_ListAtResourceLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group containing the locked resource. The name is case insensitive.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The namespace of the resource provider.",
+              "in": "path",
+              "name": "resourceProviderNamespace",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource identity.",
+              "in": "path",
+              "name": "parentResourcePath",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The resource type of the locked resource.",
+              "in": "path",
+              "name": "resourceType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the locked resource.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The filter to apply on the operation.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockListResult"
+                  }
+                }
+              },
+              "description": "OK - Returns an array of resource locks."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "List management locks at resource level": {
+              "$ref": "./examples/ManagementLocks_ListAtResourceLevel.json"
+            }
+          },
+          "x-ms-odata": "#/definitions/ManagementLockObject",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{parentResourcePath}/{resourceType}/{resourceName}/providers/Microsoft.Authorization/locks/{lockName}": {
+        "delete": {
+          "description": "To delete management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_DeleteAtResourceLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group containing the resource with the lock to delete. ",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The resource provider namespace of the resource with the lock to delete.",
+              "in": "path",
+              "name": "resourceProviderNamespace",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource identity.",
+              "in": "path",
+              "name": "parentResourcePath",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The resource type of the resource with the lock to delete.",
+              "in": "path",
+              "name": "resourceType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the resource with the lock to delete.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the lock to delete.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "204": {
+              "description": "NoContent"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Deletes the management lock of a resource or any level below the resource.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Delete management lock at resource level": {
+              "$ref": "./examples/ManagementLocks_DeleteAtResourceLevel.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get the management lock of a resource or any level below resource.",
+          "operationId": "ManagementLocks_GetAtResourceLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group. ",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The namespace of the resource provider.",
+              "in": "path",
+              "name": "resourceProviderNamespace",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "An extra path parameter needed in some services, like SQL Databases.",
+              "in": "path",
+              "name": "parentResourcePath",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The type of the resource.",
+              "in": "path",
+              "name": "resourceType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the resource.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Get management lock at resource level": {
+              "$ref": "./examples/ManagementLocks_GetAtResourceLevel.json"
+            }
+          }
+        },
+        "put": {
+          "description": "When you apply a lock at a parent scope, all child resources inherit the same lock. To create management locks, you must have access to Microsoft.Authorization/* or Microsoft.Authorization/locks/* actions. Of the built-in roles, only Owner and User Access Administrator are granted those actions.",
+          "operationId": "ManagementLocks_CreateOrUpdateAtResourceLevel",
+          "parameters": [
+            {
+              "description": "The name of the resource group containing the resource to lock. ",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The resource provider namespace of the resource to lock.",
+              "in": "path",
+              "name": "resourceProviderNamespace",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource identity.",
+              "in": "path",
+              "name": "parentResourcePath",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The resource type of the resource to lock.",
+              "in": "path",
+              "name": "resourceType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the resource to lock.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock. The lock name can be a maximum of 260 characters. It cannot contain \u003c, \u003e %, \u0026, :, \\, ?, /, or any control characters.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagementLockObject"
+                }
+              }
+            },
+            "description": "Parameters for creating or updating a  management lock.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK - Returns information about the lock."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "Created - Returns information about the lock."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Creates or updates a management lock at the resource level or any level below the resource.",
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Create management lock at resource level": {
+              "$ref": "./examples/ManagementLocks_CreateOrUpdateAtResourceLevel.json"
+            }
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Authorization/locks": {
+        "get": {
+          "description": "Gets all the management locks for a scope.",
+          "operationId": "ManagementLocks_ListByScope",
+          "parameters": [
+            {
+              "description": "The scope for the lock. When providing a scope for the assignment, use '/subscriptions/{subscriptionId}' for subscriptions, '/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}' for resource groups, and '/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{parentResourcePathIfPresent}/{resourceType}/{resourceName}' for resources.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The filter to apply on the operation.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockListResult"
+                  }
+                }
+              },
+              "description": "OK - Returns an array of resource locks."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "List management locks at scope": {
+              "$ref": "./examples/ManagementLocks_ListAtScope.json"
+            }
+          },
+          "x-ms-odata": "#/definitions/ManagementLockObject",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Authorization/locks/{lockName}": {
+        "delete": {
+          "description": "Delete a management lock by scope.",
+          "operationId": "ManagementLocks_DeleteByScope",
+          "parameters": [
+            {
+              "description": "The scope for the lock. ",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "204": {
+              "description": "NoContent"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Delete management lock at scope": {
+              "$ref": "./examples/ManagementLocks_DeleteAtScope.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a management lock by scope.",
+          "operationId": "ManagementLocks_GetByScope",
+          "parameters": [
+            {
+              "description": "The scope for the lock. ",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Get management lock at scope": {
+              "$ref": "./examples/ManagementLocks_GetAtScope.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a management lock by scope.",
+          "operationId": "ManagementLocks_CreateOrUpdateByScope",
+          "parameters": [
+            {
+              "description": "The scope for the lock. When providing a scope for the assignment, use '/subscriptions/{subscriptionId}' for subscriptions, '/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}' for resource groups, and '/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{parentResourcePathIfPresent}/{resourceType}/{resourceName}' for resources.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of lock.",
+              "in": "path",
+              "name": "lockName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagementLockObject"
+                }
+              }
+            },
+            "description": "Create or update management lock parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagementLockObject"
+                  }
+                }
+              },
+              "description": "Created"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ManagementLocks"
+          ],
+          "x-ms-examples": {
+            "Create management lock at scope": {
+              "$ref": "./examples/ManagementLocks_CreateOrUpdateAtScope.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4905 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_communication_openapi",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "CheckNameAvailabilityRequest": {
+          "description": "The check availability request body.",
+          "properties": {
+            "name": {
+              "description": "The name of the resource for which availability needs to be checked.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The resource type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityResponse": {
+          "description": "The check availability result.",
+          "properties": {
+            "message": {
+              "description": "Detailed reason why the given name is available.",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Indicates if the resource name is available.",
+              "type": "boolean"
+            },
+            "reason": {
+              "description": "The reason why the given name is not available.",
+              "enum": [
+                "Invalid",
+                "AlreadyExists"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "CheckNameAvailabilityReason"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "CommunicationServiceKeys": {
+          "description": "A class representing the access keys of a CommunicationService.",
+          "properties": {
+            "primaryConnectionString": {
+              "description": "CommunicationService connection string constructed via the primaryKey",
+              "type": "string"
+            },
+            "primaryKey": {
+              "description": "The primary access key.",
+              "type": "string"
+            },
+            "secondaryConnectionString": {
+              "description": "CommunicationService connection string constructed via the secondaryKey",
+              "type": "string"
+            },
+            "secondaryKey": {
+              "description": "The secondary access key.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CommunicationServiceProperties": {
+          "description": "A class that describes the properties of the CommunicationService.",
+          "properties": {
+            "dataLocation": {
+              "description": "The location where the communication service stores its data at rest.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "disableLocalAuth": {
+              "description": "Disable local authentication for the CommunicationService.",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            },
+            "hostName": {
+              "description": "FQDN of the CommunicationService instance.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "immutableResourceId": {
+              "description": "The immutable resource Id of the communication service.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "linkedDomains": {
+              "$ref": "#/components/schemas/DomainsResourceList"
+            },
+            "notificationHubId": {
+              "description": "Resource ID of an Azure Notification Hub linked to this resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/CommunicationServices_ProvisioningState"
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/PublicNetworkAccess"
+            },
+            "version": {
+              "description": "Version of the CommunicationService resource. Probably you need the same or higher version of client SDKs.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "dataLocation"
+          ],
+          "type": "object"
+        },
+        "CommunicationServiceResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A class representing a CommunicationService resource.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/CommunicationServiceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CommunicationServiceResourceList": {
+          "description": "Object that includes an array of CommunicationServices and a possible link for next set.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The CommunicationServiceResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/CommunicationServiceResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "CommunicationServiceResourceUpdate": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TaggedResource"
+            }
+          ],
+          "description": "A class representing update parameters for CommunicationService resource.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/CommunicationServiceUpdateProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CommunicationServiceUpdateProperties": {
+          "description": "A class that describes the properties that can be updated for CommunicationService resource.",
+          "properties": {
+            "disableLocalAuth": {
+              "description": "Disable local authentication for the CommunicationService.",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "update"
+              ]
+            },
+            "linkedDomains": {
+              "$ref": "#/components/schemas/DomainsResourceList"
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/PublicNetworkAccess"
+            }
+          },
+          "type": "object"
+        },
+        "CommunicationServices_ProvisioningState": {
+          "description": "Provisioning state of the resource.",
+          "enum": [
+            "Unknown",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Running",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Moving"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CommunicationServices_ProvisioningState",
+            "values": [
+              {
+                "description": "Unknown",
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Running",
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Updating",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Moving",
+                "name": "Moving",
+                "value": "Moving"
+              }
+            ]
+          }
+        },
+        "DnsRecord": {
+          "description": "A class that represents a VerificationStatus record.",
+          "properties": {
+            "name": {
+              "description": "Name of the DNS record.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "ttl": {
+              "description": "Represents an expiry time in seconds to represent how long this entry can be cached by the resolver, default = 3600sec.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "type": {
+              "description": "Type of the DNS record. Example: TXT",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Value of the DNS record.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DomainManagement": {
+          "description": "Describes how a Domains resource is being managed.",
+          "enum": [
+            "AzureManaged",
+            "CustomerManaged",
+            "CustomerManagedInExchangeOnline"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DomainManagement",
+            "values": [
+              {
+                "description": "AzureManaged",
+                "name": "AzureManaged",
+                "value": "AzureManaged"
+              },
+              {
+                "description": "CustomerManaged",
+                "name": "CustomerManaged",
+                "value": "CustomerManaged"
+              },
+              {
+                "description": "CustomerManagedInExchangeOnline",
+                "name": "CustomerManagedInExchangeOnline",
+                "value": "CustomerManagedInExchangeOnline"
+              }
+            ]
+          }
+        },
+        "DomainProperties": {
+          "description": "A class that describes the properties of a Domains resource.",
+          "properties": {
+            "dataLocation": {
+              "description": "The location where the Domains resource data is stored at rest.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "domainManagement": {
+              "$ref": "#/components/schemas/DomainManagement"
+            },
+            "fromSenderDomain": {
+              "description": "P2 sender domain that is displayed to the email recipients [RFC 5322].",
+              "readOnly": true,
+              "type": "string"
+            },
+            "mailFromSenderDomain": {
+              "description": "P1 sender domain that is present on the email envelope [RFC 5321].",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/Domains_ProvisioningState"
+            },
+            "userEngagementTracking": {
+              "$ref": "#/components/schemas/UserEngagementTracking"
+            },
+            "verificationRecords": {
+              "$ref": "#/components/schemas/DomainPropertiesVerificationRecords"
+            },
+            "verificationStates": {
+              "$ref": "#/components/schemas/DomainPropertiesVerificationStates"
+            }
+          },
+          "required": [
+            "domainManagement"
+          ],
+          "type": "object"
+        },
+        "DomainPropertiesVerificationRecords": {
+          "description": "List of DnsRecord",
+          "properties": {
+            "DKIM": {
+              "$ref": "#/components/schemas/DnsRecord"
+            },
+            "DKIM2": {
+              "$ref": "#/components/schemas/DnsRecord"
+            },
+            "DMARC": {
+              "$ref": "#/components/schemas/DnsRecord"
+            },
+            "Domain": {
+              "$ref": "#/components/schemas/DnsRecord"
+            },
+            "SPF": {
+              "$ref": "#/components/schemas/DnsRecord"
+            }
+          },
+          "type": "object"
+        },
+        "DomainPropertiesVerificationStates": {
+          "description": "List of VerificationStatusRecord",
+          "properties": {
+            "DKIM": {
+              "$ref": "#/components/schemas/VerificationStatusRecord"
+            },
+            "DKIM2": {
+              "$ref": "#/components/schemas/VerificationStatusRecord"
+            },
+            "DMARC": {
+              "$ref": "#/components/schemas/VerificationStatusRecord"
+            },
+            "Domain": {
+              "$ref": "#/components/schemas/VerificationStatusRecord"
+            },
+            "SPF": {
+              "$ref": "#/components/schemas/VerificationStatusRecord"
+            }
+          },
+          "type": "object"
+        },
+        "DomainResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A class representing a Domains resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DomainProperties"
+            }
+          },
+          "type": "object"
+        },
+        "DomainResourceList": {
+          "description": "Object that includes an array of Domains resource and a possible link for next set.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The DomainResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/DomainResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "DomainsResourceList": {
+          "description": "List of email Domain resource Ids.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "Domains_ProvisioningState": {
+          "description": "Provisioning state of the resource.",
+          "enum": [
+            "Unknown",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Running",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Moving"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Domains_ProvisioningState",
+            "values": [
+              {
+                "description": "Unknown",
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Running",
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Updating",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Moving",
+                "name": "Moving",
+                "value": "Moving"
+              }
+            ]
+          }
+        },
+        "EmailServiceProperties": {
+          "description": "A class that describes the properties of the EmailService.",
+          "properties": {
+            "dataLocation": {
+              "description": "The location where the email service stores its data at rest.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/EmailServices_ProvisioningState"
+            }
+          },
+          "required": [
+            "dataLocation"
+          ],
+          "type": "object"
+        },
+        "EmailServiceResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A class representing an EmailService resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/EmailServiceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "EmailServiceResourceList": {
+          "description": "Object that includes an array of EmailServices and a possible link for next set.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The EmailServiceResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/EmailServiceResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "EmailServiceResourceUpdate": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TaggedResource"
+            }
+          ],
+          "description": "A class representing update parameters for EmailService resource.",
+          "type": "object"
+        },
+        "EmailServices_ProvisioningState": {
+          "description": "Provisioning state of the resource.",
+          "enum": [
+            "Unknown",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Running",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Moving"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "EmailServices_ProvisioningState",
+            "values": [
+              {
+                "description": "Unknown",
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Running",
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Updating",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Moving",
+                "name": "Moving",
+                "value": "Moving"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "KeyType": {
+          "description": "The keyType to regenerate. Must be either 'primary' or 'secondary'(case-insensitive).",
+          "enum": [
+            "Primary",
+            "Secondary"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "KeyType",
+            "values": [
+              {
+                "description": "Primary",
+                "name": "Primary",
+                "value": "Primary"
+              },
+              {
+                "description": "Secondary",
+                "name": "Secondary",
+                "value": "Secondary"
+              }
+            ]
+          }
+        },
+        "LinkNotificationHubParameters": {
+          "description": "Description of an Azure Notification Hub to link to the communication service",
+          "properties": {
+            "connectionString": {
+              "description": "Connection string for the notification hub",
+              "type": "string"
+            },
+            "resourceId": {
+              "description": "The resource ID of the notification hub",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourceId",
+            "connectionString"
+          ],
+          "type": "object"
+        },
+        "LinkedNotificationHub": {
+          "description": "A notification hub that has been linked to the communication service",
+          "properties": {
+            "resourceId": {
+              "description": "The resource ID of the notification hub",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity",
+                "x-nullable": true
+              },
+              "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "NameAvailabilityParameters": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+            }
+          ],
+          "description": "Data POST-ed to the nameAvailability action",
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Provisioning state of the resource. Unknown is the default state for Communication Services.",
+          "enum": [
+            "Unknown",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Running",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Moving"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Unknown",
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Canceled",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Running",
+                "name": "Running",
+                "value": "Running"
+              },
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Updating",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Moving",
+                "name": "Moving",
+                "value": "Moving"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "PublicNetworkAccess": {
+          "description": "Allow, disallow, or let network security perimeter configuration control public network access to the protected resource. Value is optional but if passed in, it must be 'Enabled', 'Disabled' or 'SecuredByPerimeter'.",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "SecuredByPerimeter"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PublicNetworkAccess",
+            "values": [
+              {
+                "description": "Allows public network access to the resource",
+                "value": "Enabled"
+              },
+              {
+                "description": "Disallows public network access to the resource",
+                "value": "Disabled"
+              },
+              {
+                "description": "The network security perimeter configuration rules allow or disallow public network access to the resource. Requires an associated network security perimeter.",
+                "value": "SecuredByPerimeter"
+              }
+            ]
+          }
+        },
+        "RegenerateKeyParameters": {
+          "description": "Parameters describes the request to regenerate access keys",
+          "properties": {
+            "keyType": {
+              "$ref": "#/components/schemas/KeyType"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SenderUsernameProperties": {
+          "description": "A class that describes the properties of a SenderUsername resource.",
+          "properties": {
+            "dataLocation": {
+              "description": "The location where the SenderUsername resource data is stored at rest.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "The display name for the senderUsername.",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "username": {
+              "description": "A sender senderUsername to be used when sending emails.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username"
+          ],
+          "type": "object"
+        },
+        "SenderUsernameResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A class representing a SenderUsername resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SenderUsernameProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SenderUsernameResourceCollection": {
+          "description": "A class representing a Domains SenderUsernames collection.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SenderUsernameResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SenderUsernameResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SmtpUsernameProperties": {
+          "description": "A class that describes the properties of a SmtpUsername resource.",
+          "properties": {
+            "entraApplicationId": {
+              "description": "The application Id for the linked Entra Application.",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant of the linked Entra Application.",
+              "type": "string"
+            },
+            "username": {
+              "description": "The SMTP username. Could be free form or in the email address format.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "entraApplicationId",
+            "tenantId"
+          ],
+          "type": "object"
+        },
+        "SmtpUsernameResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The object describing the smtp username resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SmtpUsernameProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SmtpUsernameResourceCollection": {
+          "description": "Collection of SmtpUsername resources. Response will include a nextLink if response contains more pages.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SmtpUsernameResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SmtpUsernameResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SuppressionListAddressProperties": {
+          "description": "A class that describes the properties of a SuppressionListAddress resource.",
+          "properties": {
+            "dataLocation": {
+              "description": "The location where the SuppressionListAddress data is stored at rest. This value is inherited from the parent Domains resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "email": {
+              "description": "Email address of the recipient.",
+              "type": "string"
+            },
+            "firstName": {
+              "description": "The first name of the email recipient.",
+              "type": "string"
+            },
+            "lastModified": {
+              "description": "The date the address was last updated in a suppression list.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastName": {
+              "description": "The last name of the email recipient.",
+              "type": "string"
+            },
+            "notes": {
+              "description": "An optional property to provide contextual notes or a description for an address.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "email"
+          ],
+          "type": "object"
+        },
+        "SuppressionListAddressResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A object that represents a SuppressionList record.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SuppressionListAddressProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SuppressionListAddressResourceCollection": {
+          "description": "Collection of addresses in a suppression list. Response will include a nextLink if response contains more pages.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SuppressionListAddressResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SuppressionListAddressResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SuppressionListProperties": {
+          "description": "A class that describes the properties of a SuppressionList resource.",
+          "properties": {
+            "createdTimeStamp": {
+              "description": "The date the resource was created.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "dataLocation": {
+              "description": "The location where the SuppressionListAddress data is stored at rest. This value is inherited from the parent Domains resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastUpdatedTimeStamp": {
+              "description": "The date the resource was last updated.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "listName": {
+              "description": "The name of the suppression list. This value must match one of the valid sender usernames of the sending domain.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SuppressionListResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A class representing a SuppressionList resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SuppressionListProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SuppressionListResourceCollection": {
+          "description": "A class representing a Domains SuppressionListResource collection.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SuppressionListResource items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SuppressionListResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "TaggedResource": {
+          "description": "An ARM resource with that can accept tags",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Tags of the service which is a list of key value pairs that describe the resource.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UpdateDomainProperties": {
+          "description": "A class that describes the updatable properties of a Domains resource.",
+          "properties": {
+            "userEngagementTracking": {
+              "$ref": "#/components/schemas/UserEngagementTracking"
+            }
+          },
+          "type": "object"
+        },
+        "UpdateDomainRequestParameters": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TaggedResource"
+            }
+          ],
+          "description": "A class that describes the PATCH request parameters of a Domains resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/UpdateDomainProperties"
+            }
+          },
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UserEngagementTracking": {
+          "description": "Describes whether user engagement tracking is enabled or disabled.",
+          "enum": [
+            "Disabled",
+            "Enabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UserEngagementTracking",
+            "values": [
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "description": "Enabled",
+                "name": "Enabled",
+                "value": "Enabled"
+              }
+            ]
+          }
+        },
+        "VerificationParameter": {
+          "description": "Input parameter for verification APIs",
+          "properties": {
+            "verificationType": {
+              "$ref": "#/components/schemas/VerificationType"
+            }
+          },
+          "required": [
+            "verificationType"
+          ],
+          "type": "object"
+        },
+        "VerificationStatus": {
+          "description": "Status of the verification operation.",
+          "enum": [
+            "NotStarted",
+            "VerificationRequested",
+            "VerificationInProgress",
+            "VerificationFailed",
+            "Verified",
+            "CancellationRequested"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "VerificationStatus",
+            "values": [
+              {
+                "description": "NotStarted",
+                "name": "NotStarted",
+                "value": "NotStarted"
+              },
+              {
+                "description": "VerificationRequested",
+                "name": "VerificationRequested",
+                "value": "VerificationRequested"
+              },
+              {
+                "description": "VerificationInProgress",
+                "name": "VerificationInProgress",
+                "value": "VerificationInProgress"
+              },
+              {
+                "description": "VerificationFailed",
+                "name": "VerificationFailed",
+                "value": "VerificationFailed"
+              },
+              {
+                "description": "Verified",
+                "name": "Verified",
+                "value": "Verified"
+              },
+              {
+                "description": "CancellationRequested",
+                "name": "CancellationRequested",
+                "value": "CancellationRequested"
+              }
+            ]
+          }
+        },
+        "VerificationStatusRecord": {
+          "description": "A class that represents a VerificationStatus record.",
+          "properties": {
+            "errorCode": {
+              "description": "Error code. This property will only be present if the status is UnableToVerify.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/VerificationStatus"
+            }
+          },
+          "type": "object"
+        },
+        "VerificationType": {
+          "description": "Type of verification.",
+          "enum": [
+            "Domain",
+            "SPF",
+            "DKIM",
+            "DKIM2",
+            "DMARC"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "VerificationType",
+            "values": [
+              {
+                "description": "Domain",
+                "name": "Domain",
+                "value": "Domain"
+              },
+              {
+                "description": "SPF",
+                "name": "SPF",
+                "value": "SPF"
+              },
+              {
+                "description": "DKIM",
+                "name": "DKIM",
+                "value": "DKIM"
+              },
+              {
+                "description": "DKIM2",
+                "name": "DKIM2",
+                "value": "DKIM2"
+              },
+              {
+                "description": "DMARC",
+                "name": "DMARC",
+                "value": "DMARC"
+              }
+            ]
+          }
+        },
+        "VerifiedExchangeOnlineDomainList": {
+          "description": "List of FQDNs of verified domains in Exchange Online.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "REST API for Email Services/Domains/SuppressionLists",
+      "title": "Azure Communication Services Management API",
+      "version": "2026-03-18",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Communication/operations": {
+        "get": {
+          "description": "Lists all of the available REST API operations of the Microsoft.Communication provider.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List Operations",
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Operations_List": {
+              "$ref": "./examples/communicationServices/operationsList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Communication/checkNameAvailability": {
+        "post": {
+          "description": "Checks that the CommunicationService name is valid and is not already in use.",
+          "operationId": "CommunicationServices_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NameAvailabilityParameters"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "nameAvailabilityParameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Check Name Availability",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Check name availability available": {
+              "$ref": "./examples/communicationServices/checkNameAvailabilityAvailable.json"
+            },
+            "Check name availability unavailable": {
+              "$ref": "./examples/communicationServices/checkNameAvailabilityUnavailable.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Communication/communicationServices": {
+        "get": {
+          "description": "Handles requests to list all resources in a subscription.",
+          "operationId": "CommunicationServices_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResourceList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List By Subscription",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "List by subscription": {
+              "$ref": "./examples/communicationServices/listBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Communication/emailServices": {
+        "get": {
+          "description": "Handles requests to list all resources in a subscription.",
+          "operationId": "EmailServices_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResourceList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List By Subscription",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "List EmailService resources by subscription": {
+              "$ref": "./examples/emailServices/listBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Communication/listVerifiedExchangeOnlineDomains": {
+        "post": {
+          "description": "Get a list of domains that are fully verified in Exchange Online.",
+          "operationId": "EmailServices_ListVerifiedExchangeOnlineDomains",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/VerifiedExchangeOnlineDomainList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List Verified Domains From Exchange Online",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "Get verified Exchange Online domains": {
+              "$ref": "./examples/emailServices/getVerifiedExchangeOnlineDomains.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices": {
+        "get": {
+          "description": "Handles requests to list all resources in a resource group.",
+          "operationId": "CommunicationServices_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResourceList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List By Resource Group",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "List by resource group": {
+              "$ref": "./examples/communicationServices/listByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}": {
+        "delete": {
+          "description": "Operation to delete a CommunicationService.",
+          "operationId": "CommunicationServices_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Delete resource": {
+              "$ref": "./examples/communicationServices/delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the CommunicationService and its properties.",
+          "operationId": "CommunicationServices_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Get resource": {
+              "$ref": "./examples/communicationServices/get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Operation to update an existing CommunicationService.",
+          "operationId": "CommunicationServices_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunicationServiceResourceUpdate"
+                }
+              }
+            },
+            "description": "Parameters for the update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Update",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Update resource": {
+              "$ref": "./examples/communicationServices/update.json"
+            },
+            "Update resource to add DisableLocalAuth": {
+              "$ref": "./examples/communicationServices/updateWithDisableLocalAuth.json"
+            },
+            "Update resource to add PublicNetworkAccess": {
+              "$ref": "./examples/communicationServices/updateWithPublicNetworkAccess.json"
+            },
+            "Update resource to add System and User managed identities": {
+              "$ref": "./examples/communicationServices/updateWithSystemAndUserIdentity.json"
+            },
+            "Update resource to add a System Assigned managed identity": {
+              "$ref": "./examples/communicationServices/updateWithSystemAssignedIdentity.json"
+            },
+            "Update resource to add a User Assigned managed identity": {
+              "$ref": "./examples/communicationServices/updateWithUserAssignedIdentity.json"
+            },
+            "Update resource to remove identity": {
+              "$ref": "./examples/communicationServices/updateRemoveSystemIdentity.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a new CommunicationService or update an existing CommunicationService.",
+          "operationId": "CommunicationServices_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunicationServiceResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResource"
+                  }
+                }
+              },
+              "description": "Resource 'CommunicationServiceResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceResource"
+                  }
+                }
+              },
+              "description": "Resource 'CommunicationServiceResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Create or update resource": {
+              "$ref": "./examples/communicationServices/createOrUpdate.json"
+            },
+            "Create or update resource with DisableLocalAuth": {
+              "$ref": "./examples/communicationServices/createOrUpdateWithDisableLocalAuth.json"
+            },
+            "Create or update resource with PublicNetworkAccess": {
+              "$ref": "./examples/communicationServices/createOrUpdateWithPublicNetworkAccess.json"
+            },
+            "Create or update resource with managed identity": {
+              "$ref": "./examples/communicationServices/createOrUpdateWithSystemAssignedIdentity.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/CommunicationServiceResource",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}/linkNotificationHub": {
+        "post": {
+          "description": "Links an Azure Notification Hub to this communication service.",
+          "operationId": "CommunicationServices_LinkNotificationHub",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkNotificationHubParameters"
+                }
+              }
+            },
+            "description": "Parameters supplied to the operation.",
+            "x-originalParamName": "linkNotificationHubParameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LinkedNotificationHub"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Link Notification Hub",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Link notification hub": {
+              "$ref": "./examples/communicationServices/linkNotificationHub.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}/listKeys": {
+        "post": {
+          "description": "Get the access keys of the CommunicationService resource.",
+          "operationId": "CommunicationServices_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List Keys",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "List keys": {
+              "$ref": "./examples/communicationServices/listKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}/regenerateKey": {
+        "post": {
+          "description": "Regenerate CommunicationService access key. PrimaryKey and SecondaryKey cannot be regenerated at the same time.",
+          "operationId": "CommunicationServices_RegenerateKey",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegenerateKeyParameters"
+                }
+              }
+            },
+            "description": "Parameter that describes the Regenerate Key Operation.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CommunicationServiceKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Regenerate Key",
+          "tags": [
+            "CommunicationServices"
+          ],
+          "x-ms-examples": {
+            "Regenerate key": {
+              "$ref": "./examples/communicationServices/regenerateKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}/smtpUsernames": {
+        "get": {
+          "description": "Get all SmtpUsernameResources for a Communication resource.",
+          "operationId": "SmtpUsernames_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SmtpUsernameResourceCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SmtpUsernames"
+          ],
+          "x-ms-examples": {
+            "Get all SmtpUsername resources for a CommunicationService resource.": {
+              "$ref": "./examples/smtpUsername/getAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/communicationServices/{communicationServiceName}/smtpUsernames/{smtpUsername}": {
+        "delete": {
+          "description": "Operation to delete a single SmtpUsername resource.",
+          "operationId": "SmtpUsernames_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the SmtpUsernameResource.",
+              "in": "path",
+              "name": "smtpUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "SmtpUsernames"
+          ],
+          "x-ms-examples": {
+            "Delete a SmtpUsername resource.": {
+              "$ref": "./examples/smtpUsername/delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a SmtpUsernameResource.",
+          "operationId": "SmtpUsernames_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the SmtpUsernameResource.",
+              "in": "path",
+              "name": "smtpUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SmtpUsernameResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SmtpUsernames"
+          ],
+          "x-ms-examples": {
+            "Get a SmtpUsername resource.": {
+              "$ref": "./examples/smtpUsername/get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update an SmtpUsernameResource.",
+          "operationId": "SmtpUsernames_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the CommunicationService resource.",
+              "in": "path",
+              "name": "communicationServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[-\\w]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the SmtpUsernameResource.",
+              "in": "path",
+              "name": "smtpUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmtpUsernameResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SmtpUsernameResource"
+                  }
+                }
+              },
+              "description": "Resource 'SmtpUsernameResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SmtpUsernameResource"
+                  }
+                }
+              },
+              "description": "Resource 'SmtpUsernameResource' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "SmtpUsernames"
+          ],
+          "x-ms-examples": {
+            "CreateOrUpdate SmtpUsername resource": {
+              "$ref": "./examples/smtpUsername/createOrUpdate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices": {
+        "get": {
+          "description": "Handles requests to list all resources in a resource group.",
+          "operationId": "EmailServices_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResourceList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List By Resource Group",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "List EmailService resources by resource group": {
+              "$ref": "./examples/emailServices/listByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}": {
+        "delete": {
+          "description": "Operation to delete a EmailService.",
+          "operationId": "EmailServices_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "Delete EmailService resource": {
+              "$ref": "./examples/emailServices/delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the EmailService and its properties.",
+          "operationId": "EmailServices_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "Get EmailService resource": {
+              "$ref": "./examples/emailServices/get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Operation to update an existing EmailService.",
+          "operationId": "EmailServices_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailServiceResourceUpdate"
+                }
+              }
+            },
+            "description": "Parameters for the update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResource"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResource"
+                  }
+                }
+              },
+              "description": "Resource 'EmailServiceResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Update",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "Update EmailService resource": {
+              "$ref": "./examples/emailServices/update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/EmailServiceResource",
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Create a new EmailService or update an existing EmailService.",
+          "operationId": "EmailServices_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailServiceResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResource"
+                  }
+                }
+              },
+              "description": "Resource 'EmailServiceResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/EmailServiceResource"
+                  }
+                }
+              },
+              "description": "Resource 'EmailServiceResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "EmailServices"
+          ],
+          "x-ms-examples": {
+            "Create or update EmailService resource": {
+              "$ref": "./examples/emailServices/createOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/EmailServiceResource",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains": {
+        "get": {
+          "description": "Handles requests to list all Domains resources under the parent EmailServices resource.",
+          "operationId": "Domains_ListByEmailServiceResource",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResourceList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List by EmailService",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "List Domains resources by EmailServiceName": {
+              "$ref": "./examples/domains/listByEmailService.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}": {
+        "delete": {
+          "description": "Operation to delete a Domains resource.",
+          "operationId": "Domains_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Delete Domains resource": {
+              "$ref": "./examples/domains/delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the Domains resource and its properties.",
+          "operationId": "Domains_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Get Domains resource": {
+              "$ref": "./examples/domains/get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Operation to update an existing Domains resource.",
+          "operationId": "Domains_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateDomainRequestParameters"
+                }
+              }
+            },
+            "description": "Parameters for the update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResource"
+                  }
+                }
+              },
+              "description": "Resource 'DomainResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Update",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Update Domains resource": {
+              "$ref": "./examples/domains/update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/DomainResource",
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Add a new Domains resource under the parent EmailService resource or update an existing Domains resource.",
+          "operationId": "Domains_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResource"
+                  }
+                }
+              },
+              "description": "Resource 'DomainResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DomainResource"
+                  }
+                }
+              },
+              "description": "Resource 'DomainResource' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Create or update Domains resource": {
+              "$ref": "./examples/domains/createOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/DomainResource",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/cancelVerification": {
+        "post": {
+          "description": "Cancel verification of DNS record.",
+          "operationId": "Domains_CancelVerification",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationParameter"
+                }
+              }
+            },
+            "description": "Type of verification to be canceled.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Cancel Verification",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Cancel verification": {
+              "$ref": "./examples/domains/cancelVerification.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/initiateVerification": {
+        "post": {
+          "description": "Initiate verification of DNS record.",
+          "operationId": "Domains_InitiateVerification",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationParameter"
+                }
+              }
+            },
+            "description": "Type of verification to be initiated.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Initiate Verification",
+          "tags": [
+            "Domains"
+          ],
+          "x-ms-examples": {
+            "Initiate verification": {
+              "$ref": "./examples/domains/initiateVerification.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/senderUsernames": {
+        "get": {
+          "description": "List all valid sender usernames for a domains resource.",
+          "operationId": "SenderUsernames_ListByDomains",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SenderUsernameResourceCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "ListBy_Domains",
+          "tags": [
+            "SenderUsernames"
+          ],
+          "x-ms-examples": {
+            "Get SenderUsernames resource": {
+              "$ref": "./examples/senderUsernames/listByDomain.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/senderUsernames/{senderUsername}": {
+        "delete": {
+          "description": "Operation to delete a SenderUsernames resource.",
+          "operationId": "SenderUsernames_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The valid sender Username.",
+              "in": "path",
+              "name": "senderUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "SenderUsernames"
+          ],
+          "x-ms-examples": {
+            "Delete SenderUsernames resource": {
+              "$ref": "./examples/senderUsernames/delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a valid sender username for a domains resource.",
+          "operationId": "SenderUsernames_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The valid sender Username.",
+              "in": "path",
+              "name": "senderUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SenderUsernameResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SenderUsernames"
+          ],
+          "x-ms-examples": {
+            "Get SenderUsernames resource": {
+              "$ref": "./examples/senderUsernames/get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Add a new SenderUsername resource under the parent Domains resource or update an existing SenderUsername resource.",
+          "operationId": "SenderUsernames_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The valid sender Username.",
+              "in": "path",
+              "name": "senderUsername",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SenderUsernameResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SenderUsernameResource"
+                  }
+                }
+              },
+              "description": "Resource 'SenderUsernameResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SenderUsernameResource"
+                  }
+                }
+              },
+              "description": "Resource 'SenderUsernameResource' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "SenderUsernames"
+          ],
+          "x-ms-examples": {
+            "Create or update SenderUsernames resource": {
+              "$ref": "./examples/senderUsernames/createOrUpdate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/suppressionLists": {
+        "get": {
+          "description": "List all suppression lists for a domains resource.",
+          "operationId": "SuppressionLists_ListByDomain",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListResourceCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "List",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Get all SuppressionLists resources.": {
+              "$ref": "./examples/suppressionLists/getSuppressionLists.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/suppressionLists/{suppressionListName}": {
+        "delete": {
+          "description": "Delete a SuppressionList.",
+          "operationId": "SuppressionLists_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Delete a SuppressionLists resource.": {
+              "$ref": "./examples/suppressionLists/deleteSuppressionList.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a SuppressionList resource.",
+          "operationId": "SuppressionLists_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Get a SuppressionList resource.": {
+              "$ref": "./examples/suppressionLists/getSuppressionList.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Add a new SuppressionList resource under the parent Domains resource or update an existing SuppressionList resource.",
+          "operationId": "SuppressionLists_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuppressionListResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListResource"
+                  }
+                }
+              },
+              "description": "Resource 'SuppressionListResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListResource"
+                  }
+                }
+              },
+              "description": "Resource 'SuppressionListResource' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "CreateOrUpdate SuppressionLists resource.": {
+              "$ref": "./examples/suppressionLists/createOrUpdateSuppressionList.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/suppressionLists/{suppressionListName}/suppressionListAddresses": {
+        "get": {
+          "description": "Get all the addresses in a suppression list.",
+          "operationId": "SuppressionListAddresses_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListAddressResourceCollection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Get all SuppressionListAddresses resources for a SuppressionList resource.": {
+              "$ref": "./examples/suppressionLists/getAddresses.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Communication/emailServices/{emailServiceName}/domains/{domainName}/suppressionLists/{suppressionListName}/suppressionListAddresses/{addressId}": {
+        "delete": {
+          "description": "Operation to delete a single address from a suppression list.",
+          "operationId": "SuppressionListAddresses_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The id of the address in a suppression list.",
+              "in": "path",
+              "name": "addressId",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Delete",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Delete a SuppressionListAddress resource.": {
+              "$ref": "./examples/suppressionLists/deleteAddress.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a SuppressionListAddress.",
+          "operationId": "SuppressionListAddresses_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The id of the address in a suppression list.",
+              "in": "path",
+              "name": "addressId",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListAddressResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "Get a SuppressionListAddress resource.": {
+              "$ref": "./examples/suppressionLists/getAddress.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a SuppressionListAddress.",
+          "operationId": "SuppressionListAddresses_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the EmailService resource.",
+              "in": "path",
+              "name": "emailServiceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the Domains resource.",
+              "in": "path",
+              "name": "domainName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the suppression list.",
+              "in": "path",
+              "name": "suppressionListName",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The id of the address in a suppression list.",
+              "in": "path",
+              "name": "addressId",
+              "required": true,
+              "schema": {
+                "maxLength": 253,
+                "minLength": 1,
+                "pattern": "^[a-zA-Z0-9-]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuppressionListAddressResource"
+                }
+              }
+            },
+            "description": "Parameters for the create or update operation",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListAddressResource"
+                  }
+                }
+              },
+              "description": "Resource 'SuppressionListAddressResource' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuppressionListAddressResource"
+                  }
+                }
+              },
+              "description": "Resource 'SuppressionListAddressResource' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Create Or Update",
+          "tags": [
+            "SuppressionLists"
+          ],
+          "x-ms-examples": {
+            "CreateOrUpdate SuppressionListAddress resource": {
+              "$ref": "./examples/suppressionLists/createOrUpdateAddress.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "CommunicationServices"
+      },
+      {
+        "name": "Domains"
+      },
+      {
+        "name": "EmailServices"
+      },
+      {
+        "name": "SenderUsernames"
+      },
+      {
+        "name": "SmtpUsernames"
+      },
+      {
+        "name": "SuppressionLists"
+      }
+    ]
+  }
+}

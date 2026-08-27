@@ -1,0 +1,1179 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_healthbot",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AvailableOperations": {
+          "description": "Available operations of the service.",
+          "properties": {
+            "nextLink": {
+              "description": "URL client should use to fetch the next page (per server side paging).\nIt's null for now, added for future use.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of available operation details.",
+              "items": {
+                "$ref": "#/components/schemas/OperationDetail"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "BotResponseList": {
+          "description": "The list of Azure Health Bot operation response.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The HealthBot items on this page",
+              "items": {
+                "$ref": "#/components/schemas/HealthBot"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The resource management error response.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorError"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorError": {
+          "description": "The error object.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/Error"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "HealthBot": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Azure Health Bot resource definition",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/HealthBotProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "required": [
+            "sku"
+          ],
+          "type": "object"
+        },
+        "HealthBotKey": {
+          "description": "An entry of HealthBotKeysResponse",
+          "properties": {
+            "keyName": {
+              "description": "The name of the key.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The value of the key.",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            }
+          },
+          "type": "object"
+        },
+        "HealthBotKeysResponse": {
+          "description": "Health Bot Keys Response.",
+          "properties": {
+            "secrets": {
+              "description": "Array of Azure Health Bot Secrets.",
+              "items": {
+                "$ref": "#/components/schemas/HealthBotKey"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "HealthBotProperties": {
+          "description": "The properties of a Azure Health Bot. The Health Bot Service is a cloud platform that empowers developers in Healthcare organizations to build and deploy their compliant, AI-powered virtual health assistants and health bots, that help them improve processes and reduce costs.",
+          "properties": {
+            "accessControlMethod": {
+              "description": "The access control method for the Azure Health Bot resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "botManagementPortalLink": {
+              "description": "The link.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "keyVaultProperties": {
+              "$ref": "#/components/schemas/KeyVaultProperties"
+            },
+            "provisioningState": {
+              "description": "The provisioning state of the Azure Health Bot resource.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "HealthBotUpdateParameters": {
+          "description": "Parameters for updating a Azure Health Bot.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "location": {
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/HealthBotProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Tags for a Azure Health Bot.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Identity": {
+          "description": "Identity for the resource.",
+          "properties": {
+            "principalId": {
+              "description": "The principal ID of resource identity. This property will only be provided for a system assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of resource. This property will only be provided for a system assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ResourceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity"
+              },
+              "description": "The list of user identities associated with the resource. The user identity dictionary key references will be ARM resource ids in the form:\n'/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "KeyVaultProperties": {
+          "description": "Properties of the key vault.",
+          "properties": {
+            "keyName": {
+              "description": "The name of the key vault key.",
+              "type": "string",
+              "x-ms-client-name": "KeyName"
+            },
+            "keyVaultUri": {
+              "description": "The Uri of the key vault.",
+              "type": "string",
+              "x-ms-client-name": "KeyVaultUri"
+            },
+            "keyVersion": {
+              "description": "The version of the key vault key.",
+              "type": "string",
+              "x-ms-client-name": "KeyVersion"
+            },
+            "userIdentity": {
+              "description": "The user assigned identity (ARM resource id) that has access to the key.",
+              "type": "string",
+              "x-ms-client-name": "UserIdentity"
+            }
+          },
+          "required": [
+            "keyName",
+            "keyVaultUri"
+          ],
+          "type": "object"
+        },
+        "OperationDetail": {
+          "description": "Operation detail payload",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the operation",
+              "type": "string"
+            },
+            "origin": {
+              "description": "Origin of the operation",
+              "type": "string"
+            },
+            "properties": {
+              "description": "Additional properties."
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplay": {
+          "description": "Operation display payload",
+          "properties": {
+            "description": {
+              "description": "Localized friendly description for the operation",
+              "type": "string"
+            },
+            "operation": {
+              "description": "Localized friendly name for the operation",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Resource provider of the operation",
+              "type": "string"
+            },
+            "resource": {
+              "description": "Resource of the operation",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceIdentityType": {
+          "description": "The identity type. The type 'SystemAssigned, UserAssigned' includes both an implicitly created identity and a set of user assigned identities. The type 'None' will remove any identities from the Azure Health Bot",
+          "enum": [
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned, UserAssigned",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "ResourceIdentityType"
+          }
+        },
+        "Sku": {
+          "description": "The resource model definition representing SKU",
+          "properties": {
+            "name": {
+              "$ref": "#/components/schemas/SkuName"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "SkuName": {
+          "description": "The name of the Azure Health Bot SKU",
+          "enum": [
+            "F0",
+            "C0",
+            "PES",
+            "C1"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "SkuName"
+          }
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "The details of the user assigned managed identity used by the Video Analyzer resource.",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of user assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of user assigned identity.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Health Bot is a cloud platform that empowers developers in Healthcare organizations to build and deploy their compliant, AI-powered virtual health assistants and health bots, that help them improve processes and reduce costs.",
+      "title": "Azure Health Bot",
+      "version": "2025-11-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.HealthBot/operations": {
+        "get": {
+          "description": "Lists all the available Azure Health Bot operations.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AvailableOperations"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Get Operations": {
+              "$ref": "./examples/GetOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.HealthBot/healthBots": {
+        "get": {
+          "description": "Returns all the resources of a particular type belonging to a subscription.",
+          "operationId": "Bots_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BotResponseList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "List Bots by Subscription": {
+              "$ref": "./examples/ListBotsBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HealthBot/healthBots": {
+        "get": {
+          "description": "Returns all the resources of a particular type belonging to a resource group",
+          "operationId": "Bots_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BotResponseList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "List Bots by Resource Group": {
+              "$ref": "./examples/ListBotsByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HealthBot/healthBots/{botName}": {
+        "delete": {
+          "description": "Delete a HealthBot.",
+          "operationId": "Bots_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "BotDelete": {
+              "$ref": "./examples/ResourceDeletionDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a HealthBot.",
+          "operationId": "Bots_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBot"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "ResourceInfoGet": {
+              "$ref": "./examples/ResourceInfoGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Patch a HealthBot.",
+          "operationId": "Bots_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthBotUpdateParameters"
+                }
+              }
+            },
+            "description": "The parameters to provide for the required Azure Health Bot.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBot"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBot"
+                  }
+                }
+              },
+              "description": "Resource 'HealthBot' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "BotUpdate": {
+              "$ref": "./examples/ResourceUpdatePatch.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/HealthBot",
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Create a new Azure Health Bot.",
+          "operationId": "Bots_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthBot"
+                }
+              }
+            },
+            "description": "The parameters to provide for the created Azure Health Bot.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBot"
+                  }
+                }
+              },
+              "description": "Resource 'HealthBot' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBot"
+                  }
+                }
+              },
+              "description": "Resource 'HealthBot' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "BotCreate": {
+              "$ref": "./examples/ResourceCreationPut.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/HealthBot",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HealthBot/healthBots/{botName}/listSecrets": {
+        "post": {
+          "description": "List all secrets of a HealthBot.",
+          "operationId": "Bots_ListSecrets",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBotKeysResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "Bot List Secrets": {
+              "$ref": "./examples/ListSecrets.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HealthBot/healthBots/{botName}/regenerateApiJwtSecret": {
+        "post": {
+          "description": "Regenerate the API JWT Secret of a HealthBot.",
+          "operationId": "Bots_RegenerateApiJwtSecret",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Bot resource.",
+              "in": "path",
+              "name": "botName",
+              "required": true,
+              "schema": {
+                "maxLength": 64,
+                "minLength": 2,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthBotKey"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HealthBots"
+          ],
+          "x-ms-examples": {
+            "Bot Regenerate API JWT Secret": {
+              "$ref": "./examples/RegenerateApiJwtSecret.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "HealthBots"
+      }
+    ]
+  }
+}

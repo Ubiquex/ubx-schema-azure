@@ -1,0 +1,3784 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_nginx_swagger",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ActivationState": {
+          "description": "The activation state of the WAF. Use 'Enabled' to enable the WAF and 'Disabled' to disable it.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ActivationState",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "AnalysisCreate": {
+          "description": "The request body for creating an analysis for an NGINX configuration.",
+          "properties": {
+            "config": {
+              "$ref": "#/components/schemas/AnalysisCreateConfig"
+            }
+          },
+          "required": [
+            "config"
+          ],
+          "type": "object"
+        },
+        "AnalysisCreateConfig": {
+          "properties": {
+            "files": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationFile"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "package": {
+              "$ref": "#/components/schemas/NginxConfigurationPackage"
+            },
+            "protectedFiles": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationProtectedFileRequest"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "rootFile": {
+              "description": "The root file of the NGINX config file(s). It must match one of the files' filepath.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AnalysisDiagnostic": {
+          "description": "An error object found during the analysis of an NGINX configuration.",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "directive": {
+              "type": "string"
+            },
+            "file": {
+              "description": "the filepath of the most relevant config file",
+              "type": "string"
+            },
+            "id": {
+              "description": "Unique identifier for the error",
+              "type": "string"
+            },
+            "line": {
+              "format": "float",
+              "type": "number"
+            },
+            "message": {
+              "type": "string"
+            },
+            "rule": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "directive",
+            "description",
+            "file",
+            "line",
+            "message",
+            "rule"
+          ],
+          "type": "object"
+        },
+        "AnalysisResult": {
+          "description": "The response body for an analysis request. Contains the status of the analysis and any errors.",
+          "properties": {
+            "data": {
+              "$ref": "#/components/schemas/AnalysisResultData"
+            },
+            "status": {
+              "description": "The status of the analysis.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "type": "object"
+        },
+        "AnalysisResultData": {
+          "properties": {
+            "diagnostics": {
+              "items": {
+                "$ref": "#/components/schemas/DiagnosticItem"
+              },
+              "type": "array"
+            },
+            "errors": {
+              "items": {
+                "$ref": "#/components/schemas/AnalysisDiagnostic"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "AutoUpgradeProfile": {
+          "description": "Autoupgrade settings of a deployment.",
+          "properties": {
+            "upgradeChannel": {
+              "description": "Channel used for autoupgrade.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "upgradeChannel"
+          ],
+          "type": "object"
+        },
+        "DiagnosticItem": {
+          "description": "A diagnostic is a message associated with an NGINX config. The Analyzer returns diagnostics with a level indicating the importance of the diagnostic with optional category.",
+          "properties": {
+            "category": {
+              "description": "Category of warning like Best-practices, Recommendation, Security etc.",
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "directive": {
+              "type": "string"
+            },
+            "file": {
+              "description": "The filepath of the most relevant config file.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Unique identifier for the diagnostic.",
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/components/schemas/Level"
+            },
+            "line": {
+              "format": "float",
+              "type": "number"
+            },
+            "message": {
+              "type": "string"
+            },
+            "rule": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "directive",
+            "description",
+            "file",
+            "line",
+            "message",
+            "rule",
+            "level"
+          ],
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "IdentityProperties": {
+          "description": "Identity Properties",
+          "properties": {
+            "principalId": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/IdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserIdentityProperties"
+              },
+              "description": "Dictionary of \u003cUserIdentityProperties\u003e",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "IdentityType": {
+          "description": "Identity Type",
+          "enum": [
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned, UserAssigned",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IdentityType",
+            "values": [
+              {
+                "name": "SystemAssigned",
+                "value": "SystemAssigned"
+              },
+              {
+                "name": "UserAssigned",
+                "value": "UserAssigned"
+              },
+              {
+                "name": "SystemAssigned, UserAssigned",
+                "value": "SystemAssigned, UserAssigned"
+              },
+              {
+                "name": "None",
+                "value": "None"
+              }
+            ]
+          }
+        },
+        "Level": {
+          "description": "Warning or Info",
+          "enum": [
+            "Info",
+            "Warning"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Level",
+            "values": [
+              {
+                "name": "Info",
+                "value": "Info"
+              },
+              {
+                "name": "Warning",
+                "value": "Warning"
+              }
+            ]
+          }
+        },
+        "NginxCertificate": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Nginx Certificate",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxCertificateProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NginxCertificateErrorResponseBody": {
+          "description": "Nginx Certificate Error Response Body",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxCertificateListResponse": {
+          "description": "Nginx Certificate List Response",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The NginxCertificate items on this page",
+              "items": {
+                "$ref": "#/components/schemas/NginxCertificate"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "NginxCertificateProperties": {
+          "description": "Nginx Certificate Properties",
+          "properties": {
+            "certificateError": {
+              "$ref": "#/components/schemas/NginxCertificateErrorResponseBody"
+            },
+            "certificateVirtualPath": {
+              "type": "string"
+            },
+            "keyVaultSecretCreated": {
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "keyVaultSecretId": {
+              "type": "string"
+            },
+            "keyVaultSecretVersion": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "keyVirtualPath": {
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "sha1Thumbprint": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationFile": {
+          "description": "Nginx Configuration File",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "virtualPath": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationListResponse": {
+          "description": "Response of a list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The NginxConfigurationResponse items on this page",
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationResponse"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "NginxConfigurationPackage": {
+          "description": "Nginx Configuration Package",
+          "properties": {
+            "data": {
+              "type": "string"
+            },
+            "protectedFiles": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationProtectedFileRequest": {
+          "description": "Nginx Configuration Protected File Request",
+          "properties": {
+            "content": {
+              "description": "The content of the protected file. This value is a PUT only value. If you perform a GET request on this value, it will be empty because it is a protected file.",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "contentHash": {
+              "description": "The hash of the content of the file. This value is used to determine if the file has changed.",
+              "type": "string"
+            },
+            "virtualPath": {
+              "description": "The virtual path of the protected file.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationProtectedFileResponse": {
+          "description": "Nginx Configuration Protected File Response",
+          "properties": {
+            "contentHash": {
+              "description": "The hash of the content of the file. This value is used to determine if the file has changed.",
+              "type": "string"
+            },
+            "virtualPath": {
+              "description": "The virtual path of the protected file.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationRequest": {
+          "description": "Nginx Configuration Request",
+          "properties": {
+            "id": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxConfigurationRequestProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData_2"
+            },
+            "type": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationRequestProperties": {
+          "description": "Nginx Configuration Request Properties",
+          "properties": {
+            "files": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationFile"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "package": {
+              "$ref": "#/components/schemas/NginxConfigurationPackage"
+            },
+            "protectedFiles": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationProtectedFileRequest"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "rootFile": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationResponse": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Nginx Configuration Response",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NginxConfigurationResponseProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NginxConfigurationResponseProperties": {
+          "description": "Nginx Configuration Response Properties",
+          "properties": {
+            "files": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationFile"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "package": {
+              "$ref": "#/components/schemas/NginxConfigurationPackage"
+            },
+            "protectedFiles": {
+              "items": {
+                "$ref": "#/components/schemas/NginxConfigurationProtectedFileResponse"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "rootFile": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeployment": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Nginx Deployment",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/IdentityProperties"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/ResourceSku"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentApiKeyListResponse": {
+          "description": "Nginx Deployment Api Key List Response",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The NginxDeploymentApiKeyResponse items on this page",
+              "items": {
+                "$ref": "#/components/schemas/NginxDeploymentApiKeyResponse"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "NginxDeploymentApiKeyRequest": {
+          "description": "Nginx Deployment Api Key Request",
+          "properties": {
+            "id": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentApiKeyRequestProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData_2"
+            },
+            "type": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentApiKeyRequestProperties": {
+          "description": "Nginx Deployment Api Key Request Properties",
+          "properties": {
+            "endDateTime": {
+              "description": "The time after which this Dataplane API Key is no longer valid.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "secretText": {
+              "description": "Secret text to be used as a Dataplane API Key. This is a write only property that can never be read back, but the first three characters will be returned in the 'hint' property.",
+              "format": "password",
+              "type": "string",
+              "x-ms-secret": true
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentApiKeyResponse": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Nginx Deployment Api Key Response",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentApiKeyResponseProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentApiKeyResponseProperties": {
+          "description": "Nginx Deployment Api Key Response Properties",
+          "properties": {
+            "endDateTime": {
+              "description": "The time after which this Dataplane API Key is no longer valid.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "hint": {
+              "description": "The first three characters of the secret text to help identify it in use. This property is read-only.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentDefaultWafPolicyListResponse": {
+          "description": "Nginx Deployment Default Waf Policy List Response",
+          "properties": {
+            "nextLink": {
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/NginxDeploymentDefaultWafPolicyProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentDefaultWafPolicyProperties": {
+          "description": "Nginx Deployment Default Waf Policy Properties",
+          "properties": {
+            "content": {
+              "format": "byte",
+              "readOnly": true,
+              "type": "string"
+            },
+            "filepath": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentListResponse": {
+          "description": "Nginx Deployment List Response",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The NginxDeployment items on this page",
+              "items": {
+                "$ref": "#/components/schemas/NginxDeployment"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "NginxDeploymentProperties": {
+          "description": "Nginx Deployment Properties",
+          "properties": {
+            "autoUpgradeProfile": {
+              "$ref": "#/components/schemas/AutoUpgradeProfile"
+            },
+            "dataplaneApiEndpoint": {
+              "description": "Dataplane API endpoint for the caller to update the NGINX state of the deployment.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "enableDiagnosticsSupport": {
+              "type": "boolean"
+            },
+            "ipAddress": {
+              "description": "The IP address of the deployment.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "logging": {
+              "$ref": "#/components/schemas/NginxLogging"
+            },
+            "networkProfile": {
+              "$ref": "#/components/schemas/NginxNetworkProfile"
+            },
+            "nginxAppProtect": {
+              "$ref": "#/components/schemas/NginxDeploymentPropertiesNginxAppProtect"
+            },
+            "nginxVersion": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "scalingProperties": {
+              "$ref": "#/components/schemas/NginxDeploymentScalingProperties"
+            },
+            "userProfile": {
+              "$ref": "#/components/schemas/NginxDeploymentUserProfile"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentPropertiesNginxAppProtect": {
+          "description": "Settings for NGINX App Protect (NAP)",
+          "properties": {
+            "webApplicationFirewallSettings": {
+              "$ref": "#/components/schemas/WebApplicationFirewallSettings"
+            },
+            "webApplicationFirewallStatus": {
+              "$ref": "#/components/schemas/WebApplicationFirewallStatus"
+            }
+          },
+          "required": [
+            "webApplicationFirewallSettings"
+          ],
+          "type": "object"
+        },
+        "NginxDeploymentScalingProperties": {
+          "description": "Information on how the deployment will be scaled.",
+          "properties": {
+            "autoScaleSettings": {
+              "$ref": "#/components/schemas/NginxDeploymentScalingPropertiesAutoScaleSettings"
+            },
+            "capacity": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentScalingPropertiesAutoScaleSettings": {
+          "description": "The settings for enabling automatic scaling of the deployment. If this field is specified, 'scale.capacity' must be empty.",
+          "properties": {
+            "profiles": {
+              "items": {
+                "$ref": "#/components/schemas/ScaleProfile"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "required": [
+            "profiles"
+          ],
+          "type": "object"
+        },
+        "NginxDeploymentUpdateParameters": {
+          "description": "Nginx Deployment Update Parameters",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/IdentityProperties"
+            },
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentUpdateProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/ResourceSku"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Dictionary of \u003cstring\u003e",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentUpdateProperties": {
+          "description": "Nginx Deployment Update Properties",
+          "properties": {
+            "autoUpgradeProfile": {
+              "$ref": "#/components/schemas/AutoUpgradeProfile"
+            },
+            "enableDiagnosticsSupport": {
+              "type": "boolean"
+            },
+            "logging": {
+              "$ref": "#/components/schemas/NginxLogging"
+            },
+            "networkProfile": {
+              "$ref": "#/components/schemas/NginxNetworkProfile"
+            },
+            "nginxAppProtect": {
+              "$ref": "#/components/schemas/NginxDeploymentUpdatePropertiesNginxAppProtect"
+            },
+            "scalingProperties": {
+              "$ref": "#/components/schemas/NginxDeploymentScalingProperties"
+            },
+            "userProfile": {
+              "$ref": "#/components/schemas/NginxDeploymentUserProfile"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentUpdatePropertiesNginxAppProtect": {
+          "description": "Update settings for NGINX App Protect (NAP)",
+          "properties": {
+            "webApplicationFirewallSettings": {
+              "$ref": "#/components/schemas/WebApplicationFirewallSettings"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentUserProfile": {
+          "description": "Nginx Deployment User Profile",
+          "properties": {
+            "preferredEmail": {
+              "description": "The preferred support contact email address of the user used for sending alerts and notification. Can be an empty string or a valid email address.",
+              "pattern": "^$|^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicy": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Nginx Deployment Waf Policy",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyAnalysisCreateRequest": {
+          "description": "Nginx Deployment Waf Policy Analysis Create Request",
+          "properties": {
+            "content": {
+              "description": "The byte content of the policy",
+              "format": "byte",
+              "type": "string"
+            },
+            "filepath": {
+              "description": "The absolute file path of the policy as in the virtual machine",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyAnalysisData": {
+          "description": "Nginx Deployment Waf Policy Analysis Data",
+          "properties": {
+            "errors": {
+              "description": "List of errors found during analysis",
+              "items": {
+                "$ref": "#/components/schemas/NginxDeploymentWafPolicyError"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyAnalysisResponse": {
+          "description": "Nginx Deployment Waf Policy Analysis Response",
+          "properties": {
+            "data": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyAnalysisData"
+            },
+            "status": {
+              "description": "The status of the analysis. The possible values can be arbitrary",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyApplyingStatus": {
+          "description": "Nginx Deployment Waf Policy Applying Status",
+          "properties": {
+            "code": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyApplyingStatusCode"
+            },
+            "displayStatus": {
+              "description": "A readable string of the current status, and sometimes have the reason for the current state.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "time": {
+              "description": "The date and time in UTC the current applying status was set.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyApplyingStatusCode": {
+          "description": "Machine readable code indicating the applying status code of a WAF Policy.",
+          "enum": [
+            "NotApplied",
+            "Applying",
+            "Succeeded",
+            "Failed",
+            "Removing"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NginxDeploymentWafPolicyApplyingStatusCode",
+            "values": [
+              {
+                "description": "The policy is not referenced in the nginx config and not applied.",
+                "name": "NotApplied",
+                "value": "NotApplied"
+              },
+              {
+                "description": "The policy is referenced in the nginx config and is applying.",
+                "name": "Applying",
+                "value": "Applying"
+              },
+              {
+                "description": "The policy is referenced in the nginx config and that config has been successfully applied.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "The policy is referenced in the nginx config and that config failed to apply.",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "The policy is now not referenced in the nginx config and its being removed from the applied nginx config.",
+                "name": "Removing",
+                "value": "Removing"
+              }
+            ]
+          }
+        },
+        "NginxDeploymentWafPolicyCompilingStatus": {
+          "description": "Nginx Deployment Waf Policy Compiling Status",
+          "properties": {
+            "code": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyCompilingStatusCode"
+            },
+            "displayStatus": {
+              "description": "A readable string of the current status, and sometimes have the reason for the current state. If the CompilingStatus is Failed the Display Status will be The waf Policy failed to compile.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "time": {
+              "description": "The date and time the policy was compiled in UTC.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyCompilingStatusCode": {
+          "description": "Machine readable code indicating the compilation status of a WAF Policy.",
+          "enum": [
+            "NotStarted",
+            "InProgress",
+            "Succeeded",
+            "Failed"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NginxDeploymentWafPolicyCompilingStatusCode",
+            "values": [
+              {
+                "description": "The compilation of the custom waf policy has not started",
+                "name": "NotStarted",
+                "value": "NotStarted"
+              },
+              {
+                "description": "The compilation of the custom waf policy is in progress",
+                "name": "InProgress",
+                "value": "InProgress"
+              },
+              {
+                "description": "The compilation of the custom waf policy is completed successfully and can now be referenced in the nginx config.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "The compilation of the custom waf policy failed.",
+                "name": "Failed",
+                "value": "Failed"
+              }
+            ]
+          }
+        },
+        "NginxDeploymentWafPolicyError": {
+          "description": "Nginx Deployment Waf Policy Error",
+          "properties": {
+            "code": {
+              "description": "Error code",
+              "type": "string"
+            },
+            "field": {
+              "description": "Field that caused the error",
+              "type": "string"
+            },
+            "message": {
+              "description": "Error message",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyListResponse": {
+          "description": "Nginx Deployment Waf Policy List Response",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The NginxDeploymentWafPolicyMetadata items on this page",
+              "items": {
+                "$ref": "#/components/schemas/NginxDeploymentWafPolicyMetadata"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyMetadata": {
+          "description": "Nginx Deployment Waf Policy Metadata",
+          "properties": {
+            "id": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyMetadataProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData_2"
+            },
+            "type": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyMetadataProperties": {
+          "description": "Nginx Deployment Waf Policy Metadata Properties",
+          "properties": {
+            "applyingState": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyApplyingStatus"
+            },
+            "compilingState": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyCompilingStatus"
+            },
+            "filepath": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "NginxDeploymentWafPolicyProperties": {
+          "description": "Nginx Deployment Waf Policy Properties",
+          "properties": {
+            "applyingState": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyApplyingStatus"
+            },
+            "compilingState": {
+              "$ref": "#/components/schemas/NginxDeploymentWafPolicyCompilingStatus"
+            },
+            "content": {
+              "description": "The byte content of the Policy",
+              "format": "byte",
+              "type": "string"
+            },
+            "filepath": {
+              "description": "The file path where the Policy is to be saved",
+              "type": "string"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "NginxFrontendIPConfiguration": {
+          "description": "Nginx Frontend IP Configuration",
+          "properties": {
+            "privateIPAddresses": {
+              "items": {
+                "$ref": "#/components/schemas/NginxPrivateIPAddress"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "publicIPAddresses": {
+              "items": {
+                "$ref": "#/components/schemas/NginxPublicIPAddress"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "NginxLogging": {
+          "description": "Nginx Logging",
+          "properties": {
+            "storageAccount": {
+              "$ref": "#/components/schemas/NginxStorageAccount"
+            }
+          },
+          "type": "object"
+        },
+        "NginxNetworkInterfaceConfiguration": {
+          "description": "Nginx Network Interface Configuration",
+          "properties": {
+            "subnetId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxNetworkProfile": {
+          "description": "Nginx Network Profile",
+          "properties": {
+            "frontEndIPConfiguration": {
+              "$ref": "#/components/schemas/NginxFrontendIPConfiguration"
+            },
+            "networkInterfaceConfiguration": {
+              "$ref": "#/components/schemas/NginxNetworkInterfaceConfiguration"
+            }
+          },
+          "type": "object"
+        },
+        "NginxPrivateIPAddress": {
+          "description": "Nginx Private IP Address",
+          "properties": {
+            "privateIPAddress": {
+              "type": "string"
+            },
+            "privateIPAllocationMethod": {
+              "$ref": "#/components/schemas/NginxPrivateIPAllocationMethod"
+            },
+            "subnetId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxPrivateIPAllocationMethod": {
+          "description": "Nginx Private IP Allocation Method",
+          "enum": [
+            "Static",
+            "Dynamic"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NginxPrivateIPAllocationMethod",
+            "values": [
+              {
+                "name": "Static",
+                "value": "Static"
+              },
+              {
+                "name": "Dynamic",
+                "value": "Dynamic"
+              }
+            ]
+          }
+        },
+        "NginxPublicIPAddress": {
+          "description": "Nginx Public IP Address",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NginxStorageAccount": {
+          "description": "Nginx Storage Account",
+          "properties": {
+            "accountName": {
+              "type": "string"
+            },
+            "containerName": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Provisioning State",
+          "enum": [
+            "Accepted",
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Deleted",
+            "NotSpecified"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "name": "Accepted",
+                "value": "Accepted"
+              },
+              {
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "name": "Deleted",
+                "value": "Deleted"
+              },
+              {
+                "name": "NotSpecified",
+                "value": "NotSpecified"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceSku": {
+          "description": "Resource Sku",
+          "properties": {
+            "name": {
+              "description": "Name of the SKU.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "ScaleProfile": {
+          "description": "The autoscale profile.",
+          "properties": {
+            "capacity": {
+              "$ref": "#/components/schemas/ScaleProfileCapacity"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "capacity"
+          ],
+          "type": "object"
+        },
+        "ScaleProfileCapacity": {
+          "description": "The capacity parameters of the profile.",
+          "properties": {
+            "max": {
+              "description": "The maximum number of NCUs the deployment can be autoscaled to.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "min": {
+              "description": "The minimum number of NCUs the deployment can be autoscaled to.",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "min",
+            "max"
+          ],
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserIdentityProperties": {
+          "description": "User Identity Properties",
+          "properties": {
+            "clientId": {
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WebApplicationFirewallComponentVersions": {
+          "description": "Versions of the NGINX App Protect Web Application Firewall (WAF) components.",
+          "properties": {
+            "wafEngineVersion": {
+              "description": "The version of the NGINX App Protect Web Application Firewall (WAF) engine.",
+              "type": "string"
+            },
+            "wafNginxVersion": {
+              "description": "The version of the NGINX App Protect Web Application Firewall (WAF) module for NGINX.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "wafEngineVersion",
+            "wafNginxVersion"
+          ],
+          "type": "object"
+        },
+        "WebApplicationFirewallPackage": {
+          "description": "NGINX App Protect Web Application Firewall (WAF) Package. Contains the version and revision date of the package.",
+          "properties": {
+            "revisionDatetime": {
+              "description": "The date and time of the package revision.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "version": {
+              "description": "The version of the NGINX App Protect Web Application Firewall (WAF) package.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "version",
+            "revisionDatetime"
+          ],
+          "type": "object"
+        },
+        "WebApplicationFirewallSettings": {
+          "description": "Settings for the NGINX App Protect Web Application Firewall (WAF)",
+          "properties": {
+            "activationState": {
+              "$ref": "#/components/schemas/ActivationState"
+            }
+          },
+          "type": "object"
+        },
+        "WebApplicationFirewallStatus": {
+          "description": "The status of the NGINX App Protect Web Application Firewall",
+          "properties": {
+            "attackSignaturesPackage": {
+              "$ref": "#/components/schemas/WebApplicationFirewallPackage"
+            },
+            "botSignaturesPackage": {
+              "$ref": "#/components/schemas/WebApplicationFirewallPackage"
+            },
+            "componentVersions": {
+              "$ref": "#/components/schemas/WebApplicationFirewallComponentVersions"
+            },
+            "threatCampaignsPackage": {
+              "$ref": "#/components/schemas/WebApplicationFirewallPackage"
+            },
+            "wafRelease": {
+              "description": "NGINX App Protect WAF release version",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "systemData_2": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "title": "Nginx.NginxPlus",
+      "version": "2025-11-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Nginx.NginxPlus/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Operations_List": {
+              "$ref": "./examples/Operations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Nginx.NginxPlus/nginxDeployments": {
+        "get": {
+          "description": "List the NGINX deployments resources",
+          "operationId": "Deployments_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_List": {
+              "$ref": "./examples/Deployments_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments": {
+        "get": {
+          "description": "List all NGINX deployments under the specified resource group.",
+          "operationId": "Deployments_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_ListByResourceGroup": {
+              "$ref": "./examples/Deployments_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}": {
+        "delete": {
+          "description": "Delete the NGINX deployment resource",
+          "operationId": "Deployments_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_Delete": {
+              "$ref": "./examples/Deployments_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the NGINX deployment",
+          "operationId": "Deployments_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeployment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_Get": {
+              "$ref": "./examples/Deployments_Get.json"
+            },
+            "Deployments_Get_AutoScale": {
+              "$ref": "./examples/Deployments_Get_AutoScale.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update the NGINX deployment",
+          "operationId": "Deployments_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxDeploymentUpdateParameters"
+                }
+              }
+            },
+            "description": "The Nginx deployment update parameters",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeployment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_Update": {
+              "$ref": "./examples/Deployments_Update.json"
+            },
+            "Deployments_UpdateSubnet": {
+              "$ref": "./examples/Deployments_UpdateSubnet.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/NginxDeployment",
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Create or update the NGINX deployment",
+          "operationId": "Deployments_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxDeployment"
+                }
+              }
+            },
+            "description": "The Nginx deployment",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeployment"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeployment' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeployment"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeployment' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "Deployments_Create": {
+              "$ref": "./examples/Deployments_Create.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/NginxDeployment",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/apiKeys": {
+        "get": {
+          "description": "List all API Keys of the given Nginx deployment",
+          "operationId": "ApiKeys_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentApiKeyListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentApiKeyResponses"
+          ],
+          "x-ms-examples": {
+            "ApiKeys_List": {
+              "$ref": "./examples/ApiKeys_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/apiKeys/{apiKeyName}": {
+        "delete": {
+          "description": "Delete API key for Nginx deployment",
+          "operationId": "ApiKeys_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The resource name of the API key",
+              "in": "path",
+              "name": "apiKeyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentApiKeyResponses"
+          ],
+          "x-ms-examples": {
+            "ApiKeys_Delete": {
+              "$ref": "./examples/ApiKeys_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get the specified API Key of the given Nginx deployment",
+          "operationId": "ApiKeys_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The resource name of the API key",
+              "in": "path",
+              "name": "apiKeyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentApiKeyResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentApiKeyResponses"
+          ],
+          "x-ms-examples": {
+            "ApiKeys_Get": {
+              "$ref": "./examples/ApiKeys_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update an API Key for the Nginx deployment in order to access the dataplane API endpoint",
+          "operationId": "ApiKeys_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The resource name of the API key",
+              "in": "path",
+              "name": "apiKeyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxDeploymentApiKeyRequest"
+                }
+              }
+            },
+            "description": "The API Key object containing fields (e.g. secret text, expiration date) to upsert the key.",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentApiKeyResponse"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeploymentApiKeyResponse' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentApiKeyResponse"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeploymentApiKeyResponse' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentApiKeyResponses"
+          ],
+          "x-ms-examples": {
+            "ApiKeys_CreateOrUpdate": {
+              "$ref": "./examples/ApiKeys_CreateOrUpdate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/certificates": {
+        "get": {
+          "description": "List all certificates of given NGINX deployment",
+          "operationId": "Certificates_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxCertificateListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxCertificates"
+          ],
+          "x-ms-examples": {
+            "Certificates_List": {
+              "$ref": "./examples/Certificates_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/certificates/{certificateName}": {
+        "delete": {
+          "description": "Deletes a certificate from the NGINX deployment",
+          "operationId": "Certificates_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of certificate",
+              "in": "path",
+              "name": "certificateName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxCertificates"
+          ],
+          "x-ms-examples": {
+            "Certificates_Delete": {
+              "$ref": "./examples/Certificates_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a certificate of given NGINX deployment",
+          "operationId": "Certificates_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of certificate",
+              "in": "path",
+              "name": "certificateName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxCertificate"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxCertificates"
+          ],
+          "x-ms-examples": {
+            "Certificates_Get": {
+              "$ref": "./examples/Certificates_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update the NGINX certificates for given NGINX deployment",
+          "operationId": "Certificates_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of certificate",
+              "in": "path",
+              "name": "certificateName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxCertificate"
+                }
+              }
+            },
+            "description": "The certificate",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxCertificate"
+                  }
+                }
+              },
+              "description": "Resource 'NginxCertificate' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxCertificate"
+                  }
+                }
+              },
+              "description": "Resource 'NginxCertificate' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxCertificates"
+          ],
+          "x-ms-examples": {
+            "Certificates_CreateOrUpdate": {
+              "$ref": "./examples/Certificates_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/NginxCertificate",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations": {
+        "get": {
+          "description": "List the NGINX configuration of given NGINX deployment.",
+          "operationId": "Configurations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxConfigurationListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxConfigurationResponses"
+          ],
+          "x-ms-examples": {
+            "Configurations_List": {
+              "$ref": "./examples/Configurations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/{configurationName}": {
+        "delete": {
+          "description": "Reset the NGINX configuration of given NGINX deployment to default",
+          "operationId": "Configurations_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of configuration, only 'default' is supported value due to the singleton of NGINX conf",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxConfigurationResponses"
+          ],
+          "x-ms-examples": {
+            "Configurations_Delete": {
+              "$ref": "./examples/Configurations_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the NGINX configuration of given NGINX deployment",
+          "operationId": "Configurations_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of configuration, only 'default' is supported value due to the singleton of NGINX conf",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxConfigurationResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxConfigurationResponses"
+          ],
+          "x-ms-examples": {
+            "Configurations_Get": {
+              "$ref": "./examples/Configurations_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update the NGINX configuration for given NGINX deployment",
+          "operationId": "Configurations_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of configuration, only 'default' is supported value due to the singleton of NGINX conf",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxConfigurationRequest"
+                }
+              }
+            },
+            "description": "The NGINX configuration",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxConfigurationResponse"
+                  }
+                }
+              },
+              "description": "Resource 'NginxConfigurationResponse' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxConfigurationResponse"
+                  }
+                }
+              },
+              "description": "Resource 'NginxConfigurationResponse' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxConfigurationResponses"
+          ],
+          "x-ms-examples": {
+            "Configurations_CreateOrUpdate": {
+              "$ref": "./examples/Configurations_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/NginxConfigurationResponse",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/configurations/{configurationName}/analyze": {
+        "post": {
+          "description": "Analyze an NGINX configuration without applying it to the NGINXaaS deployment",
+          "operationId": "Configurations_Analysis",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of configuration, only 'default' is supported value due to the singleton of NGINX conf",
+              "in": "path",
+              "name": "configurationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisCreate"
+                }
+              }
+            },
+            "description": "The NGINX configuration to analyze",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AnalysisResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxConfigurationResponses"
+          ],
+          "x-ms-examples": {
+            "Configurations_Analysis": {
+              "$ref": "./examples/Configurations_Analysis.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/listDefaultWafPolicies": {
+        "post": {
+          "description": "Get the Nginx Waf Policy of given Nginx deployment",
+          "operationId": "DefaultWafPolicy_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentDefaultWafPolicyListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "DefaultWafPolicy_List": {
+              "$ref": "./examples/DefaultWafPolicy_List.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/wafPolicies": {
+        "get": {
+          "description": "List Waf Policies of given Nginx deployment",
+          "operationId": "WafPolicy_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentWafPolicyListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeployments"
+          ],
+          "x-ms-examples": {
+            "WafPolicy_List": {
+              "$ref": "./examples/WafPolicy_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/wafPolicies/{wafPolicyName}": {
+        "delete": {
+          "description": "Reset the Nginx Waf Policy of given Nginx deployment to default",
+          "operationId": "WafPolicy_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of Waf Policy",
+              "in": "path",
+              "name": "wafPolicyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentWafPolicies"
+          ],
+          "x-ms-examples": {
+            "WafPolicy_Delete": {
+              "$ref": "./examples/WafPolicy_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the Nginx Waf Policy of given Nginx deployment",
+          "operationId": "WafPolicy_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of Waf Policy",
+              "in": "path",
+              "name": "wafPolicyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentWafPolicy"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentWafPolicies"
+          ],
+          "x-ms-examples": {
+            "WafPolicy_Get": {
+              "$ref": "./examples/WafPolicy_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update the Nginx Waf Policy for given Nginx deployment",
+          "operationId": "WafPolicy_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of Waf Policy",
+              "in": "path",
+              "name": "wafPolicyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxDeploymentWafPolicy"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentWafPolicy"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeploymentWafPolicy' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentWafPolicy"
+                  }
+                }
+              },
+              "description": "Resource 'NginxDeploymentWafPolicy' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentWafPolicies"
+          ],
+          "x-ms-examples": {
+            "WafPolicy_Create": {
+              "$ref": "./examples/WafPolicy_Create.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/NginxDeploymentWafPolicy",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Nginx.NginxPlus/nginxDeployments/{deploymentName}/wafPolicies/{wafPolicyName}/analyzeWafPolicy": {
+        "post": {
+          "description": "Analyze an Nginx Waf Policy",
+          "operationId": "NginxDeploymentWafPolicies_Analysis",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of targeted NGINX deployment",
+              "in": "path",
+              "name": "deploymentName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of Waf Policy",
+              "in": "path",
+              "name": "wafPolicyName",
+              "required": true,
+              "schema": {
+                "pattern": "^([a-z0-9A-Z][a-z0-9A-Z-]{0,28}[a-z0-9A-Z]|[a-z0-9A-Z])$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NginxDeploymentWafPolicyAnalysisCreateRequest"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NginxDeploymentWafPolicyAnalysisResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NginxDeploymentWafPolicies"
+          ],
+          "x-ms-examples": {
+            "NginxDeploymentWafPolicies_Analysis": {
+              "$ref": "./examples/NginxDeploymentWafPolicies_Analysis.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "NginxDeploymentApiKeyResponses"
+      },
+      {
+        "name": "NginxDeployments"
+      },
+      {
+        "name": "NginxCertificates"
+      },
+      {
+        "name": "NginxConfigurationResponses"
+      },
+      {
+        "name": "NginxDeploymentWafPolicies"
+      }
+    ]
+  }
+}

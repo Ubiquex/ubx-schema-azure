@@ -1,0 +1,3644 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_chaos_openapi",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "LocationParameter": {
+          "description": "The name of the Azure region.",
+          "in": "path",
+          "minLength": 1,
+          "name": "location",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "OperationIdParameter": {
+          "description": "The ID of an ongoing async operation.",
+          "in": "path",
+          "minLength": 1,
+          "name": "operationId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ActionStatus": {
+          "description": "Model that represents the an action and its status.",
+          "properties": {
+            "actionId": {
+              "description": "The id of the action status.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "actionName": {
+              "description": "The name of the action status.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endTime": {
+              "description": "String that represents the end time of the action.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "startTime": {
+              "description": "String that represents the start time of the action.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the action.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "targets": {
+              "description": "The array of targets.",
+              "items": {
+                "$ref": "#/components/schemas/ExperimentExecutionActionTargetDetailsProperties"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "Azure.Core.azureLocation": {
+          "description": "Represents an Azure geography region where supported resource providers live.",
+          "type": "string"
+        },
+        "BranchStatus": {
+          "description": "Model that represents the a list of actions and action statuses.",
+          "properties": {
+            "actions": {
+              "description": "The array of actions.",
+              "items": {
+                "$ref": "#/components/schemas/ActionStatus"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "actionId"
+              ]
+            },
+            "branchId": {
+              "description": "The id of the branch status.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "branchName": {
+              "description": "The name of the branch status.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the branch.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Capability": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Model that represents a Capability resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CapabilityProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CapabilityListResult": {
+          "description": "Model that represents a list of Capability resources and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Capability items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Capability"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "CapabilityProperties": {
+          "description": "Model that represents the Capability properties model.",
+          "properties": {
+            "description": {
+              "description": "Localized string of the description.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "parametersSchema": {
+              "description": "URL to retrieve JSON schema of the Capability parameters.",
+              "maxLength": 2048,
+              "readOnly": true,
+              "type": "string"
+            },
+            "publisher": {
+              "description": "String of the Publisher that this Capability extends.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "targetType": {
+              "description": "String of the Target Type that this Capability extends.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "urn": {
+              "description": "String of the URN for this Capability Type.",
+              "maxLength": 2048,
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CapabilityType": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Model that represents a Capability Type resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CapabilityTypeProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CapabilityTypeListResult": {
+          "description": "Model that represents a list of Capability Type resources and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The CapabilityType items on this page",
+              "items": {
+                "$ref": "#/components/schemas/CapabilityType"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "CapabilityTypeProperties": {
+          "description": "Model that represents the Capability Type properties model.",
+          "properties": {
+            "azureRbacActions": {
+              "description": "Control plane actions necessary to execute capability type.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "azureRbacDataActions": {
+              "description": "Data plane actions necessary to execute capability type.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "description": {
+              "description": "Localized string of the description.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Localized string of the display name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "kind": {
+              "description": "String of the kind of this Capability Type.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "parametersSchema": {
+              "description": "URL to retrieve JSON schema of the Capability Type parameters.",
+              "maxLength": 2048,
+              "readOnly": true,
+              "type": "string"
+            },
+            "publisher": {
+              "description": "String of the Publisher that this Capability Type extends.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requiredAzureRoleDefinitionIds": {
+              "description": "Required Azure Role Definition Ids to execute capability type.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "runtimeProperties": {
+              "$ref": "#/components/schemas/CapabilityTypePropertiesRuntimeProperties"
+            },
+            "targetType": {
+              "description": "String of the Target Type that this Capability Type extends.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "urn": {
+              "description": "String of the URN for this Capability Type.",
+              "maxLength": 2048,
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CapabilityTypePropertiesRuntimeProperties": {
+          "description": "Runtime properties of this Capability Type.",
+          "properties": {
+            "kind": {
+              "description": "String of the kind of the resource's action type (continuous or discrete).",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ChaosExperimentAction": {
+          "description": "Model that represents the base action model. 9 total per experiment.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "name": {
+              "description": "String that represents a Capability URN.",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ExperimentActionType"
+            }
+          },
+          "required": [
+            "name",
+            "type"
+          ],
+          "type": "object"
+        },
+        "ChaosExperimentBranch": {
+          "description": "Model that represents a branch in the step. 9 total per experiment.",
+          "properties": {
+            "actions": {
+              "description": "List of actions.",
+              "items": {
+                "$ref": "#/components/schemas/ChaosExperimentAction"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "name": {
+              "description": "String of the branch name.",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "actions"
+          ],
+          "type": "object"
+        },
+        "ChaosExperimentStep": {
+          "description": "Model that represents a step in the Experiment resource.",
+          "properties": {
+            "branches": {
+              "description": "List of branches.",
+              "items": {
+                "$ref": "#/components/schemas/ChaosExperimentBranch"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "name": {
+              "description": "String of the step name.",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "branches"
+          ],
+          "type": "object"
+        },
+        "ChaosTargetFilter": {
+          "description": "Model that represents available filter types that can be applied to a targets list.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "type": {
+              "$ref": "#/components/schemas/FilterType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ChaosTargetListSelector": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosTargetSelector"
+            }
+          ],
+          "description": "Model that represents a list selector.",
+          "properties": {
+            "targets": {
+              "description": "List of Target references.",
+              "items": {
+                "$ref": "#/components/schemas/TargetReference"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "targets"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "List"
+        },
+        "ChaosTargetQuerySelector": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosTargetSelector"
+            }
+          ],
+          "description": "Model that represents a query selector.",
+          "properties": {
+            "queryString": {
+              "description": "Azure Resource Graph (ARG) Query Language query for target resources.",
+              "type": "string"
+            },
+            "subscriptionIds": {
+              "description": "Subscription id list to scope resource query.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "queryString",
+            "subscriptionIds"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "Query"
+        },
+        "ChaosTargetSelector": {
+          "description": "Model that represents a selector in the Experiment resource.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "filter": {
+              "$ref": "#/components/schemas/ChaosTargetFilter"
+            },
+            "id": {
+              "description": "String of the selector ID.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/SelectorType"
+            }
+          },
+          "required": [
+            "id",
+            "type"
+          ],
+          "type": "object"
+        },
+        "ChaosTargetSimpleFilter": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosTargetFilter"
+            }
+          ],
+          "description": "Model that represents a simple target filter.",
+          "properties": {
+            "parameters": {
+              "$ref": "#/components/schemas/ChaosTargetSimpleFilterParameters"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Simple"
+        },
+        "ChaosTargetSimpleFilterParameters": {
+          "description": "Model that represents the Simple filter parameters.",
+          "properties": {
+            "zones": {
+              "description": "List of Azure availability zones to filter targets by.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ContinuousAction": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosExperimentAction"
+            }
+          ],
+          "description": "Model that represents a continuous action.",
+          "properties": {
+            "duration": {
+              "description": "ISO8601 formatted string that represents a duration.",
+              "format": "duration",
+              "type": "string"
+            },
+            "parameters": {
+              "description": "List of key value pairs.",
+              "items": {
+                "$ref": "#/components/schemas/KeyValuePair"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "key"
+              ]
+            },
+            "selectorId": {
+              "description": "String that represents a selector.",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "duration",
+            "parameters",
+            "selectorId"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "continuous"
+        },
+        "DelayAction": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosExperimentAction"
+            }
+          ],
+          "description": "Model that represents a delay action.",
+          "properties": {
+            "duration": {
+              "description": "ISO8601 formatted string that represents a duration.",
+              "format": "duration",
+              "type": "string"
+            }
+          },
+          "required": [
+            "duration"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "delay"
+        },
+        "DiscreteAction": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ChaosExperimentAction"
+            }
+          ],
+          "description": "Model that represents a discrete action.",
+          "properties": {
+            "parameters": {
+              "description": "List of key value pairs.",
+              "items": {
+                "$ref": "#/components/schemas/KeyValuePair"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "key"
+              ]
+            },
+            "selectorId": {
+              "description": "String that represents a selector.",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "parameters",
+            "selectorId"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "discrete"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "Experiment": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Model that represents a Experiment resource.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ExperimentProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "ExperimentActionType": {
+          "description": "Enum union of Chaos experiment action types.",
+          "enum": [
+            "delay",
+            "discrete",
+            "continuous"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ExperimentActionType",
+            "values": [
+              {
+                "name": "delay",
+                "value": "delay"
+              },
+              {
+                "name": "discrete",
+                "value": "discrete"
+              },
+              {
+                "name": "continuous",
+                "value": "continuous"
+              }
+            ]
+          }
+        },
+        "ExperimentExecution": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Model that represents the execution of a Experiment.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ExperimentExecutionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionActionTargetDetailsError": {
+          "description": "Model that represents the Experiment action target details error model.",
+          "properties": {
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "message": {
+              "description": "The error message",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionActionTargetDetailsProperties": {
+          "description": "Model that represents the Experiment action target details properties model.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ExperimentExecutionActionTargetDetailsError"
+            },
+            "status": {
+              "description": "The status of the execution.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The target for the action.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "targetCompletedTime": {
+              "description": "String that represents the completed date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "targetFailedTime": {
+              "description": "String that represents the failed date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionDetails": {
+          "description": "Model that represents the execution details of an Experiment.",
+          "properties": {
+            "id": {
+              "description": "String of the fully qualified resource ID.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "String of the resource name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ExperimentExecutionDetailsProperties"
+            },
+            "type": {
+              "description": "String of the resource type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionDetailsProperties": {
+          "description": "Model that represents the extended properties of an experiment execution.",
+          "properties": {
+            "failureReason": {
+              "description": "The reason why the execution failed.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastActionAt": {
+              "description": "String that represents the last action date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "runInformation": {
+              "$ref": "#/components/schemas/ExperimentExecutionDetailsPropertiesRunInformation"
+            },
+            "startedAt": {
+              "description": "String that represents the start date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the execution.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "stoppedAt": {
+              "description": "String that represents the stop date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionDetailsPropertiesRunInformation": {
+          "description": "The information of the experiment run.",
+          "properties": {
+            "steps": {
+              "description": "The steps of the experiment run.",
+              "items": {
+                "$ref": "#/components/schemas/StepStatus"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "stepName"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentExecutionListResult": {
+          "description": "Model that represents a list of Experiment executions and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ExperimentExecution items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ExperimentExecution"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ExperimentExecutionProperties": {
+          "description": "Model that represents the execution properties of an Experiment.",
+          "properties": {
+            "startedAt": {
+              "description": "String that represents the start date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the execution.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "stoppedAt": {
+              "description": "String that represents the stop date time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExperimentListResult": {
+          "description": "Model that represents a list of Experiment resources and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Experiment items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Experiment"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ExperimentProperties": {
+          "description": "Model that represents the Experiment properties model.",
+          "properties": {
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "selectors": {
+              "description": "List of selectors.",
+              "items": {
+                "$ref": "#/components/schemas/ChaosTargetSelector"
+              },
+              "type": "array"
+            },
+            "steps": {
+              "description": "List of steps.",
+              "items": {
+                "$ref": "#/components/schemas/ChaosExperimentStep"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "steps",
+            "selectors"
+          ],
+          "type": "object"
+        },
+        "ExperimentUpdate": {
+          "description": "Describes an experiment update.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "FilterType": {
+          "description": "Enum that discriminates between filter types. Currently only `Simple` type is supported.",
+          "enum": [
+            "Simple"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "FilterType",
+            "values": [
+              {
+                "description": "Simple filter type.",
+                "name": "Simple",
+                "value": "Simple"
+              }
+            ]
+          }
+        },
+        "KeyValuePair": {
+          "description": "A key-value pair used to describe parameters for actions or configurations.",
+          "properties": {
+            "key": {
+              "description": "The name of the setting for the action.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "value": {
+              "description": "The value of the setting for the action.",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "key",
+            "value"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "$ref": "#/components/schemas/UserAssignedIdentities"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "OperationStatusResult": {
+          "description": "The current status of an async operation.",
+          "properties": {
+            "endTime": {
+              "description": "The end time of the operation.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            },
+            "id": {
+              "description": "Fully qualified ID for the async operation.",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of the async operation.",
+              "type": "string"
+            },
+            "operations": {
+              "description": "The operations list.",
+              "items": {
+                "$ref": "#/components/schemas/OperationStatusResult"
+              },
+              "type": "array"
+            },
+            "percentComplete": {
+              "description": "Percent of the operation that is complete.",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            "resourceId": {
+              "description": "Fully qualified ID of the resource against which the original async operation was started.",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "startTime": {
+              "description": "The start time of the operation.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "status": {
+              "description": "Operation status.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "type": "object"
+        },
+        "OperationStatusResult_2": {
+          "description": "The current status of an async operation.",
+          "properties": {
+            "endTime": {
+              "description": "The end time of the operation.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            },
+            "id": {
+              "description": "Fully qualified ID for the async operation.",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of the async operation.",
+              "type": "string"
+            },
+            "operations": {
+              "description": "The operations list.",
+              "items": {
+                "$ref": "#/components/schemas/OperationStatusResult"
+              },
+              "type": "array"
+            },
+            "percentComplete": {
+              "description": "Percent of the operation that is complete.",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            "resourceId": {
+              "description": "Fully qualified ID of the resource against which the original async operation was started.",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "startTime": {
+              "description": "The start time of the operation.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "status": {
+              "description": "Operation status.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Current provisioning state for a given Azure Chaos resource.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Creating",
+            "Updating",
+            "Deleting"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Resource has been created.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Resource creation failed.",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Resource creation was canceled.",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Initial creation in progress.",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "Update in progress.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Deletion in progress.",
+                "name": "Deleting",
+                "value": "Deleting"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SelectorType": {
+          "description": "Enum of the selector type.",
+          "enum": [
+            "List",
+            "Query"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SelectorType",
+            "values": [
+              {
+                "description": "List selector type.",
+                "name": "List",
+                "value": "List"
+              },
+              {
+                "description": "Query selector type.",
+                "name": "Query",
+                "value": "Query"
+              }
+            ]
+          }
+        },
+        "StepStatus": {
+          "description": "Model that represents the a list of branches and branch statuses.",
+          "properties": {
+            "branches": {
+              "description": "The array of branches.",
+              "items": {
+                "$ref": "#/components/schemas/BranchStatus"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "branchName"
+              ]
+            },
+            "status": {
+              "description": "The value of the status of the step.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "stepId": {
+              "description": "The id of the step.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "stepName": {
+              "description": "The name of the step.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Target": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Model that represents a Target resource.",
+          "properties": {
+            "location": {
+              "$ref": "#/components/schemas/Azure.Core.azureLocation"
+            },
+            "properties": {
+              "additionalProperties": {},
+              "description": "The properties of the target resource.",
+              "type": "object",
+              "x-ms-client-flatten": true
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "TargetListResult": {
+          "description": "Model that represents a list of Target resources and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Target items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Target"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "TargetReference": {
+          "description": "Model that represents a reference to a Target in the selector.",
+          "properties": {
+            "id": {
+              "description": "String of the resource ID of a Target resource.",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/TargetReferenceType"
+            }
+          },
+          "required": [
+            "type",
+            "id"
+          ],
+          "type": "object"
+        },
+        "TargetReferenceType": {
+          "description": "Enum of the Target reference type.",
+          "enum": [
+            "ChaosTarget"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "TargetReferenceType",
+            "values": [
+              {
+                "description": "Chaos target reference type.",
+                "name": "ChaosTarget",
+                "value": "ChaosTarget"
+              }
+            ]
+          }
+        },
+        "TargetType": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Model that represents a Target Type resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/TargetTypeProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "TargetTypeListResult": {
+          "description": "Model that represents a list of Target Type resources and a link for pagination.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The TargetType items on this page",
+              "items": {
+                "$ref": "#/components/schemas/TargetType"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "TargetTypeProperties": {
+          "description": "Model that represents the base Target Type properties model.",
+          "properties": {
+            "description": {
+              "description": "Localized string of the description.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Localized string of the display name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "propertiesSchema": {
+              "description": "URL to retrieve JSON schema of the Target Type properties.",
+              "maxLength": 2048,
+              "readOnly": true,
+              "type": "string"
+            },
+            "resourceTypes": {
+              "description": "List of resource types this Target Type can extend.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserAssignedIdentities": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/UserAssignedIdentity",
+            "x-nullable": true
+          },
+          "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+          "title": "User-Assigned Identities",
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Chaos Management Client",
+      "title": "ChaosManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Chaos/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_ListAll",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Lists all Chaos Studio operations.": {
+              "$ref": "./examples/Operations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/experiments": {
+        "get": {
+          "description": "Get a list of Experiment resources in a subscription.",
+          "operationId": "Experiments_ListAll",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Optional value that indicates whether to filter results based on if the Experiment is currently running. If null, then the results will not be filtered.",
+              "in": "query",
+              "name": "running",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExperimentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "List all Experiments in a subscription.": {
+              "$ref": "./examples/Experiments_ListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/locations/{location}/operationStatuses/{operationId}": {
+        "get": {
+          "description": "Returns the current status of an async operation.",
+          "operationId": "OperationStatuses_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "$ref": "#/components/parameters/OperationIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationStatusResult_2"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "OperationStatuses"
+          ],
+          "x-ms-examples": {
+            "Gets Chaos Studio async operation status.": {
+              "$ref": "./examples/OperationStatuses_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/locations/{location}/targetTypes": {
+        "get": {
+          "description": "Get a list of Target Type resources for given location.",
+          "operationId": "TargetTypes_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TargetTypeListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TargetTypes"
+          ],
+          "x-ms-examples": {
+            "List all Target Types for westus2 location.": {
+              "$ref": "./examples/TargetTypes_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/locations/{location}/targetTypes/{targetTypeName}": {
+        "get": {
+          "description": "Get a Target Type resources for given location.",
+          "operationId": "TargetTypes_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "description": "String that represents a Target Type resource name.",
+              "in": "path",
+              "name": "targetTypeName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TargetType"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "TargetTypes"
+          ],
+          "x-ms-examples": {
+            "Get a Target Type for westus2 location": {
+              "$ref": "./examples/TargetTypes_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/locations/{location}/targetTypes/{targetTypeName}/capabilityTypes": {
+        "get": {
+          "description": "Get a list of Capability Type resources for given Target Type and location.",
+          "operationId": "CapabilityTypes_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "description": "String that represents a Target Type resource name.",
+              "in": "path",
+              "name": "targetTypeName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CapabilityTypeListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "CapabilityTypes"
+          ],
+          "x-ms-examples": {
+            "List all Capability Types for a virtual machine Target resource on westus2 location.": {
+              "$ref": "./examples/CapabilityTypes_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Chaos/locations/{location}/targetTypes/{targetTypeName}/capabilityTypes/{capabilityTypeName}": {
+        "get": {
+          "description": "Get a Capability Type resource for given Target Type and location.",
+          "operationId": "CapabilityTypes_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "description": "String that represents a Target Type resource name.",
+              "in": "path",
+              "name": "targetTypeName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Capability Type resource name.",
+              "in": "path",
+              "name": "capabilityTypeName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9\\-\\.]+-\\d\\.\\d$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CapabilityType"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "CapabilityTypes"
+          ],
+          "x-ms-examples": {
+            "Get a Capability Type for a virtual machine Target resource on westus2 location.": {
+              "$ref": "./examples/CapabilityTypes_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments": {
+        "get": {
+          "description": "Get a list of Experiment resources in a resource group.",
+          "operationId": "Experiments_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Optional value that indicates whether to filter results based on if the Experiment is currently running. If null, then the results will not be filtered.",
+              "in": "query",
+              "name": "running",
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExperimentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "List all Experiments in a resource group.": {
+              "$ref": "./examples/Experiments_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}": {
+        "delete": {
+          "description": "Delete a Experiment resource.",
+          "operationId": "Experiments_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Delete a Experiment in a resource group.": {
+              "$ref": "./examples/Experiments_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a Experiment resource.",
+          "operationId": "Experiments_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Experiment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Get a Experiment in a resource group.": {
+              "$ref": "./examples/Experiments_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update an experiment.",
+          "operationId": "Experiments_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentUpdate"
+                }
+              }
+            },
+            "description": "Parameters supplied to the Update experiment operation.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Experiment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Update an Experiment in a resource group.": {
+              "$ref": "./examples/Experiments_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Create or update a Experiment resource.",
+          "operationId": "Experiments_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            },
+            "description": "Experiment resource to be created or updated.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Experiment"
+                  }
+                }
+              },
+              "description": "Resource 'Experiment' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Experiment"
+                  }
+                }
+              },
+              "description": "Resource 'Experiment' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Create/update a Experiment in a resource group.": {
+              "$ref": "./examples/Experiments_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}/cancel": {
+        "post": {
+          "description": "Cancel a running Experiment resource.",
+          "operationId": "Experiments_Cancel",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Cancel a running Experiment.": {
+              "$ref": "./examples/Experiments_Cancel.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}/executions": {
+        "get": {
+          "description": "Get a list of executions of an Experiment resource.",
+          "operationId": "Experiments_ListAllExecutions",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExperimentExecutionListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ExperimentExecutions"
+          ],
+          "x-ms-examples": {
+            "List all executions of an Experiment.": {
+              "$ref": "./examples/Experiments_ListAllExecutions.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}/executions/{executionId}": {
+        "get": {
+          "description": "Get an execution of an Experiment resource.",
+          "operationId": "Experiments_GetExecution",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "GUID that represents a Experiment execution detail.",
+              "in": "path",
+              "name": "executionId",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExperimentExecution"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ExperimentExecutions"
+          ],
+          "x-ms-examples": {
+            "Get the execution of a Experiment.": {
+              "$ref": "./examples/Experiments_GetExecution.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}/executions/{executionId}/getExecutionDetails": {
+        "post": {
+          "description": "Execution details of an experiment resource.",
+          "operationId": "Experiments_ExecutionDetails",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "GUID that represents a Experiment execution detail.",
+              "in": "path",
+              "name": "executionId",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExperimentExecutionDetails"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ExperimentExecutions"
+          ],
+          "x-ms-examples": {
+            "Get experiment execution details.": {
+              "$ref": "./examples/Experiments_ExecutionDetails.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Chaos/experiments/{experimentName}/start": {
+        "post": {
+          "description": "Start a Experiment resource.",
+          "operationId": "Experiments_Start",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "String that represents a Experiment resource name.",
+              "in": "path",
+              "name": "experimentName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "pattern": "^[^\u003c\u003e%\u0026:?#/\\\\]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Experiments"
+          ],
+          "x-ms-examples": {
+            "Start a Experiment.": {
+              "$ref": "./examples/Experiments_Start.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Chaos/targets": {
+        "get": {
+          "description": "Get a list of Target resources that extend a tracked regional resource.",
+          "operationId": "Targets_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TargetListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Targets"
+          ],
+          "x-ms-examples": {
+            "List all Targets that extend a virtual machine resource.": {
+              "$ref": "./examples/Targets_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Chaos/targets/{targetName}": {
+        "delete": {
+          "description": "Delete a Target resource that extends a tracked regional resource.",
+          "operationId": "Targets_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Targets"
+          ],
+          "x-ms-examples": {
+            "Delete a Target that extends a virtual machine resource.": {
+              "$ref": "./examples/Targets_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a Target resource that extends a tracked regional resource.",
+          "operationId": "Targets_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Target"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Targets"
+          ],
+          "x-ms-examples": {
+            "Get a Target that extends a virtual machine resource.": {
+              "$ref": "./examples/Targets_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a Target resource that extends a tracked regional resource.",
+          "operationId": "Targets_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Target"
+                }
+              }
+            },
+            "description": "Target resource to be created or updated.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Target"
+                  }
+                }
+              },
+              "description": "Resource 'Target' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Target"
+                  }
+                }
+              },
+              "description": "Resource 'Target' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Targets"
+          ],
+          "x-ms-examples": {
+            "Create/update a Target that extends a virtual machine resource.": {
+              "$ref": "./examples/Targets_CreateOrUpdate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Chaos/targets/{targetName}/capabilities": {
+        "get": {
+          "description": "Get a list of Capability resources that extend a Target resource.",
+          "operationId": "Capabilities_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that sets the continuation token.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CapabilityListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Capabilities"
+          ],
+          "x-ms-examples": {
+            "List all Capabilities that extend a virtual machine Target resource.": {
+              "$ref": "./examples/Capabilities_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{parentProviderNamespace}/{parentResourceType}/{parentResourceName}/providers/Microsoft.Chaos/targets/{targetName}/capabilities/{capabilityName}": {
+        "delete": {
+          "description": "Delete a Capability that extends a Target resource.",
+          "operationId": "Capabilities_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Capability resource name.",
+              "in": "path",
+              "name": "capabilityName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9\\-\\.]+-\\d\\.\\d$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Capabilities"
+          ],
+          "x-ms-examples": {
+            "Delete a Capability that extends a virtual machine Target resource.": {
+              "$ref": "./examples/Capabilities_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a Capability resource that extends a Target resource.",
+          "operationId": "Capabilities_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Capability resource name.",
+              "in": "path",
+              "name": "capabilityName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9\\-\\.]+-\\d\\.\\d$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Capability"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Capabilities"
+          ],
+          "x-ms-examples": {
+            "Get a Capability that extends a virtual machine Target resource.": {
+              "$ref": "./examples/Capabilities_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a Capability resource that extends a Target resource.",
+          "operationId": "Capabilities_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The parent resource provider namespace.",
+              "in": "path",
+              "name": "parentProviderNamespace",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource type.",
+              "in": "path",
+              "name": "parentResourceType",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The parent resource name.",
+              "in": "path",
+              "name": "parentResourceName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Target resource name.",
+              "in": "path",
+              "name": "targetName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+                "type": "string"
+              }
+            },
+            {
+              "description": "String that represents a Capability resource name.",
+              "in": "path",
+              "name": "capabilityName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9\\-\\.]+-\\d\\.\\d$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capability"
+                }
+              }
+            },
+            "description": "Capability resource to be created or updated.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Capability"
+                  }
+                }
+              },
+              "description": "Resource 'Capability' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Capability"
+                  }
+                }
+              },
+              "description": "Resource 'Capability' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Capabilities"
+          ],
+          "x-ms-examples": {
+            "Create/update a Capability that extends a virtual machine Target resource.": {
+              "$ref": "./examples/Capabilities_CreateOrUpdate.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Capabilities"
+      },
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "Targets"
+      },
+      {
+        "name": "CapabilityTypes"
+      },
+      {
+        "name": "Experiments"
+      },
+      {
+        "name": "ExperimentExecutions"
+      },
+      {
+        "name": "TargetTypes"
+      },
+      {
+        "name": "OperationStatuses"
+      }
+    ]
+  }
+}

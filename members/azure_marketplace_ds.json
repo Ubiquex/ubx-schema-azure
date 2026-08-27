@@ -1,0 +1,4790 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_marketplace",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Accessibility": {
+          "description": "Plan accessibility",
+          "enum": [
+            "Unknown",
+            "Public",
+            "PrivateTenantOnLevel",
+            "PrivateSubscriptionOnLevel"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Accessibility",
+            "values": [
+              {
+                "name": "Unknown",
+                "value": "Unknown"
+              },
+              {
+                "name": "Public",
+                "value": "Public"
+              },
+              {
+                "name": "PrivateTenantOnLevel",
+                "value": "PrivateTenantOnLevel"
+              },
+              {
+                "name": "PrivateSubscriptionOnLevel",
+                "value": "PrivateSubscriptionOnLevel"
+              }
+            ]
+          }
+        },
+        "AcknowledgeOfferNotificationDetails": {
+          "description": "Notification update request payload details",
+          "properties": {
+            "acknowledge": {
+              "description": "Gets or sets a value indicating whether acknowledge action flag is enabled",
+              "type": "boolean"
+            },
+            "addPlans": {
+              "description": "Gets or sets added plans",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "dismiss": {
+              "description": "Gets or sets a value indicating whether dismiss action flag is enabled",
+              "type": "boolean"
+            },
+            "removeOffer": {
+              "description": "Gets or sets a value indicating whether remove offer action flag is enabled",
+              "type": "boolean"
+            },
+            "removePlans": {
+              "description": "Gets or sets remove plans",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "AcknowledgeOfferNotificationProperties": {
+          "description": "Notification update request payload",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AcknowledgeOfferNotificationDetails"
+            }
+          },
+          "type": "object"
+        },
+        "AdminAction": {
+          "description": "Gets or sets admin action",
+          "enum": [
+            "Approved",
+            "Rejected"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AdminAction",
+            "values": [
+              {
+                "name": "Approved",
+                "value": "Approved"
+              },
+              {
+                "name": "Rejected",
+                "value": "Rejected"
+              }
+            ]
+          }
+        },
+        "AdminRequestApprovalProperties": {
+          "description": "Admin approval request resource properties",
+          "properties": {
+            "adminAction": {
+              "$ref": "#/components/schemas/AdminAction"
+            },
+            "administrator": {
+              "description": "Gets or sets admin details",
+              "type": "string"
+            },
+            "approvedPlans": {
+              "description": "Gets or sets Approved plans ids, empty in case of rejected",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "collectionIds": {
+              "description": "Gets or sets list of associated collection ids",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "comment": {
+              "description": "Gets or sets admin comment",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Gets display name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "icon": {
+              "description": "The offer icon url.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "offerId": {
+              "description": "Gets or sets offer Id",
+              "type": "string"
+            },
+            "plans": {
+              "description": "Gets list of plans with requesters details",
+              "items": {
+                "$ref": "#/components/schemas/PlanRequesterDetails"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            },
+            "publisherId": {
+              "description": "Gets or sets publisher Id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AdminRequestApprovalsList": {
+          "description": "List of admin request approval resources",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of notifications list results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/AdminRequestApprovalsResource"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "AdminRequestApprovalsResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Admin request approval resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AdminRequestApprovalProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AnyExistingOffersInTheCollectionsResponse": {
+          "description": "Response object of query if are there existing offers in the collections.",
+          "properties": {
+            "value": {
+              "description": "Boolean answer, true if exists at least a single offer in an enabled collection, otherwise, false.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "Availability": {
+          "description": "Indicates private store availability",
+          "enum": [
+            "enabled",
+            "disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Availability",
+            "values": [
+              {
+                "name": "enabled",
+                "value": "enabled"
+              },
+              {
+                "name": "disabled",
+                "value": "disabled"
+              }
+            ]
+          }
+        },
+        "BillingAccountsResponse": {
+          "description": "Billing accounts response object",
+          "properties": {
+            "billingAccounts": {
+              "description": "Billing accounts list",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "BulkCollectionsDetails": {
+          "description": "Bulk collection details",
+          "properties": {
+            "action": {
+              "description": "Action to perform (For example: EnableCollections, DisableCollections)",
+              "type": "string"
+            },
+            "collectionIds": {
+              "description": "collection ids list that the action is performed on",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "BulkCollectionsPayload": {
+          "description": "Bulk collections action properties",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/BulkCollectionsDetails"
+            }
+          },
+          "type": "object"
+        },
+        "BulkCollectionsResponse": {
+          "description": "The bulk collections response. The response contains two lists that indicate for each collection whether the operation succeeded or failed",
+          "properties": {
+            "failed": {
+              "description": "Failed collections",
+              "items": {
+                "$ref": "#/components/schemas/CollectionsDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "collectionId"
+              ]
+            },
+            "succeeded": {
+              "description": "Succeeded collections",
+              "items": {
+                "$ref": "#/components/schemas/CollectionsDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "collectionId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Collection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The Collection data structure.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CollectionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionOffersByAllContextsPayload": {
+          "description": "Suggested subscription list",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CollectionOffersByAllContextsProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionOffersByAllContextsProperties": {
+          "description": "Suggested subscription list",
+          "properties": {
+            "subscriptionIds": {
+              "description": "Subscription ids list",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionOffersByContext": {
+          "description": "List of offers and plans that restricted to the context",
+          "properties": {
+            "context": {
+              "description": "Offer's context, e.g. subscription ID, tenant ID.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "offers": {
+              "$ref": "#/components/schemas/CollectionOffersByContextOffers"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionOffersByContextList": {
+          "description": "List of objects which describes offers per context. An empty GUID is a public context.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of offer list per context results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/CollectionOffersByContext"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "context"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "CollectionOffersByContextOffers": {
+          "description": "List of offers",
+          "properties": {
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/OfferProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "uniqueOfferId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "CollectionProperties": {
+          "description": "The collection details",
+          "properties": {
+            "allSubscriptions": {
+              "description": "Indicating whether all subscriptions are selected (=true) or not (=false).",
+              "type": "boolean"
+            },
+            "appliedRules": {
+              "description": "Gets list of collection rules",
+              "items": {
+                "$ref": "#/components/schemas/Rule"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "type"
+              ]
+            },
+            "approveAllItems": {
+              "description": "Indicating whether all items are approved for this collection (=true) or not (=false).",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "approveAllItemsModifiedAt": {
+              "description": "Gets the modified date of all items approved.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "claim": {
+              "description": "Gets or sets the association with Commercial's Billing Account.",
+              "type": "string"
+            },
+            "collectionId": {
+              "description": "Gets collection Id.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "collectionName": {
+              "description": "Gets or sets collection name.",
+              "type": "string"
+            },
+            "enabled": {
+              "description": "Indicating whether the collection is enabled or disabled.",
+              "type": "boolean"
+            },
+            "numberOfOffers": {
+              "description": "Gets the number of offers associated with the collection.",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "subscriptionsList": {
+              "description": "Gets or sets subscription ids list. Empty list indicates all subscriptions are selected, null indicates no update is done, explicit list indicates the explicit selected subscriptions. On insert, null is considered as bad request",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionsDetails": {
+          "description": "Collection name and id.",
+          "properties": {
+            "collectionId": {
+              "description": "Collection id.",
+              "type": "string"
+            },
+            "collectionName": {
+              "description": "Collection name.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionsList": {
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of offer list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/Collection"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionsToSubscriptionsMappingPayload": {
+          "description": "The subscriptions list to get the related collections",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CollectionsToSubscriptionsMappingProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionsToSubscriptionsMappingProperties": {
+          "description": "The subscriptions list to get the related collections",
+          "properties": {
+            "subscriptionIds": {
+              "description": "Subscriptions ids list",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionsToSubscriptionsMappingResponse": {
+          "description": "A map of collections subscriptions details",
+          "properties": {
+            "details": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/collectionsSubscriptionsMappingDetails"
+              },
+              "description": "The map of collections subscriptions",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "ContextAndPlansDetails": {
+          "description": "Object of plans per context.",
+          "properties": {
+            "context": {
+              "description": "Plan's context, e.g. subscription ID, tenant ID.",
+              "type": "string"
+            },
+            "planIds": {
+              "description": "List of plan IDs.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Error response indicates Microsoft.Marketplace service is not able to process the incoming request. The reason is provided in the error message.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorResponseError"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponseError": {
+          "description": "The details of the error.",
+          "properties": {
+            "code": {
+              "description": "Error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "message": {
+              "description": "Error message indicating why the operation failed.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IdentityType": {
+          "description": "The type of identity that creates/modifies resources",
+          "enum": [
+            "User",
+            "Application",
+            "ManagedIdentity",
+            "Key"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IdentityType",
+            "values": [
+              {
+                "name": "User",
+                "value": "User"
+              },
+              {
+                "name": "Application",
+                "value": "Application"
+              },
+              {
+                "name": "ManagedIdentity",
+                "value": "ManagedIdentity"
+              },
+              {
+                "name": "Key",
+                "value": "Key"
+              }
+            ]
+          }
+        },
+        "MultiContextAndPlansPayload": {
+          "description": "Payload object for upsert offer with multiple context and plans.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/MultiContextAndPlansProperties"
+            }
+          },
+          "type": "object"
+        },
+        "MultiContextAndPlansProperties": {
+          "description": "Object describes multiple context and plans.",
+          "properties": {
+            "eTag": {
+              "description": "The offer's eTag.",
+              "type": "string"
+            },
+            "offerId": {
+              "description": "The offer ID which contains the plans.",
+              "type": "string"
+            },
+            "plansContext": {
+              "items": {
+                "$ref": "#/components/schemas/ContextAndPlansDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "context"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "NewNotifications": {
+          "description": "New plans notification details",
+          "properties": {
+            "displayName": {
+              "description": "Gets offer display name",
+              "type": "string"
+            },
+            "icon": {
+              "description": "Gets or sets the icon url",
+              "type": "string"
+            },
+            "isFuturePlansEnabled": {
+              "description": "Gets a value indicating whether future plans is enabled.",
+              "type": "boolean"
+            },
+            "messageCode": {
+              "description": "Gets or sets the notification message id",
+              "format": "int64",
+              "type": "integer"
+            },
+            "offerId": {
+              "description": "Gets offer id",
+              "type": "string"
+            },
+            "plans": {
+              "description": "Gets or sets removed plans notifications",
+              "items": {
+                "$ref": "#/components/schemas/PlanNotificationDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "NewPlansNotificationsList": {
+          "description": "List of all new plans notifications for public offers",
+          "properties": {
+            "newPlansNotifications": {
+              "items": {
+                "$ref": "#/components/schemas/NewNotifications"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "NotificationsSettingsProperties": {
+          "description": "Describes the json payload for notifications settings",
+          "properties": {
+            "recipients": {
+              "description": "Gets or sets list of notified recipients for new requests",
+              "items": {
+                "$ref": "#/components/schemas/Recipient"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "principalId"
+              ]
+            },
+            "sendToAllMarketplaceAdmins": {
+              "description": "Gets or sets whether to send email to all marketplace admins for new requests",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "Offer": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The privateStore offer data structure.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/OfferProperties"
+            }
+          },
+          "type": "object"
+        },
+        "OfferListResponse": {
+          "description": "Paged collection of Offer items",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Offer items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Offer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "OfferProperties": {
+          "properties": {
+            "createdAt": {
+              "description": "Private store offer creation date",
+              "readOnly": true,
+              "type": "string"
+            },
+            "eTag": {
+              "description": "Identifier for purposes of race condition",
+              "type": "string"
+            },
+            "iconFileUris": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Icon File Uris",
+              "type": "object"
+            },
+            "isStopSell": {
+              "description": "Indicating whether the offer is stop sell or not.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "modifiedAt": {
+              "description": "Private store offer modification date",
+              "readOnly": true,
+              "type": "string"
+            },
+            "offerDisplayName": {
+              "description": "It will be displayed prominently in the marketplace",
+              "readOnly": true,
+              "type": "string"
+            },
+            "plans": {
+              "description": "Offer plans",
+              "items": {
+                "$ref": "#/components/schemas/Plan"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            },
+            "privateStoreId": {
+              "description": "Private store unique id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publisherDisplayName": {
+              "description": "Publisher name that will be displayed prominently in the marketplace",
+              "readOnly": true,
+              "type": "string"
+            },
+            "specificPlanIdsLimitation": {
+              "description": "Plan ids limitation for this offer",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "uniqueOfferId": {
+              "description": "Offers unique id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "updateSuppressedDueIdempotence": {
+              "description": "Indicating whether the offer was not updated to db (true = not updated). If the allow list is identical to the existed one in db, the offer would not be updated.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Set the Operation for the POST method. Ping or Delete",
+          "enum": [
+            "DeletePrivateStoreOffer",
+            "DeletePrivateStoreCollection",
+            "DeletePrivateStoreCollectionOffer",
+            "Ping"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Operation",
+            "values": [
+              {
+                "name": "DeletePrivateStoreOffer",
+                "value": "DeletePrivateStoreOffer"
+              },
+              {
+                "name": "DeletePrivateStoreCollection",
+                "value": "DeletePrivateStoreCollection"
+              },
+              {
+                "name": "DeletePrivateStoreCollectionOffer",
+                "value": "DeletePrivateStoreCollectionOffer"
+              },
+              {
+                "name": "Ping",
+                "value": "Ping"
+              }
+            ]
+          }
+        },
+        "OperationListResult": {
+          "description": "Result of the request to list Marketplace operations. It contains a list of operations and a URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of Microsoft.Marketplace operations supported by the Microsoft.Marketplace resource provider.",
+              "items": {
+                "$ref": "#/components/schemas/SingleOperation"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Plan": {
+          "properties": {
+            "accessibility": {
+              "$ref": "#/components/schemas/Accessibility"
+            },
+            "altStackReference": {
+              "description": "Alternative stack type",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isStopSell": {
+              "description": "Indicating whether the plan is stop sell or not.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "planDisplayName": {
+              "description": "Friendly name for the plan for display in the marketplace",
+              "readOnly": true,
+              "type": "string"
+            },
+            "planId": {
+              "description": "Text identifier for this plan",
+              "readOnly": true,
+              "type": "string"
+            },
+            "skuId": {
+              "description": "Identifier for this plan",
+              "readOnly": true,
+              "type": "string"
+            },
+            "stackType": {
+              "description": "Stack type (classic or arm)",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PlanNotificationDetails": {
+          "description": "Plan notification details",
+          "properties": {
+            "planDisplayName": {
+              "description": "Gets or sets the plan display name",
+              "type": "string"
+            },
+            "planId": {
+              "description": "Gets or sets the plan id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PlanRequesterDetails": {
+          "description": "Plan with requesters details",
+          "properties": {
+            "planDisplayName": {
+              "description": "Gets the plan display name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "planId": {
+              "description": "Gets the plan id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requesters": {
+              "description": "Gets requesters details list",
+              "items": {
+                "$ref": "#/components/schemas/UserRequestDetails"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "user"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PrivateStore": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The PrivateStore data structure.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateStoreProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateStoreList": {
+          "description": "Describes the json payload for the list of available private stores (between zero and one, inclusive)",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The PrivateStore items on this page",
+              "items": {
+                "$ref": "#/components/schemas/PrivateStore"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateStoreNotificationsState": {
+          "description": "Get private store notifications state",
+          "properties": {
+            "approvalRequests": {
+              "items": {
+                "$ref": "#/components/schemas/RequestApprovalsDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "newNotifications": {
+              "items": {
+                "$ref": "#/components/schemas/NewNotifications"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "stopSellNotifications": {
+              "items": {
+                "$ref": "#/components/schemas/StopSellNotifications"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "PrivateStoreProperties": {
+          "description": "Describes the json payload on whether or not the private store is enabled for a given tenant",
+          "properties": {
+            "availability": {
+              "$ref": "#/components/schemas/Availability"
+            },
+            "branding": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Gets or sets list of branding characteristics",
+              "type": "object"
+            },
+            "collectionIds": {
+              "description": "Gets list of associated collection ids",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "eTag": {
+              "description": "Identifier for purposes of race condition",
+              "type": "string"
+            },
+            "isGov": {
+              "description": "Is government",
+              "type": "boolean"
+            },
+            "notificationsSettings": {
+              "$ref": "#/components/schemas/NotificationsSettingsProperties"
+            },
+            "privateStoreId": {
+              "description": "Private Store id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "privateStoreName": {
+              "description": "Private Store Name",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Tenant id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource_2"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "QueryApprovedPlans": {
+          "description": "Query approved plans details",
+          "properties": {
+            "offerId": {
+              "description": "Offer id",
+              "type": "string"
+            },
+            "planIds": {
+              "description": "Offer plan ids",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "subscriptionIds": {
+              "description": "List of subscription IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "QueryApprovedPlansDetails": {
+          "description": "Query approved plans response",
+          "properties": {
+            "allSubscriptions": {
+              "description": "Indicates whether all subscriptions are approved for this plan",
+              "type": "boolean"
+            },
+            "planId": {
+              "description": "Plan id",
+              "type": "string"
+            },
+            "subscriptionIds": {
+              "description": "Approved subscription ids list. In case all subscriptions are approved for a plan, allSubscriptions flag is true and list is empty ( else flag is set to false). In case both subscriptions list is empty and allSubscriptions flag is false, the plan is not approved for any subscription.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "QueryApprovedPlansPayload": {
+          "description": "Query approved plans payload",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/QueryApprovedPlans"
+            }
+          },
+          "type": "object"
+        },
+        "QueryApprovedPlansResponse": {
+          "description": "Query approved plans response",
+          "properties": {
+            "details": {
+              "description": "A list indicating for each plan which subscriptions are approved. Plan Id is unique",
+              "items": {
+                "$ref": "#/components/schemas/QueryApprovedPlansDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "QueryOffers": {
+          "description": "List of offers",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of PrivateStore list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/OfferProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "uniqueOfferId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "QueryRequestApproval": {
+          "description": "Gets the request plans with indication on each plan whether is approved by the admin, has pending request or not requested yet",
+          "properties": {
+            "etag": {
+              "description": "Gets or sets e-tag field",
+              "type": "string"
+            },
+            "messageCode": {
+              "description": "Gets or sets the notification message id",
+              "format": "int64",
+              "type": "integer"
+            },
+            "plansDetails": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/planDetails"
+              },
+              "description": "Gets or sets the plans details",
+              "type": "object"
+            },
+            "uniqueOfferId": {
+              "description": "Gets or sets unique offer id.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "QueryRequestApprovalProperties": {
+          "description": "The details to get the request plans statuses",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RequestDetails"
+            }
+          },
+          "type": "object"
+        },
+        "QueryUserOffersDetails": {
+          "description": "List of offers IDs and list of user's subscriptions IDs to query the user's approved offers",
+          "properties": {
+            "offerIds": {
+              "description": "List of offer IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "subscriptionIds": {
+              "description": "List of subscription IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "QueryUserOffersProperties": {
+          "description": "Query user's offers properties",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/QueryUserOffersDetails"
+            }
+          },
+          "type": "object"
+        },
+        "QueryUserRulesDetails": {
+          "description": "List of subscriptions IDs to query the user's rules",
+          "properties": {
+            "subscriptionIds": {
+              "description": "List of subscription IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "QueryUserRulesProperties": {
+          "description": "Query user's rules properties",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/QueryUserRulesDetails"
+            }
+          },
+          "type": "object"
+        },
+        "Recipient": {
+          "description": "Describes the json payload for a notified recipient for new requests",
+          "properties": {
+            "displayName": {
+              "description": "Display Name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "emailAddress": {
+              "description": "Email Address",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "Principal ID",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RequestApprovalProperties": {
+          "description": "Approval request resource properties",
+          "properties": {
+            "isClosed": {
+              "description": "Gets a value indicating whether the request is closed",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "messageCode": {
+              "description": "Gets or sets the request approval message code",
+              "format": "int64",
+              "type": "integer"
+            },
+            "offerDisplayName": {
+              "description": "Gets offer display name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "offerId": {
+              "description": "Gets or sets unique offer id.",
+              "type": "string"
+            },
+            "plansDetails": {
+              "description": "Gets or sets the plans details",
+              "items": {
+                "$ref": "#/components/schemas/planDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            },
+            "publisherId": {
+              "description": "The offer's publisher id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RequestApprovalResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Request approval resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RequestApprovalProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RequestApprovalsDetails": {
+          "description": "Request approvals details",
+          "properties": {
+            "displayName": {
+              "description": "Gets offer display name",
+              "type": "string"
+            },
+            "icon": {
+              "description": "Gets or sets the icon url",
+              "type": "string"
+            },
+            "messageCode": {
+              "description": "Gets or sets the notification message id",
+              "format": "int64",
+              "type": "integer"
+            },
+            "offerId": {
+              "description": "Gets offer id",
+              "type": "string"
+            },
+            "plans": {
+              "description": "Gets or sets removed plans notifications",
+              "items": {
+                "$ref": "#/components/schemas/PlanNotificationDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            },
+            "publisherId": {
+              "description": "Gets or sets publisher id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RequestApprovalsList": {
+          "description": "List of admin request approval resources",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of notifications list results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/RequestApprovalResource"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "RequestDetails": {
+          "description": "Request details needed to get the plans statuses",
+          "properties": {
+            "planIds": {
+              "description": "Current plans list",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "publisherId": {
+              "description": "The offer's publisher id",
+              "type": "string"
+            },
+            "subscriptionId": {
+              "description": "Gets or sets the subscription id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "An Azure resource.",
+          "properties": {
+            "id": {
+              "description": "The resource ID.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/SystemData"
+            },
+            "type": {
+              "description": "The type of the resource.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource_2": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Rule": {
+          "properties": {
+            "type": {
+              "$ref": "#/components/schemas/RuleType"
+            },
+            "value": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "RuleListResponse": {
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of rules list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/Rule"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "type"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "RuleType": {
+          "description": "Rule type",
+          "enum": [
+            "PrivateProducts",
+            "TermsAndCondition"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "RuleType",
+            "values": [
+              {
+                "name": "PrivateProducts",
+                "value": "PrivateProducts"
+              },
+              {
+                "name": "TermsAndCondition",
+                "value": "TermsAndCondition"
+              }
+            ]
+          }
+        },
+        "SetRulesRequest": {
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of rules list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/Rule"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "type"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "SingleOperation": {
+          "description": "Microsoft.Marketplace REST API operation",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/SingleOperationDisplay"
+            },
+            "id": {
+              "description": "Operation ID",
+              "type": "string"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Operation name: {provider}/{resource}/{operation}",
+              "type": "string"
+            },
+            "origin": {
+              "description": "Origin of the operation",
+              "type": "string"
+            },
+            "properties": {
+              "description": "Properties of the operation"
+            }
+          },
+          "type": "object"
+        },
+        "SingleOperationDisplay": {
+          "description": "The object that represents the operation.",
+          "properties": {
+            "description": {
+              "description": "Friendly description for the operation,",
+              "readOnly": true,
+              "type": "string"
+            },
+            "operation": {
+              "description": "Operation type",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provider": {
+              "description": "Service provider: Microsoft.Marketplace",
+              "readOnly": true,
+              "type": "string"
+            },
+            "resource": {
+              "description": "Resource on which the operation is performed",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Status": {
+          "description": "Gets the plan status",
+          "enum": [
+            "Pending",
+            "Rejected",
+            "Approved",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "Status",
+            "values": [
+              {
+                "name": "Pending",
+                "value": "Pending"
+              },
+              {
+                "name": "Rejected",
+                "value": "Rejected"
+              },
+              {
+                "name": "Approved",
+                "value": "Approved"
+              },
+              {
+                "name": "None",
+                "value": "None"
+              }
+            ]
+          }
+        },
+        "StopSellNotifications": {
+          "description": "Stop sell notification details",
+          "properties": {
+            "displayName": {
+              "description": "Gets offer display name",
+              "type": "string"
+            },
+            "icon": {
+              "description": "Gets or sets the icon url",
+              "type": "string"
+            },
+            "isEntire": {
+              "description": "Gets a value indicating whether entire offer is in stop sell or only few of its plans",
+              "type": "boolean"
+            },
+            "messageCode": {
+              "description": "Gets or sets the notification message id",
+              "format": "int64",
+              "type": "integer"
+            },
+            "offerId": {
+              "description": "Gets offer id",
+              "type": "string"
+            },
+            "plans": {
+              "description": "Gets or sets removed plans notifications",
+              "items": {
+                "$ref": "#/components/schemas/PlanNotificationDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "StopSellOffersPlansNotificationsList": {
+          "description": "List of stop sell offers and plans notifications.",
+          "properties": {
+            "stopSellNotifications": {
+              "items": {
+                "$ref": "#/components/schemas/StopSellOffersPlansNotificationsListProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "offerId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "StopSellOffersPlansNotificationsListProperties": {
+          "description": "List of stop sell offers and plans notifications.",
+          "properties": {
+            "displayName": {
+              "description": "The offer display name",
+              "readOnly": true,
+              "type": "string"
+            },
+            "icon": {
+              "description": "The icon url",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isEntire": {
+              "description": "A value indicating whether entire offer is in stop sell or only few of its plans",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "messageCode": {
+              "description": "The notification message code",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "offerId": {
+              "description": "The offer id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "plans": {
+              "description": "The list of removed plans notifications",
+              "items": {
+                "$ref": "#/components/schemas/PlanNotificationDetails"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "planId"
+              ]
+            },
+            "publicContext": {
+              "description": "True if the offer has public plans",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "subscriptionsIds": {
+              "description": "The subscriptions related to private plans",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "StopSellSubscriptions": {
+          "description": "Private plans subscriptions",
+          "properties": {
+            "subscriptions": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "Subscription": {
+          "description": "Subscription information.",
+          "properties": {
+            "displayName": {
+              "description": "The subscription display name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "id": {
+              "description": "The fully qualified ID for the subscription. For example, /subscriptions/00000000-0000-0000-0000-000000000000.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "state": {
+              "$ref": "#/components/schemas/SubscriptionState"
+            },
+            "subscriptionId": {
+              "description": "The subscription ID.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SubscriptionState": {
+          "description": "The subscription state. Possible values are Enabled, Warned, PastDue, Disabled, and Deleted.",
+          "enum": [
+            "Enabled",
+            "Warned",
+            "PastDue",
+            "Disabled",
+            "Deleted"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SubscriptionState",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Warned",
+                "value": "Warned"
+              },
+              {
+                "name": "PastDue",
+                "value": "PastDue"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "name": "Deleted",
+                "value": "Deleted"
+              }
+            ]
+          }
+        },
+        "SubscriptionsContextList": {
+          "description": "List of subscription Ids in the private store",
+          "properties": {
+            "subscriptionsIds": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SubscriptionsResponse": {
+          "description": "Subscription list operation response.",
+          "properties": {
+            "count": {
+              "description": "Number of subscriptions on the page",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "skipToken": {
+              "description": "The skip token to retrieve the next page.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "An array of subscriptions.",
+              "items": {
+                "$ref": "#/components/schemas/Subscription"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SystemData": {
+          "description": "Read only system data",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "$ref": "#/components/schemas/IdentityType"
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "$ref": "#/components/schemas/IdentityType"
+            }
+          },
+          "type": "object"
+        },
+        "TransferOffersDetails": {
+          "description": "Transfer offers response details",
+          "properties": {
+            "offerIdsList": {
+              "description": "Offers ids list to transfer from source collection to target collection(s)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "operation": {
+              "description": "Operation to perform (For example: Copy or Move)",
+              "type": "string"
+            },
+            "targetCollections": {
+              "description": "Target collections ids",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "TransferOffersProperties": {
+          "description": "Transfer offers properties",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/TransferOffersDetails"
+            }
+          },
+          "type": "object"
+        },
+        "TransferOffersResponse": {
+          "description": "The transfer items response. The response contains two lists that indicate for each collection whether the operation succeeded or failed",
+          "properties": {
+            "failed": {
+              "description": "Failed collections",
+              "items": {
+                "$ref": "#/components/schemas/CollectionsDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "collectionId"
+              ]
+            },
+            "succeeded": {
+              "description": "Succeeded collections",
+              "items": {
+                "$ref": "#/components/schemas/CollectionsDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "collectionId"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "UserRequestDetails": {
+          "description": "user request details",
+          "properties": {
+            "date": {
+              "description": "Gets request date",
+              "readOnly": true,
+              "type": "string"
+            },
+            "justification": {
+              "description": "Gets justification",
+              "readOnly": true,
+              "type": "string"
+            },
+            "subscriptionId": {
+              "description": "Gets the subscription id that the user is requesting to add the plan to",
+              "type": "string"
+            },
+            "subscriptionName": {
+              "description": "Gets the subscription name that the user is requesting to add the plan to",
+              "type": "string"
+            },
+            "user": {
+              "description": "Gets user id",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WithdrawDetails": {
+          "description": "Withdraw properties details",
+          "properties": {
+            "planId": {
+              "description": "Gets or sets Plan Id",
+              "type": "string"
+            },
+            "publisherId": {
+              "description": "The offer's publisher id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WithdrawProperties": {
+          "description": "Withdraw properties",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/WithdrawDetails"
+            }
+          },
+          "type": "object"
+        },
+        "collectionsSubscriptionsMappingDetails": {
+          "description": "Collection name and related subscriptions list",
+          "properties": {
+            "collectionName": {
+              "description": "Collection name",
+              "type": "string"
+            },
+            "subscriptions": {
+              "description": "Subscriptions ids list",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "planDetails": {
+          "description": "Return plan with request details",
+          "properties": {
+            "justification": {
+              "description": "Gets or sets user's justification for the plan's request",
+              "type": "string"
+            },
+            "planId": {
+              "description": "Gets or sets Plan Id",
+              "type": "string"
+            },
+            "requestDate": {
+              "description": "Gets request date",
+              "readOnly": true
+            },
+            "status": {
+              "$ref": "#/components/schemas/Status"
+            },
+            "subscriptionId": {
+              "description": "Gets or sets the subscription id that the user is requesting to add the plan to",
+              "type": "string"
+            },
+            "subscriptionName": {
+              "description": "Gets or sets the subscription name that the user is requesting to add the plan to",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "REST APIs for Private Marketplace",
+      "title": "Marketplace RP Service",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Marketplace/operations": {
+        "get": {
+          "description": "Lists all of the available Microsoft.Marketplace REST API operations.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "GetOperations": {
+              "$ref": "./examples/GetOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores": {
+        "get": {
+          "description": "Gets the list of available private stores.",
+          "operationId": "PrivateStore_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Determines if to use cache or DB for serving this request",
+              "in": "query",
+              "name": "use-cache",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateStoreList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStores": {
+              "$ref": "./examples/GetPrivateStores.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}": {
+        "delete": {
+          "description": "Deletes the private store. All that is not saved will be lost.",
+          "operationId": "PrivateStore_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "DeletePrivateStores": {
+              "$ref": "./examples/DeletePrivateStore.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get information about the private store",
+          "operationId": "PrivateStore_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateStore"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStore": {
+              "$ref": "./examples/GetPrivateStore.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Changes private store properties",
+          "operationId": "PrivateStore_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateStore"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "PrivateStores_update": {
+              "$ref": "./examples/PrivateStores_update.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/adminRequestApprovals": {
+        "get": {
+          "description": "Get list of admin request approvals",
+          "operationId": "PrivateStore_AdminRequestApprovalsList",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AdminRequestApprovalsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AdminRequestApprovalsResources"
+          ],
+          "x-ms-examples": {
+            "AdminRequestApprovalsList": {
+              "$ref": "./examples/AdminRequestApprovalsList.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/adminRequestApprovals/{adminRequestApprovalId}": {
+        "get": {
+          "description": "Get open approval requests",
+          "operationId": "PrivateStore_GetAdminRequestApproval",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The admin request approval ID to get create or update",
+              "in": "path",
+              "name": "adminRequestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The publisher id of this offer.",
+              "in": "query",
+              "name": "publisherId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AdminRequestApprovalsResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AdminRequestApprovalsResources"
+          ],
+          "x-ms-examples": {
+            "GetAdminRequestApproval": {
+              "$ref": "./examples/GetAdminRequestApproval.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Update the admin action, weather the request is approved or rejected and the approved plans",
+          "operationId": "PrivateStore_UpdateAdminRequestApproval",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The admin request approval ID to get create or update",
+              "in": "path",
+              "name": "adminRequestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminRequestApprovalsResource"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AdminRequestApprovalsResource"
+                  }
+                }
+              },
+              "description": "Resource 'AdminRequestApprovalsResource' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AdminRequestApprovalsResources"
+          ],
+          "x-ms-examples": {
+            "UpdateAdminRequestApproval": {
+              "$ref": "./examples/UpdateAdminRequestApproval.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/anyExistingOffersInTheCollections": {
+        "post": {
+          "description": "Query whether exists any offer in the collections.",
+          "operationId": "PrivateStore_AnyExistingOffersInTheCollections",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AnyExistingOffersInTheCollectionsResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "AnyExistingOffersInTheCollections": {
+              "$ref": "./examples/AnyExistingOffersInTheCollections.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/billingAccounts": {
+        "post": {
+          "description": "Tenant billing accounts names",
+          "operationId": "PrivateStore_BillingAccounts",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BillingAccountsResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "BillingAccounts": {
+              "$ref": "./examples/BillingAccounts.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/bulkCollectionsAction": {
+        "post": {
+          "description": "Perform an action on bulk collections",
+          "operationId": "PrivateStore_BulkCollectionsAction",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCollectionsPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BulkCollectionsResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "BulkCollectionsAction": {
+              "$ref": "./examples/BulkCollectionsAction.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections": {
+        "get": {
+          "description": "Gets private store collections list",
+          "operationId": "PrivateStoreCollection_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CollectionsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreCollectionsList": {
+              "$ref": "./examples/GetPrivateStoreCollectionsList.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}": {
+        "delete": {
+          "description": "Delete a collection from the given private store.",
+          "operationId": "PrivateStoreCollection_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "DeletePrivateStoreCollection": {
+              "$ref": "./examples/DeletePrivateStoreCollection.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets private store collection",
+          "operationId": "PrivateStoreCollection_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Collection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreCollection": {
+              "$ref": "./examples/GetPrivateStoreCollection.json"
+            }
+          }
+        },
+        "post": {
+          "description": "Delete Private store collection. This is a workaround.",
+          "operationId": "PrivateStoreCollection_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "PostPrivateStoreCollection": {
+              "$ref": "./examples/PostPrivateStoreCollection.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update private store collection",
+          "operationId": "PrivateStoreCollection_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Collection"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Collection"
+                  }
+                }
+              },
+              "description": "Resource 'Collection' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "CreatePrivateStoreCollection": {
+              "$ref": "./examples/CreatePrivateStoreCollection.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/approveAllItems": {
+        "post": {
+          "description": "Delete all existing offers from the collection and enable approve all items.",
+          "operationId": "PrivateStoreCollection_ApproveAllItems",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Collection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "ApproveAllItems": {
+              "$ref": "./examples/ApproveAllItems.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/disableApproveAllItems": {
+        "post": {
+          "description": "Disable approve all items for the collection.",
+          "operationId": "PrivateStoreCollection_DisableApproveAllItems",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Collection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "DisableApproveAllItems": {
+              "$ref": "./examples/DisableApproveAllItems.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/mapOffersToContexts": {
+        "post": {
+          "description": "Get a list of all offers in the given collection according to the required contexts.",
+          "operationId": "PrivateStoreCollectionOffer_ListByContexts",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionOffersByAllContextsPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CollectionOffersByContextList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreCollectionOffersWithFullContext": {
+              "$ref": "./examples/GetPrivateStoreCollectionOffersWithFullContext.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/offers": {
+        "get": {
+          "description": "Get a list of all private offers in the given private store and collection",
+          "operationId": "PrivateStoreCollectionOffer_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OfferListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreOffers": {
+              "$ref": "./examples/GetPrivateStoreOffers.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/offers/{offerId}": {
+        "delete": {
+          "description": "Deletes an offer from the given collection of private store.",
+          "operationId": "PrivateStoreCollectionOffer_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "DeletePrivateStoreOffer": {
+              "$ref": "./examples/DeletePrivateStoreOffer.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets information about a specific offer.",
+          "operationId": "PrivateStoreCollectionOffer_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Offer"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreCollectionOffer": {
+              "$ref": "./examples/GetPrivateStoreCollectionOffer.json"
+            }
+          }
+        },
+        "post": {
+          "description": "Delete Private store offer. This is a workaround.",
+          "operationId": "PrivateStoreCollectionOffer_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "PostPrivateStoreCollectionOffer": {
+              "$ref": "./examples/PostPrivateStoreCollectionOffer.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Update or add an offer to a specific collection of the private store.",
+          "operationId": "PrivateStoreCollectionOffer_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Offer"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Offer"
+                  }
+                }
+              },
+              "description": "Resource 'Offer' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "PrivateStoreOffer_update": {
+              "$ref": "./examples/PrivateStoreOffer_update.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/offers/{offerId}/contextsView": {
+        "post": {
+          "description": "Retrieve offer information with plans under required contexts restrictions.",
+          "operationId": "PrivateStoreCollectionOffer_ContextsView",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionOffersByAllContextsPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Offer"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "GetPrivateStoreCollectionOfferContextsView": {
+              "$ref": "./examples/GetPrivateStoreCollectionOfferContextsView.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/offers/{offerId}/upsertOfferWithMultiContext": {
+        "post": {
+          "description": "Upsert an offer with multiple context details.",
+          "operationId": "PrivateStoreCollectionOffer_UpsertOfferWithMultiContext",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiContextAndPlansPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Offer"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Offers"
+          ],
+          "x-ms-examples": {
+            "UpsertOfferWithMultiContext": {
+              "$ref": "./examples/UpsertOfferWithMultiContext.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/queryRules": {
+        "post": {
+          "description": "Get a list of all private store rules in the given private store and collection",
+          "operationId": "QueryRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RuleListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "GetCollectionRules": {
+              "$ref": "./examples/GetCollectionRules.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/setRules": {
+        "post": {
+          "description": "Set rule for specific private store and collection",
+          "operationId": "SetCollectionRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetRulesRequest"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "SetCollectionRules": {
+              "$ref": "./examples/SetCollectionRules.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collections/{collectionId}/transferOffers": {
+        "post": {
+          "description": "transferring offers (copy or move) from source collection to target collection(s)",
+          "operationId": "PrivateStoreCollection_TransferOffers",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The collection ID",
+              "in": "path",
+              "name": "collectionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferOffersProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransferOffersResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Collections"
+          ],
+          "x-ms-examples": {
+            "TransferOffers": {
+              "$ref": "./examples/TransferOffers.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/collectionsToSubscriptionsMapping": {
+        "post": {
+          "description": "For a given subscriptions list, the API will return a map of collections and the related subscriptions from the supplied list.",
+          "operationId": "PrivateStore_CollectionsToSubscriptionsMapping",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsToSubscriptionsMappingPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CollectionsToSubscriptionsMappingResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "CollectionsToSubscriptionsMapping": {
+              "$ref": "./examples/CollectionsToSubscriptionsMapping.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/fetchAllSubscriptionsInTenant": {
+        "post": {
+          "description": "Fetch all subscriptions in tenant, only for marketplace admin",
+          "operationId": "PrivateStore_FetchAllSubscriptionsInTenant",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The skip token to get the next page.",
+              "in": "header",
+              "name": "next-page-token",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SubscriptionsResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "FetchAllSubscriptionsInTenant": {
+              "$ref": "./examples/FetchAllSubscriptionsInTenant.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/listNewPlansNotifications": {
+        "post": {
+          "description": "List new plans notifications",
+          "operationId": "PrivateStore_ListNewPlansNotifications",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NewPlansNotificationsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "ListNewPlansNotifications": {
+              "$ref": "./examples/ListNewPlansNotifications.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/listStopSellOffersPlansNotifications": {
+        "post": {
+          "description": "List stop sell notifications for both stop sell offers and stop sell plans",
+          "operationId": "PrivateStore_ListStopSellOffersPlansNotifications",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopSellSubscriptions"
+                }
+              }
+            },
+            "x-originalParamName": "stopSellSubscriptions"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/StopSellOffersPlansNotificationsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "ListStopSellOffersPlansNotifications": {
+              "$ref": "./examples/ListStopSellOffersPlansNotifications.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/listSubscriptionsContext": {
+        "post": {
+          "description": "List all the subscriptions in the private store context",
+          "operationId": "PrivateStore_ListSubscriptionsContext",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SubscriptionsContextList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "ListSubscriptionsContext": {
+              "$ref": "./examples/ListSubscriptionsContext.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/offers/{offerId}/acknowledgeNotification": {
+        "post": {
+          "description": "Acknowledge notification for offer",
+          "operationId": "PrivateStore_AcknowledgeOfferNotification",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The offer ID to update or delete",
+              "in": "path",
+              "name": "offerId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcknowledgeOfferNotificationProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "AcknowledgeNotification": {
+              "$ref": "./examples/AcknowledgeNotification.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/queryApprovedPlans": {
+        "post": {
+          "description": "Get map of plans and related approved subscriptions.",
+          "operationId": "PrivateStore_QueryApprovedPlans",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryApprovedPlansPayload"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/QueryApprovedPlansResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "QueryApprovedPlans": {
+              "$ref": "./examples/QueryApprovedPlans.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/queryNotificationsState": {
+        "post": {
+          "description": "Get private store notifications state",
+          "operationId": "PrivateStore_QueryNotificationsState",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateStoreNotificationsState"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "NotificationsState": {
+              "$ref": "./examples/NotificationsState.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/queryOffers": {
+        "post": {
+          "description": "List of offers, regardless the collections",
+          "operationId": "PrivateStore_QueryOffers",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/QueryOffers"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "QueryOffers": {
+              "$ref": "./examples/QueryOffers.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/queryUserOffers": {
+        "post": {
+          "description": "List of user's approved offers for the provided offers and subscriptions",
+          "operationId": "PrivateStore_QueryUserOffers",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryUserOffersProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/QueryOffers"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "QueryUserOffers": {
+              "$ref": "./examples/QueryUserOffers.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/queryUserRules": {
+        "post": {
+          "description": "All rules approved in the private store that are relevant for user subscriptions",
+          "operationId": "QueryUserRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryUserRulesProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RuleListResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateStores"
+          ],
+          "x-ms-examples": {
+            "QueryUserRules": {
+              "$ref": "./examples/QueryUserRules.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/requestApprovals": {
+        "get": {
+          "description": "Get all open approval requests of current user",
+          "operationId": "PrivateStore_GetApprovalRequestsList",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RequestApprovalsList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RequestApprovalResources"
+          ],
+          "x-ms-examples": {
+            "GetApprovalRequestsList": {
+              "$ref": "./examples/GetApprovalRequestsList.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/requestApprovals/{requestApprovalId}": {
+        "get": {
+          "description": "Get open request approval details",
+          "operationId": "PrivateStore_GetRequestApproval",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The request approval ID to get create or update",
+              "in": "path",
+              "name": "requestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RequestApprovalResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RequestApprovalResources"
+          ],
+          "x-ms-examples": {
+            "GetApprovalRequest": {
+              "$ref": "./examples/GetRequestApproval.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create approval request",
+          "operationId": "PrivateStore_CreateApprovalRequest",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The request approval ID to get create or update",
+              "in": "path",
+              "name": "requestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestApprovalResource"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RequestApprovalResource"
+                  }
+                }
+              },
+              "description": "Resource 'RequestApprovalResource' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RequestApprovalResources"
+          ],
+          "x-ms-examples": {
+            "CreateApprovalRequest": {
+              "$ref": "./examples/CreateApprovalRequest.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/requestApprovals/{requestApprovalId}/query": {
+        "post": {
+          "description": "Get request statuses foreach plan, this api is used as a complex GET action.",
+          "operationId": "PrivateStore_QueryRequestApproval",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The request approval ID to get create or update",
+              "in": "path",
+              "name": "requestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryRequestApprovalProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/QueryRequestApproval"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RequestApprovalResources"
+          ],
+          "x-ms-examples": {
+            "QueryRequestApproval": {
+              "$ref": "./examples/QueryRequestApproval.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Marketplace/privateStores/{privateStoreId}/requestApprovals/{requestApprovalId}/withdrawPlan": {
+        "post": {
+          "description": "Withdraw a user request approval on specific plan",
+          "operationId": "PrivateStore_WithdrawPlan",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The store ID - must use the tenant ID",
+              "in": "path",
+              "name": "privateStoreId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The request approval ID to get create or update",
+              "in": "path",
+              "name": "requestApprovalId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithdrawProperties"
+                }
+              }
+            },
+            "x-originalParamName": "payload"
+          },
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RequestApprovalResources"
+          ],
+          "x-ms-examples": {
+            "WithdrawPlan": {
+              "$ref": "./examples/WithdrawPlan.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "PrivateStores"
+      },
+      {
+        "name": "RequestApprovalResources"
+      },
+      {
+        "name": "AdminRequestApprovalsResources"
+      },
+      {
+        "name": "Collections"
+      },
+      {
+        "name": "Offers"
+      }
+    ]
+  }
+}

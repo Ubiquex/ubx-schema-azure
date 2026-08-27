@@ -1,0 +1,1894 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_synapse_workspace",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "WorkspaceNameParameter": {
+          "description": "The name of the workspace.",
+          "in": "path",
+          "name": "workspaceName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "AadAdminProperties": {
+          "description": "Workspace active directory administrator properties",
+          "properties": {
+            "administratorType": {
+              "description": "Workspace active directory administrator type",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "login": {
+              "description": "Login of the workspace active directory administrator",
+              "type": "string"
+            },
+            "sid": {
+              "description": "Object ID of the workspace active directory administrator",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "tenantId": {
+              "description": "Tenant ID of the workspace active directory administrator",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "CspWorkspaceAdminProperties": {
+          "description": "Initial workspace AAD admin properties for a CSP subscription",
+          "properties": {
+            "initialWorkspaceAdminObjectId": {
+              "description": "AAD object ID of initial workspace admin",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "CustomerManagedKeyDetails": {
+          "description": "Details of the customer managed key associated with the workspace",
+          "properties": {
+            "kekIdentity": {
+              "$ref": "#/components/schemas/KekIdentityProperties"
+            },
+            "key": {
+              "$ref": "#/components/schemas/WorkspaceKeyDetails"
+            },
+            "status": {
+              "description": "The customer managed key status on the workspace",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DataLakeStorageAccountDetails": {
+          "description": "Details of the data lake storage account associated with the workspace",
+          "properties": {
+            "accountUrl": {
+              "description": "Account URL",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "createManagedPrivateEndpoint": {
+              "description": "Create managed private endpoint to this storage account or not",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "filesystem": {
+              "description": "Filesystem name",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "resourceId": {
+              "description": "ARM resource Id of this storage account",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "EncryptionDetails": {
+          "description": "Details of the encryption associated with the workspace",
+          "properties": {
+            "cmk": {
+              "$ref": "#/components/schemas/CustomerManagedKeyDetails"
+            },
+            "doubleEncryptionEnabled": {
+              "description": "Double Encryption enabled",
+              "readOnly": true,
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "KekIdentityProperties": {
+          "description": "Key encryption key properties",
+          "properties": {
+            "useSystemAssignedIdentity": {
+              "description": "Boolean specifying whether to use system assigned identity or not"
+            },
+            "userAssignedIdentity": {
+              "description": "User assigned identity resource Id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIdentity": {
+          "description": "The workspace managed identity",
+          "properties": {
+            "principalId": {
+              "description": "The principal ID of the workspace managed identity",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the workspace managed identity",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of managed identity for the workspace",
+              "enum": [
+                "None",
+                "SystemAssigned",
+                "SystemAssigned,UserAssigned"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "ResourceIdentityType"
+              }
+            },
+            "userAssignedIdentities": {
+              "$ref": "#/components/schemas/UserAssignedManagedIdentities"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIdentitySqlControlSettingsModel": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Sql Control Settings for workspace managed identity",
+          "properties": {
+            "properties": {
+              "description": "Sql Control Settings for workspace managed identity",
+              "properties": {
+                "grantSqlControlToManagedIdentity": {
+                  "description": "Grant sql control to managed identity",
+                  "properties": {
+                    "actualState": {
+                      "description": "Actual state",
+                      "enum": [
+                        "Enabling",
+                        "Enabled",
+                        "Disabling",
+                        "Disabled",
+                        "Unknown"
+                      ],
+                      "readOnly": true,
+                      "type": "string",
+                      "x-ms-enum": {
+                        "modelAsString": false,
+                        "name": "ActualState"
+                      }
+                    },
+                    "desiredState": {
+                      "description": "Desired state",
+                      "enum": [
+                        "Enabled",
+                        "Disabled"
+                      ],
+                      "type": "string",
+                      "x-ms-enum": {
+                        "modelAsString": false,
+                        "name": "DesiredState"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "title": "Managed Identity Sql Control Settings",
+              "type": "object",
+              "x-ms-client-flatten": true
+            }
+          },
+          "title": "Managed Identity Sql Control Settings",
+          "type": "object"
+        },
+        "ManagedVirtualNetworkSettings": {
+          "description": "Managed Virtual Network Settings",
+          "properties": {
+            "allowedAadTenantIdsForLinking": {
+              "description": "Allowed Aad Tenant Ids For Linking",
+              "items": {
+                "description": "Tenant Id",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "linkedAccessCheckOnTargetResource": {
+              "description": "Linked Access Check On Target Resource",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "create",
+                "read",
+                "update"
+              ]
+            },
+            "preventDataExfiltration": {
+              "description": "Prevent Data Exfiltration",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpoint": {
+          "description": "Private endpoint details",
+          "properties": {
+            "id": {
+              "description": "Resource id of the private endpoint.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "PrivateEndpointConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource_2"
+            }
+          ],
+          "description": "A private endpoint connection",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "Properties of a private endpoint connection.",
+          "properties": {
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionState"
+            },
+            "provisioningState": {
+              "description": "Provisioning state of the private endpoint connection.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkServiceConnectionState": {
+          "description": "Connection state details of the private endpoint",
+          "properties": {
+            "actionsRequired": {
+              "description": "The actions required for private link service connection.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "description": {
+              "description": "The private link service connection description.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The private link service connection status.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "ProxyResource_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "PurviewConfiguration": {
+          "description": "Purview Configuration",
+          "properties": {
+            "purviewResourceId": {
+              "description": "Purview Resource ID",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "RestorableDroppedSqlPool": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A restorable dropped Sql pool",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/RestorableDroppedSqlPoolProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RestorableDroppedSqlPoolListResult": {
+          "description": "The response to a list restorable dropped Sql pools request",
+          "properties": {
+            "value": {
+              "description": "A list of restorable dropped Sql pools",
+              "items": {
+                "$ref": "#/components/schemas/RestorableDroppedSqlPool"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "RestorableDroppedSqlPoolProperties": {
+          "description": "The properties of a restorable dropped Sql pool",
+          "properties": {
+            "creationDate": {
+              "description": "The creation date of the database (ISO8601 format)",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "databaseName": {
+              "description": "The name of the database",
+              "readOnly": true,
+              "type": "string"
+            },
+            "deletionDate": {
+              "description": "The deletion date of the database (ISO8601 format)",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "earliestRestoreDate": {
+              "description": "The earliest restore date of the database (ISO8601 format)",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "edition": {
+              "description": "The edition of the database",
+              "readOnly": true,
+              "type": "string"
+            },
+            "elasticPoolName": {
+              "description": "The elastic pool name of the database",
+              "readOnly": true,
+              "type": "string"
+            },
+            "maxSizeBytes": {
+              "description": "The max size in bytes of the database",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serviceLevelObjective": {
+              "description": "The service level objective name of the database",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserAssignedManagedIdentities": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/UserAssignedManagedIdentity"
+          },
+          "description": "The User Assigned Managed Identities.",
+          "type": "object"
+        },
+        "UserAssignedManagedIdentity": {
+          "description": "User Assigned Managed Identity",
+          "properties": {
+            "clientId": {
+              "description": "The client ID.",
+              "format": "uuid",
+              "nullable": true,
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID.",
+              "format": "uuid",
+              "nullable": true,
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "VirtualNetworkProfile": {
+          "description": "Virtual Network Profile",
+          "properties": {
+            "computeSubnetId": {
+              "description": "Subnet ID used for computes in workspace",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Workspace": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A workspace",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/WorkspaceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspaceAadAdminInfo": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Workspace active directory administrator",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AadAdminProperties"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspaceInfoListResult": {
+          "description": "List of workspaces",
+          "properties": {
+            "nextLink": {
+              "description": "Link to the next page of results",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of workspaces",
+              "items": {
+                "$ref": "#/components/schemas/Workspace"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspaceKeyDetails": {
+          "description": "Details of the customer managed key associated with the workspace",
+          "properties": {
+            "keyVaultUrl": {
+              "description": "Workspace Key sub-resource key vault url",
+              "type": "string"
+            },
+            "name": {
+              "description": "Workspace Key sub-resource name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspacePatchInfo": {
+          "description": "Workspace patch details",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/WorkspacePatchProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspacePatchProperties": {
+          "description": "Workspace patch properties",
+          "properties": {
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionDetails"
+            },
+            "managedVirtualNetworkSettings": {
+              "$ref": "#/components/schemas/ManagedVirtualNetworkSettings"
+            },
+            "provisioningState": {
+              "description": "Resource provisioning state",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publicNetworkAccess": {
+              "description": "Enable or Disable public network access to workspace",
+              "enum": [
+                "Enabled",
+                "Disabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "WorkspacePublicNetworkAccess"
+              }
+            },
+            "purviewConfiguration": {
+              "$ref": "#/components/schemas/PurviewConfiguration"
+            },
+            "sqlAdministratorLoginPassword": {
+              "description": "SQL administrator login password",
+              "type": "string"
+            },
+            "workspaceRepositoryConfiguration": {
+              "$ref": "#/components/schemas/WorkspaceRepositoryConfiguration"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspaceProperties": {
+          "description": "Workspace properties",
+          "properties": {
+            "adlaResourceId": {
+              "description": "The ADLA resource ID.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "azureADOnlyAuthentication": {
+              "description": "Enable or Disable AzureADOnlyAuthentication on All Workspace subresource",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "create",
+                "update"
+              ]
+            },
+            "connectivityEndpoints": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Connectivity endpoints",
+              "readOnly": true,
+              "type": "object"
+            },
+            "cspWorkspaceAdminProperties": {
+              "$ref": "#/components/schemas/CspWorkspaceAdminProperties"
+            },
+            "defaultDataLakeStorage": {
+              "$ref": "#/components/schemas/DataLakeStorageAccountDetails"
+            },
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionDetails"
+            },
+            "extraProperties": {
+              "description": "Workspace level configs and feature flags",
+              "readOnly": true,
+              "type": "object"
+            },
+            "managedResourceGroupName": {
+              "description": "Workspace managed resource group. The resource group name uniquely identifies the resource group within the user subscriptionId. The resource group name must be no longer than 90 characters long, and must be alphanumeric characters (Char.IsLetterOrDigit()) and '-', '_', '(', ')' and'.'. Note that the name cannot end with '.'",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "managedVirtualNetwork": {
+              "description": "Setting this to 'default' will ensure that all compute for this workspace is in a virtual network managed on behalf of the user.",
+              "type": "string"
+            },
+            "managedVirtualNetworkSettings": {
+              "$ref": "#/components/schemas/ManagedVirtualNetworkSettings"
+            },
+            "privateEndpointConnections": {
+              "description": "Private endpoint connections to the workspace",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "type": "array"
+            },
+            "provisioningState": {
+              "description": "Resource provisioning state",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publicNetworkAccess": {
+              "default": "Enabled",
+              "description": "Enable or Disable public network access to workspace",
+              "enum": [
+                "Enabled",
+                "Disabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "WorkspacePublicNetworkAccess"
+              }
+            },
+            "purviewConfiguration": {
+              "$ref": "#/components/schemas/PurviewConfiguration"
+            },
+            "settings": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "description": "Workspace settings",
+              "readOnly": true,
+              "type": "object"
+            },
+            "sqlAdministratorLogin": {
+              "description": "Login for workspace SQL active directory administrator",
+              "type": "string"
+            },
+            "sqlAdministratorLoginPassword": {
+              "description": "SQL administrator login password",
+              "type": "string"
+            },
+            "trustedServiceBypassEnabled": {
+              "default": false,
+              "description": "Is trustedServiceBypassEnabled for the workspace",
+              "type": "boolean"
+            },
+            "virtualNetworkProfile": {
+              "$ref": "#/components/schemas/VirtualNetworkProfile"
+            },
+            "workspaceRepositoryConfiguration": {
+              "$ref": "#/components/schemas/WorkspaceRepositoryConfiguration"
+            },
+            "workspaceUID": {
+              "description": "The workspace unique identifier",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WorkspaceRepositoryConfiguration": {
+          "description": "Git integration settings",
+          "properties": {
+            "accountName": {
+              "description": "Account name",
+              "type": "string"
+            },
+            "collaborationBranch": {
+              "description": "Collaboration branch",
+              "type": "string"
+            },
+            "hostName": {
+              "description": "GitHub Enterprise host name. For example: `https://github.mydomain.com`",
+              "type": "string"
+            },
+            "lastCommitId": {
+              "description": "The last commit ID",
+              "type": "string"
+            },
+            "projectName": {
+              "description": "VSTS project name",
+              "type": "string"
+            },
+            "repositoryName": {
+              "description": "Repository name",
+              "type": "string"
+            },
+            "rootFolder": {
+              "description": "Root folder to use in the repository",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The VSTS tenant ID",
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of workspace repositoryID configuration. Example WorkspaceVSTSConfiguration, WorkspaceGitHubConfiguration",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Synapse Analytics APIs",
+      "title": "SynapseManagementClient",
+      "version": "2021-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/workspaces": {
+        "get": {
+          "description": "Returns a list of workspaces in a subscription",
+          "operationId": "Workspaces_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceInfoListResult"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "List workspaces in subscription": {
+              "$ref": "./examples/ListWorkspacesInSubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces": {
+        "get": {
+          "description": "Returns a list of workspaces in a resource group",
+          "operationId": "Workspaces_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceInfoListResult"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "List workspaces in resource group": {
+              "$ref": "./examples/ListWorkspacesInResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}": {
+        "delete": {
+          "description": "Deletes a workspace",
+          "operationId": "Workspaces_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "204": {
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Delete a workspace": {
+              "$ref": "./examples/DeleteWorkspace.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a workspace",
+          "operationId": "Workspaces_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Get a workspace": {
+              "$ref": "./examples/GetWorkspace.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates a workspace",
+          "operationId": "Workspaces_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspacePatchInfo"
+                }
+              }
+            },
+            "description": "Workspace patch request properties",
+            "required": true,
+            "x-originalParamName": "workspacePatchInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Update a workspace": {
+              "$ref": "./examples/UpdateWorkspace.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a workspace",
+          "operationId": "Workspaces_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workspace"
+                }
+              }
+            },
+            "description": "Workspace create or update request properties",
+            "required": true,
+            "x-originalParamName": "workspaceInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Create or update a workspace": {
+              "$ref": "./examples/CreateOrUpdateWorkspace.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/administrators/activeDirectory": {
+        "delete": {
+          "description": "Deletes a workspace active directory admin",
+          "operationId": "WorkspaceAadAdmins_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            },
+            "202": {
+              "description": ""
+            },
+            "204": {
+              "description": "Accepted"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Delete workspace active directory admin": {
+              "$ref": "./examples/DeleteWorkspaceAadAdmin.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a workspace active directory admin",
+          "operationId": "WorkspaceAadAdmins_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Get workspace active directory admin": {
+              "$ref": "./examples/GetWorkspaceAadAdmin.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a workspace active directory admin",
+          "operationId": "WorkspaceAadAdmins_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                }
+              }
+            },
+            "description": "Workspace active directory administrator properties",
+            "required": true,
+            "x-originalParamName": "aadAdminInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Create or update workspace active directory admin": {
+              "$ref": "./examples/CreateOrUpdateWorkspaceAadAdmin.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/managedIdentitySqlControlSettings/default": {
+        "get": {
+          "operationId": "WorkspaceManagedIdentitySqlControlSettings_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagedIdentitySqlControlSettingsModel"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error"
+            }
+          },
+          "summary": "Get Managed Identity Sql Control Settings",
+          "x-ms-examples": {
+            "Get managed identity sql control settings": {
+              "$ref": "./examples/GetManagedIdentitySqlControlSettings.json"
+            }
+          }
+        },
+        "put": {
+          "operationId": "WorkspaceManagedIdentitySqlControlSettings_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedIdentitySqlControlSettingsModel"
+                }
+              }
+            },
+            "description": "Managed Identity Sql Control Settings",
+            "required": true,
+            "x-originalParamName": "managedIdentitySqlControlSettings"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagedIdentitySqlControlSettingsModel"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ManagedIdentitySqlControlSettingsModel"
+                  }
+                }
+              },
+              "description": "Created"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error"
+            }
+          },
+          "summary": "Create or update Managed Identity Sql Control Settings",
+          "x-ms-examples": {
+            "Create or update managed identity sql control settings": {
+              "$ref": "./examples/CreateOrUpdateManagedIdentitySqlControlSettings.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/restorableDroppedSqlPools": {
+        "get": {
+          "description": "Gets a list of deleted Sql pools that can be restored",
+          "operationId": "RestorableDroppedSqlPools_ListByWorkspace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RestorableDroppedSqlPoolListResult"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error"
+            }
+          },
+          "tags": [
+            "RestorableDroppedSqlPools"
+          ],
+          "x-ms-examples": {
+            "Get list of restorable dropped Sql pools": {
+              "$ref": "./examples/RestorableDroppedSqlpoolList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/restorableDroppedSqlPools/{restorableDroppedSqlPoolId}": {
+        "get": {
+          "description": "Gets a deleted sql pool that can be restored",
+          "operationId": "RestorableDroppedSqlPools_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "description": "The id of the deleted Sql Pool in the form of sqlPoolName,deletionTimeInFileTimeFormat",
+              "in": "path",
+              "name": "restorableDroppedSqlPoolId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RestorableDroppedSqlPool"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error"
+            }
+          },
+          "tags": [
+            "RestorableDroppedSqlPools"
+          ],
+          "x-ms-examples": {
+            "Get a restorable dropped Sql pool": {
+              "$ref": "./examples/RestorableDroppedSqlPoolGet.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/sqlAdministrators/activeDirectory": {
+        "delete": {
+          "description": "Deletes a workspace SQL active directory admin",
+          "operationId": "WorkspaceSqlAadAdmins_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            },
+            "202": {
+              "description": ""
+            },
+            "204": {
+              "description": "Accepted"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Delete workspace active directory admin": {
+              "$ref": "./examples/DeleteWorkspaceAadAdmin.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a workspace SQL active directory admin",
+          "operationId": "WorkspaceSqlAadAdmins_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Get workspace active directory admin": {
+              "$ref": "./examples/GetWorkspaceAadAdmin.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a workspace SQL active directory admin",
+          "operationId": "WorkspaceSqlAadAdmins_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                }
+              }
+            },
+            "description": "Workspace active directory administrator properties",
+            "required": true,
+            "x-originalParamName": "aadAdminInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkspaceAadAdminInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "Workspaces"
+          ],
+          "x-ms-examples": {
+            "Create or update workspace active directory admin": {
+              "$ref": "./examples/CreateOrUpdateWorkspaceAadAdmin.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

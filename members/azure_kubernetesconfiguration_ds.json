@@ -1,0 +1,729 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_kubernetesconfiguration",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ClusterNameParameter": {
+          "description": "The name of the kubernetes cluster.",
+          "in": "path",
+          "name": "clusterName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ClusterResourceNameParameter": {
+          "description": "The Kubernetes cluster resource name - i.e. managedClusters, connectedClusters, provisionedClusters.",
+          "in": "path",
+          "name": "clusterResourceName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ClusterRpParameter": {
+          "description": "The Kubernetes cluster RP - i.e. Microsoft.ContainerService, Microsoft.Kubernetes, Microsoft.HybridContainerService.",
+          "in": "path",
+          "name": "clusterRp",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SourceControlConfigurationNameParameter": {
+          "description": "Name of the Source Control Configuration.",
+          "in": "path",
+          "name": "sourceControlConfigurationName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ChartValues": {
+          "description": "Values override for the operator Helm chart.",
+          "type": "string"
+        },
+        "ChartVersion": {
+          "description": "Version of the operator Helm chart.",
+          "type": "string"
+        },
+        "ComplianceStatus": {
+          "description": "Compliance Status details",
+          "properties": {
+            "complianceState": {
+              "description": "The compliance state of the configuration.",
+              "enum": [
+                "Pending",
+                "Compliant",
+                "Noncompliant",
+                "Installed",
+                "Failed"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ComplianceStateType"
+              }
+            },
+            "lastConfigApplied": {
+              "description": "Datetime the configuration was last applied.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "message": {
+              "description": "Message from when the configuration was applied.",
+              "type": "string"
+            },
+            "messageLevel": {
+              "description": "Level of the message.",
+              "enum": [
+                "Error",
+                "Warning",
+                "Information"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "MessageLevelType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "ConfigurationProtectedSettings": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Name-value pairs of protected configuration settings for the configuration",
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "HelmOperatorProperties": {
+          "description": "Properties for Helm operator.",
+          "properties": {
+            "chartValues": {
+              "$ref": "#/components/schemas/ChartValues"
+            },
+            "chartVersion": {
+              "$ref": "#/components/schemas/ChartVersion"
+            }
+          },
+          "type": "object"
+        },
+        "OperatorScopeDefinition": {
+          "default": "cluster",
+          "description": "Scope at which the operator will be installed.",
+          "enum": [
+            "cluster",
+            "namespace"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "OperatorScopeType"
+          }
+        },
+        "OperatorTypeDefinition": {
+          "description": "Type of the operator",
+          "enum": [
+            "Flux"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "OperatorType"
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SourceControlConfiguration": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The SourceControl Configuration object returned in Get \u0026 Put response.",
+          "properties": {
+            "properties": {
+              "description": "Properties to create a Source Control Configuration resource",
+              "properties": {
+                "complianceStatus": {
+                  "$ref": "#/components/schemas/ComplianceStatus"
+                },
+                "configurationProtectedSettings": {
+                  "$ref": "#/components/schemas/ConfigurationProtectedSettings"
+                },
+                "enableHelmOperator": {
+                  "description": "Option to enable Helm Operator for this git configuration.",
+                  "type": "boolean"
+                },
+                "helmOperatorProperties": {
+                  "$ref": "#/components/schemas/HelmOperatorProperties"
+                },
+                "operatorInstanceName": {
+                  "description": "Instance name of the operator - identifying the specific configuration.",
+                  "type": "string"
+                },
+                "operatorNamespace": {
+                  "default": "default",
+                  "description": "The namespace to which this operator is installed to. Maximum of 253 lower case alphanumeric characters, hyphen and period only.",
+                  "type": "string"
+                },
+                "operatorParams": {
+                  "description": "Any Parameters for the Operator instance in string format.",
+                  "type": "string"
+                },
+                "operatorScope": {
+                  "$ref": "#/components/schemas/OperatorScopeDefinition"
+                },
+                "operatorType": {
+                  "$ref": "#/components/schemas/OperatorTypeDefinition"
+                },
+                "provisioningState": {
+                  "description": "The provisioning state of the resource provider.",
+                  "enum": [
+                    "Accepted",
+                    "Deleting",
+                    "Running",
+                    "Succeeded",
+                    "Failed"
+                  ],
+                  "readOnly": true,
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": true,
+                    "name": "ProvisioningStateType"
+                  }
+                },
+                "repositoryPublicKey": {
+                  "description": "Public Key associated with this SourceControl configuration (either generated within the cluster or provided by the user).",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "repositoryUrl": {
+                  "description": "Url of the SourceControl Repository.",
+                  "type": "string"
+                },
+                "sshKnownHostsContents": {
+                  "description": "Base64-encoded known_hosts contents containing public SSH keys required to access private Git instances",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "x-ms-client-flatten": true
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            }
+          },
+          "type": "object"
+        },
+        "SourceControlConfigurationList": {
+          "description": "Result of the request to list Source Control Configurations.  It contains a list of SourceControlConfiguration objects and a URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of configuration objects, if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of Source Control Configurations within a Kubernetes cluster.",
+              "items": {
+                "$ref": "#/components/schemas/SourceControlConfiguration"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these APIs to create Source Control Configuration resources through ARM, for Kubernetes Clusters.",
+      "title": "SourceControlConfigurationClient",
+      "version": "2023-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations": {
+        "get": {
+          "description": "List all Source Control Configurations.",
+          "operationId": "SourceControlConfigurations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterRpParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SourceControlConfigurationList"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "SourceControlConfiguration"
+          ],
+          "x-ms-examples": {
+            "List Source Control Configuration": {
+              "$ref": "./examples/ListSourceControlConfiguration.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{clusterRp}/{clusterResourceName}/{clusterName}/providers/Microsoft.KubernetesConfiguration/sourceControlConfigurations/{sourceControlConfigurationName}": {
+        "delete": {
+          "description": "This will delete the YAML file used to set up the Source control configuration, thus stopping future sync from the source repo.",
+          "operationId": "SourceControlConfigurations_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterRpParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SourceControlConfigurationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK.  The request has been completed successfully."
+            },
+            "204": {
+              "description": "No Content.  The request has been accepted but the configuration was not found."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "SourceControlConfiguration"
+          ],
+          "x-ms-examples": {
+            "Delete Source Control Configuration": {
+              "$ref": "./examples/DeleteSourceControlConfiguration.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "get": {
+          "description": "Gets details of the Source Control Configuration.",
+          "operationId": "SourceControlConfigurations_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterRpParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SourceControlConfigurationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SourceControlConfiguration"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "SourceControlConfiguration"
+          ],
+          "x-ms-examples": {
+            "Get Source Control Configuration": {
+              "$ref": "./examples/GetSourceControlConfiguration.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a new Kubernetes Source Control Configuration.",
+          "operationId": "SourceControlConfigurations_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterRpParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterResourceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SourceControlConfigurationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceControlConfiguration"
+                }
+              }
+            },
+            "description": "Properties necessary to Create KubernetesConfiguration.",
+            "required": true,
+            "x-originalParamName": "sourceControlConfiguration"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SourceControlConfiguration"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SourceControlConfiguration"
+                  }
+                }
+              },
+              "description": "Created."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "SourceControlConfiguration"
+          ],
+          "x-ms-examples": {
+            "Create Source Control Configuration": {
+              "$ref": "./examples/CreateSourceControlConfiguration.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

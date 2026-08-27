@@ -1,0 +1,2528 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_devcenter_vdi",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "FilterParameter": {
+          "description": "The filter to apply to the operation. Example: '$filter=contains(name,'myName').",
+          "in": "query",
+          "name": "$filter",
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "NetworkConnectionName": {
+          "description": "Name of the Network Connection that can be applied to a Pool.",
+          "in": "path",
+          "name": "networkConnectionName",
+          "required": true,
+          "schema": {
+            "maxLength": 63,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "PoolNameParameter": {
+          "description": "Name of the pool.",
+          "in": "path",
+          "name": "poolName",
+          "required": true,
+          "schema": {
+            "maxLength": 63,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ProjectNameParameter": {
+          "description": "The name of the project.",
+          "in": "path",
+          "maxLength": 63,
+          "minLength": 3,
+          "name": "projectName",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_.]{2,62}$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ScheduleNameParameter": {
+          "description": "The name of the schedule that uniquely identifies it.",
+          "in": "path",
+          "name": "scheduleName",
+          "required": true,
+          "schema": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "^[-\\w]+$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "TopParameter": {
+          "description": "The maximum number of resources to return from the operation. Example: '$top=10'.",
+          "format": "int32",
+          "in": "query",
+          "name": "$top",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "Capability": {
+          "description": "A name/value pair to describe a capability.",
+          "properties": {
+            "name": {
+              "description": "Name of the capability.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Value of the capability.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CatalogErrorDetails": {
+          "description": "Catalog error details",
+          "properties": {
+            "code": {
+              "description": "An identifier for the error.",
+              "type": "string"
+            },
+            "message": {
+              "description": "A message describing the error.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CatalogResourceValidationErrorDetails": {
+          "description": "List of validator error details. Populated when changes are made to the resource or its dependent resources that impact the validity of the Catalog resource.",
+          "properties": {
+            "errors": {
+              "description": "Errors associated with resources synchronized from the catalog.",
+              "items": {
+                "$ref": "#/components/schemas/CatalogErrorDetails"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "CatalogResourceValidationStatus": {
+          "description": "Catalog resource validation status",
+          "enum": [
+            "Unknown",
+            "Pending",
+            "Succeeded",
+            "Failed"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CatalogResourceValidationStatus"
+          }
+        },
+        "DevCenterSku": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Sku"
+            }
+          ],
+          "description": "The resource model definition representing SKU for DevCenter resources",
+          "properties": {
+            "capabilities": {
+              "description": "Collection of name/value pairs to describe the SKU capabilities.",
+              "items": {
+                "$ref": "#/components/schemas/Capability"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "locations": {
+              "description": "SKU supported locations.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "resourceType": {
+              "description": "The name of the resource type",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "DomainJoinType": {
+          "description": "Active Directory join type",
+          "enum": [
+            "HybridAzureADJoin",
+            "AzureADJoin",
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DomainJoinType"
+          }
+        },
+        "EndpointDependency": {
+          "description": "A domain name and connection details used to access a dependency.",
+          "properties": {
+            "description": {
+              "description": "Human-readable supplemental information about the dependency and when it is applicable.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "domainName": {
+              "description": "The domain name of the dependency. Domain names may be fully qualified or may contain a * wildcard.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpointDetails": {
+              "description": "The list of connection details for this endpoint.",
+              "items": {
+                "$ref": "#/components/schemas/EndpointDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "EndpointDetail": {
+          "description": "Details about the connection between the Batch service and the endpoint.",
+          "properties": {
+            "port": {
+              "description": "The port an endpoint is connected to.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "HealthCheck": {
+          "description": "An individual health check item",
+          "properties": {
+            "additionalDetails": {
+              "description": "Additional details about the health check or the recommended action.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "displayName": {
+              "description": "The display name of this health check item.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endDateTime": {
+              "description": "End time of the health check item.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "errorType": {
+              "description": "The type of error that occurred during this health check.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "recommendedAction": {
+              "description": "The recommended action to fix the corresponding error.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "startDateTime": {
+              "description": "Start time of health check item.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/HealthCheckStatus"
+            }
+          },
+          "type": "object"
+        },
+        "HealthCheckStatus": {
+          "description": "Health check status values",
+          "enum": [
+            "Unknown",
+            "Pending",
+            "Running",
+            "Passed",
+            "Warning",
+            "Failed",
+            "Informational"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HealthCheckStatus"
+          }
+        },
+        "HealthCheckStatusDetails": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource_2"
+            }
+          ],
+          "description": "Health Check details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/HealthCheckStatusDetailsProperties"
+            }
+          },
+          "type": "object"
+        },
+        "HealthCheckStatusDetailsListResult": {
+          "description": "Result of the network health check list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Current page of results.",
+              "items": {
+                "$ref": "#/components/schemas/HealthCheckStatusDetails"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "HealthCheckStatusDetailsProperties": {
+          "description": "Health Check properties.",
+          "properties": {
+            "endDateTime": {
+              "description": "End time of last execution of the health checks.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "healthChecks": {
+              "description": "Details for each health check item.",
+              "items": {
+                "$ref": "#/components/schemas/HealthCheck"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "startDateTime": {
+              "description": "Start time of last execution of the health checks.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "HealthStatus": {
+          "description": "Health status indicating whether a pool is available to create Dev Boxes.",
+          "enum": [
+            "Unknown",
+            "Pending",
+            "Healthy",
+            "Warning",
+            "Unhealthy"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "HealthStatus"
+          }
+        },
+        "HealthStatusDetail": {
+          "description": "Pool health status detail.",
+          "properties": {
+            "code": {
+              "description": "An identifier for the issue.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "message": {
+              "description": "A message describing the issue, intended to be suitable for display in a user interface",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ImageReference": {
+          "description": "Image reference information",
+          "properties": {
+            "exactVersion": {
+              "description": "The actual version of the image after use. When id references a gallery image latest version, this will indicate the actual version in use.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "id": {
+              "description": "Image ID, or Image version ID. When Image ID is provided, its latest version will be used.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "LicenseType": {
+          "description": "License Types",
+          "enum": [
+            "Windows_Client"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "LicenseType"
+          }
+        },
+        "LocalAdminStatus": {
+          "description": "Local Administrator enable or disable status. Indicates whether owners of Dev Boxes are added as local administrators on the Dev Box.",
+          "enum": [
+            "Disabled",
+            "Enabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "LocalAdminStatus"
+          }
+        },
+        "NetworkConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Network related settings",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NetworkProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkConnectionListResult": {
+          "description": "Result of the network connection list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Current page of results.",
+              "items": {
+                "$ref": "#/components/schemas/NetworkConnection"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkConnectionUpdate": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResourceUpdate"
+            }
+          ],
+          "description": "The network connection properties for partial update. Properties not provided in the update request will not be changed.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NetworkConnectionUpdateProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkConnectionUpdateProperties": {
+          "description": "Properties of network connection. These properties can be updated after the resource has been created.",
+          "properties": {
+            "domainName": {
+              "description": "Active Directory domain name",
+              "type": "string"
+            },
+            "domainPassword": {
+              "description": "The password for the account used to join domain",
+              "type": "string",
+              "x-ms-secret": true
+            },
+            "domainUsername": {
+              "description": "The username of an Active Directory account (user or service account) that has permissions to create computer objects in Active Directory. Required format: admin@contoso.com.",
+              "type": "string"
+            },
+            "organizationUnit": {
+              "description": "Active Directory domain Organization Unit (OU)",
+              "type": "string"
+            },
+            "subnetId": {
+              "description": "The subnet to attach Virtual Machines to",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/NetworkConnectionUpdateProperties"
+            }
+          ],
+          "description": "Network properties",
+          "properties": {
+            "domainJoinType": {
+              "$ref": "#/components/schemas/DomainJoinType"
+            },
+            "healthCheckStatus": {
+              "$ref": "#/components/schemas/HealthCheckStatus"
+            },
+            "networkingResourceGroupName": {
+              "description": "The name for resource group where NICs will be placed.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "required": [
+            "subnetId",
+            "domainJoinType"
+          ],
+          "type": "object"
+        },
+        "OutboundEnvironmentEndpoint": {
+          "description": "A collection of related endpoints from the same service for which the agent requires outbound access.",
+          "properties": {
+            "category": {
+              "description": "The type of service that the agent connects to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpoints": {
+              "description": "The endpoints for this service for which the agent requires outbound access.",
+              "items": {
+                "$ref": "#/components/schemas/EndpointDependency"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "domainName"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "OutboundEnvironmentEndpointCollection": {
+          "description": "Values returned by the List operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The continuation token.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The collection of outbound network dependency endpoints returned by the listing operation.",
+              "items": {
+                "$ref": "#/components/schemas/OutboundEnvironmentEndpoint"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "category"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Pool": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A pool of Virtual Machines.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PoolProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PoolDevBoxDefinition": {
+          "description": "Represents a definition for a Developer Machine.",
+          "properties": {
+            "activeImageReference": {
+              "$ref": "#/components/schemas/ImageReference"
+            },
+            "imageReference": {
+              "$ref": "#/components/schemas/ImageReference"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "type": "object"
+        },
+        "PoolDevBoxDefinitionType": {
+          "description": "Indicates if the pool is created from an existing Dev Box Definition or if one is provided directly.",
+          "enum": [
+            "Reference",
+            "Value"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PoolDevBoxDefinitionType"
+          }
+        },
+        "PoolListResult": {
+          "description": "Results of the machine pool list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Current page of results.",
+              "items": {
+                "$ref": "#/components/schemas/Pool"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PoolProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/PoolUpdateProperties"
+            }
+          ],
+          "description": "Properties of a Pool",
+          "properties": {
+            "devBoxCount": {
+              "description": "Indicates the number of provisioned Dev Boxes in this pool.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "healthStatus": {
+              "$ref": "#/components/schemas/HealthStatus"
+            },
+            "healthStatusDetails": {
+              "description": "Details on the Pool health status to help diagnose issues. This is only populated when the pool status indicates the pool is in a non-healthy state",
+              "items": {
+                "$ref": "#/components/schemas/HealthStatusDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "code"
+              ]
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "required": [
+            "devBoxDefinitionName",
+            "networkConnectionName",
+            "licenseType",
+            "localAdministrator"
+          ],
+          "type": "object"
+        },
+        "PoolUpdate": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResourceUpdate"
+            }
+          ],
+          "description": "The pool properties for partial update. Properties not provided in the update request will not be changed.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PoolUpdateProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PoolUpdateProperties": {
+          "description": "Properties of a Pool. These properties can be updated after the resource has been created.",
+          "properties": {
+            "devBoxDefinition": {
+              "$ref": "#/components/schemas/PoolDevBoxDefinition"
+            },
+            "devBoxDefinitionName": {
+              "description": "Name of a Dev Box definition in parent Project of this Pool. Will be ignored if devBoxDefinitionType is Value.",
+              "type": "string"
+            },
+            "devBoxDefinitionType": {
+              "$ref": "#/components/schemas/PoolDevBoxDefinitionType"
+            },
+            "displayName": {
+              "description": "The display name of the pool.",
+              "type": "string"
+            },
+            "licenseType": {
+              "$ref": "#/components/schemas/LicenseType"
+            },
+            "localAdministrator": {
+              "$ref": "#/components/schemas/LocalAdminStatus"
+            },
+            "managedVirtualNetworkRegions": {
+              "description": "The regions of the managed virtual network (required when managedNetworkType is Managed).",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "networkConnectionName": {
+              "description": "Name of a Network Connection in parent Project of this Pool",
+              "type": "string"
+            },
+            "singleSignOnStatus": {
+              "$ref": "#/components/schemas/SingleSignOnStatus"
+            },
+            "stopOnDisconnect": {
+              "$ref": "#/components/schemas/StopOnDisconnectConfiguration"
+            },
+            "stopOnNoConnect": {
+              "$ref": "#/components/schemas/StopOnNoConnectConfiguration"
+            },
+            "virtualNetworkType": {
+              "$ref": "#/components/schemas/VirtualNetworkType"
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Provisioning state of the resource.",
+          "enum": [
+            "NotSpecified",
+            "Accepted",
+            "Running",
+            "Creating",
+            "Created",
+            "Updating",
+            "Updated",
+            "Deleting",
+            "Deleted",
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "MovingResources",
+            "TransientFailure",
+            "RolloutInProgress",
+            "StorageProvisioningFailed"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState"
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Resource_2": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Schedule": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource_2"
+            }
+          ],
+          "description": "Represents a Schedule to execute a task.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ScheduleProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduleEnableStatus": {
+          "description": "Schedule enable or disable status. Indicates whether the schedule applied to is either enabled or disabled.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ScheduleEnableStatus"
+          }
+        },
+        "ScheduleListResult": {
+          "description": "Result of the schedule list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Current page of results.",
+              "items": {
+                "$ref": "#/components/schemas/Schedule"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduleProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ScheduleUpdateProperties"
+            }
+          ],
+          "description": "The Schedule properties defining when and what to execute.",
+          "properties": {
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            }
+          },
+          "required": [
+            "type",
+            "frequency",
+            "timeZone",
+            "time"
+          ],
+          "type": "object"
+        },
+        "ScheduleUpdate": {
+          "description": "The schedule properties for partial update. Properties not provided in the update request will not be changed.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ScheduleUpdateProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduleUpdateProperties": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResourceUpdate"
+            }
+          ],
+          "description": "Updatable properties of a Schedule.",
+          "properties": {
+            "frequency": {
+              "$ref": "#/components/schemas/ScheduledFrequency"
+            },
+            "state": {
+              "$ref": "#/components/schemas/ScheduleEnableStatus"
+            },
+            "time": {
+              "description": "The target time to trigger the action. The format is HH:MM.",
+              "type": "string"
+            },
+            "timeZone": {
+              "description": "The IANA timezone id at which the schedule should execute.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ScheduledType"
+            }
+          },
+          "type": "object"
+        },
+        "ScheduledFrequency": {
+          "description": "The frequency of task execution.",
+          "enum": [
+            "Daily"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ScheduledFrequency"
+          }
+        },
+        "ScheduledType": {
+          "description": "The supported types for a scheduled task.",
+          "enum": [
+            "StopDevBox"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ScheduledType"
+          }
+        },
+        "SingleSignOnStatus": {
+          "description": "SingleSignOn (SSO) enable or disable status. Indicates whether Dev Boxes in the Pool will have SSO enabled or disabled.",
+          "enum": [
+            "Disabled",
+            "Enabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SingleSignOnStatus"
+          }
+        },
+        "Sku": {
+          "description": "The resource model definition representing SKU",
+          "properties": {
+            "capacity": {
+              "description": "If the SKU supports scale out/in then the capacity integer should be included. If scale out/in is not possible for the resource this may be omitted.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "family": {
+              "description": "If the service has different generations of hardware, for the same SKU, then that can be captured here.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the SKU. E.g. P3. It is typically a letter+number code",
+              "type": "string"
+            },
+            "size": {
+              "description": "The SKU size. When the name field is the combination of tier and some other value, this would be the standalone code. ",
+              "type": "string"
+            },
+            "tier": {
+              "$ref": "#/components/schemas/SkuTier"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "SkuListResult": {
+          "description": "Results of the Microsoft.DevCenter SKU list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "Current page of results.",
+              "items": {
+                "$ref": "#/components/schemas/DevCenterSku"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "SkuTier": {
+          "description": "This field is required to be implemented by the Resource Provider if the service has more than one tier, but is not required on a PUT.",
+          "enum": [
+            "Free",
+            "Basic",
+            "Standard",
+            "Premium"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "SkuTier"
+          }
+        },
+        "StopOnDisconnectConfiguration": {
+          "description": "Stop on disconnect configuration settings for Dev Boxes created in this pool.",
+          "properties": {
+            "gracePeriodMinutes": {
+              "description": "The specified time in minutes to wait before stopping a Dev Box once disconnect is detected.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "status": {
+              "$ref": "#/components/schemas/StopOnDisconnectEnableStatus"
+            }
+          },
+          "type": "object"
+        },
+        "StopOnDisconnectEnableStatus": {
+          "description": "Stop on disconnect enable or disable status. Indicates whether stop on disconnect to is either enabled or disabled.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "StopOnDisconnectEnableStatus"
+          }
+        },
+        "StopOnNoConnectConfiguration": {
+          "description": "Stop on no connect configuration settings for Dev Boxes created in this pool.",
+          "properties": {
+            "gracePeriodMinutes": {
+              "description": "The specified time in minutes to wait before stopping a Dev Box if no connection is made.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "status": {
+              "$ref": "#/components/schemas/StopOnNoConnectEnableStatus"
+            }
+          },
+          "type": "object"
+        },
+        "StopOnNoConnectEnableStatus": {
+          "description": "Stop on no connect enable or disable status.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "StopOnNoConnectEnableStatus"
+          }
+        },
+        "Tags": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Resource tags.",
+          "type": "object",
+          "x-ms-mutability": [
+            "read",
+            "create",
+            "update"
+          ]
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "TrackedResourceUpdate": {
+          "description": "Base tracked resource type for PATCH updates",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "$ref": "#/components/schemas/Tags"
+            }
+          },
+          "type": "object"
+        },
+        "VirtualNetworkType": {
+          "description": "Indicates a pool uses a Virtual Network managed by Microsoft (Managed), or a customer provided Network (Unmanaged).",
+          "enum": [
+            "Managed",
+            "Unmanaged"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "VirtualNetworkType"
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "DevCenter Management API",
+      "title": "DevCenter",
+      "version": "2025-02-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevCenter/networkConnections": {
+        "get": {
+          "description": "Lists network connections in a subscription",
+          "operationId": "NetworkConnections_ListBySubscription",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnectionListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_ListBySubscription": {
+              "$ref": "./examples/NetworkConnections_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevCenter/skus": {
+        "get": {
+          "description": "Lists the Microsoft.DevCenter SKUs available in a subscription",
+          "operationId": "Skus_ListBySubscription",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SkuListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "SKUs"
+          ],
+          "x-ms-examples": {
+            "Skus_ListBySubscription": {
+              "$ref": "./examples/Skus_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections": {
+        "get": {
+          "description": "Lists network connections in a resource group",
+          "operationId": "NetworkConnections_ListByResourceGroup",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnectionListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_ListByResourceGroup": {
+              "$ref": "./examples/NetworkConnections_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}": {
+        "delete": {
+          "description": "Deletes a Network Connections resource",
+          "operationId": "NetworkConnections_Delete",
+          "responses": {
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_Delete": {
+              "$ref": "./examples/NetworkConnections_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets a network connection resource",
+          "operationId": "NetworkConnections_Get",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnection"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_Get": {
+              "$ref": "./examples/NetworkConnections_Get.json"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/NetworkConnectionName"
+          }
+        ],
+        "patch": {
+          "description": "Partially updates a Network Connection",
+          "operationId": "NetworkConnections_Update",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkConnectionUpdate"
+                }
+              }
+            },
+            "description": "Represents network connection",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnection"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_Update": {
+              "$ref": "./examples/NetworkConnections_Patch.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Network Connections resource",
+          "operationId": "NetworkConnections_CreateOrUpdate",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkConnection"
+                }
+              }
+            },
+            "description": "Represents network connection",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnection"
+                  }
+                }
+              },
+              "description": "Accepted. Operation will complete asynchronously."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkConnection"
+                  }
+                }
+              },
+              "description": "Created. Operation will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_CreateOrUpdate": {
+              "$ref": "./examples/NetworkConnections_Put.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/healthChecks": {
+        "get": {
+          "description": "Lists health check status details",
+          "operationId": "NetworkConnections_ListHealthDetails",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthCheckStatusDetailsListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_ListHealthDetails": {
+              "$ref": "./examples/NetworkConnections_ListHealthDetails.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          },
+          {
+            "$ref": "#/components/parameters/NetworkConnectionName"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/healthChecks/latest": {
+        "get": {
+          "description": "Gets health check status details.",
+          "operationId": "NetworkConnections_GetHealthDetails",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkConnectionName"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthCheckStatusDetails"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connections"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_GetHealthDetails": {
+              "$ref": "./examples/NetworkConnections_GetHealthDetails.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/outboundNetworkDependenciesEndpoints": {
+        "get": {
+          "description": "Lists the endpoints that agents may call as part of Dev Box service administration. These FQDNs should be allowed for outbound access in order for the Dev Box service to function.",
+          "operationId": "NetworkConnections_ListOutboundNetworkDependenciesEndpoints",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OutboundEnvironmentEndpointCollection"
+                  }
+                }
+              },
+              "description": "The operation was successful. The response contains a list of outbound network dependencies."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connection"
+          ],
+          "x-ms-examples": {
+            "ListOutboundNetworkDependencies": {
+              "$ref": "./examples/NetworkConnections_ListOutboundNetworkDependenciesEndpoints.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          },
+          {
+            "$ref": "#/components/parameters/NetworkConnectionName"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/networkConnections/{networkConnectionName}/runHealthChecks": {
+        "post": {
+          "description": "Triggers a new health check run. The execution and health check result can be tracked via the network Connection health check details",
+          "operationId": "NetworkConnections_RunHealthChecks",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkConnectionName"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Accepted. Initiating health checks.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Network Connection"
+          ],
+          "x-ms-examples": {
+            "NetworkConnections_RunHealthChecks": {
+              "$ref": "./examples/NetworkConnections_RunHealthChecks.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools": {
+        "get": {
+          "description": "Lists pools for a project",
+          "operationId": "Pools_ListByProject",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PoolListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_ListByProject": {
+              "$ref": "./examples/Pools_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}": {
+        "delete": {
+          "description": "Deletes a machine pool",
+          "operationId": "Pools_Delete",
+          "responses": {
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Delete": {
+              "$ref": "./examples/Pools_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets a machine pool",
+          "operationId": "Pools_Get",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Get": {
+              "$ref": "./examples/Pools_Get.json"
+            },
+            "Pools_GetUnhealthyStatus": {
+              "$ref": "./examples/Pools_GetUnhealthyStatus.json"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/PoolNameParameter"
+          }
+        ],
+        "patch": {
+          "description": "Partially updates a machine pool",
+          "operationId": "Pools_Update",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolUpdate"
+                }
+              }
+            },
+            "description": "Represents a machine pool",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Update": {
+              "$ref": "./examples/Pools_Patch.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a machine pool",
+          "operationId": "Pools_CreateOrUpdate",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pool"
+                }
+              }
+            },
+            "description": "Represents a machine pool",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "Created. Operation will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_CreateOrUpdate": {
+              "$ref": "./examples/Pools_Put.json"
+            },
+            "Pools_CreateOrUpdateWithManagedNetwork": {
+              "$ref": "./examples/Pools_PutWithManagedNetwork.json"
+            },
+            "Pools_CreateOrUpdateWithValueDevBoxDefinition": {
+              "$ref": "./examples/Pools_PutWithValueDevBoxDefinition.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/runHealthChecks": {
+        "post": {
+          "description": "Triggers a refresh of the pool status.",
+          "operationId": "Pools_RunHealthChecks",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ProjectNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PoolNameParameter"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Accepted. Initiating pool status refresh.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_RefreshStatus": {
+              "$ref": "./examples/Pools_RunHealthChecks.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules": {
+        "get": {
+          "description": "Lists schedules for a pool",
+          "operationId": "Schedules_ListByPool",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ScheduleListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Schedules"
+          ],
+          "x-ms-examples": {
+            "Schedules_ListByPool": {
+              "$ref": "./examples/Schedules_ListByPool.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/PoolNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ]
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevCenter/projects/{projectName}/pools/{poolName}/schedules/{scheduleName}": {
+        "delete": {
+          "description": "Deletes a Scheduled.",
+          "operationId": "Schedules_Delete",
+          "responses": {
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Schedules"
+          ],
+          "x-ms-examples": {
+            "Schedules_Delete": {
+              "$ref": "./examples/Schedules_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets a schedule resource.",
+          "operationId": "Schedules_Get",
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Schedules"
+          ],
+          "x-ms-examples": {
+            "Schedules_GetByPool": {
+              "$ref": "./examples/Schedules_Get.json"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/PoolNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ScheduleNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/TopParameter"
+          }
+        ],
+        "patch": {
+          "description": "Partially updates a Scheduled.",
+          "operationId": "Schedules_Update",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleUpdate"
+                }
+              }
+            },
+            "description": "Represents a scheduled task.",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "202": {
+              "description": "Accepted. Operation will complete asynchronously",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Schedules"
+          ],
+          "x-ms-examples": {
+            "Schedules_Update": {
+              "$ref": "./examples/Schedules_Patch.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Schedule.",
+          "operationId": "Schedules_CreateOrUpdate",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            },
+            "description": "Represents a scheduled task",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              },
+              "description": "Created. Operation will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Schedules"
+          ],
+          "x-ms-examples": {
+            "Schedules_CreateDailyShutdownPoolSchedule": {
+              "$ref": "./examples/Schedules_CreateDailyShutdownPoolSchedule.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

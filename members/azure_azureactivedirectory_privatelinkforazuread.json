@@ -1,0 +1,566 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_azureactivedirectory_privatelinkforazuread",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "apiVersionParameter": {
+          "description": "Version of the API to be used with the client request.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "client"
+        },
+        "policyNameParameter": {
+          "description": "The name of the private link policy in Azure AD.",
+          "in": "path",
+          "name": "policyName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "resourceGroupNameParameter": {
+          "description": "Name of an Azure resource group.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "maxLength": 90,
+            "minLength": 1,
+            "pattern": "^[-\\w\\._\\(\\)]+$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "subscriptionIdParameter": {
+          "description": "Azure subscription ID.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "client"
+        }
+      },
+      "schemas": {
+        "AzureResourceBase": {
+          "description": "Common properties for all Azure resources.",
+          "properties": {
+            "id": {
+              "description": "String Id used to locate any resource on Azure.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of this resource.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of this resource.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ErrorDefinition": {
+          "description": "Error definition.",
+          "properties": {
+            "code": {
+              "description": "Service specific error code which serves as the substatus for the HTTP error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "Internal error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDefinition"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "message": {
+              "description": "Description of the error.",
+              "readOnly": true,
+              "type": "string"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "description": "Error response.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDefinition"
+            }
+          }
+        },
+        "privateLinkPolicy": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/AzureResourceBase"
+            }
+          ],
+          "description": "PrivateLink Policy configuration object.",
+          "properties": {
+            "allTenants": {
+              "description": "Flag indicating whether all tenants are allowed",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the Private Link Azure AD Policy.",
+              "type": "string"
+            },
+            "ownerTenantId": {
+              "description": "Guid of the owner tenant",
+              "type": "string"
+            },
+            "resourceGroup": {
+              "description": "Name of the resource group",
+              "type": "string"
+            },
+            "resourceName": {
+              "description": "Name of the private link policy resource",
+              "type": "string"
+            },
+            "subscriptionId": {
+              "description": "Subscription Identifier",
+              "type": "string"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            },
+            "tenants": {
+              "description": "The list of tenantIds.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "privateLinkPolicyListResult": {
+          "description": "A list of private link policies",
+          "properties": {
+            "nextLink": {
+              "description": "The link used to get the next page of operations.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Array of private link policies",
+              "items": {
+                "$ref": "#/components/schemas/privateLinkPolicy"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "privateLinkPolicyUpdateParameter": {
+          "description": "private Link policy parameters to be updated. ",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags to be updated.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Private link Policy for Azure Active Directory.",
+      "title": "azureactivedirectory",
+      "version": "2020-03-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/microsoft.aadiam/privateLinkForAzureAd": {
+        "get": {
+          "description": "Lists all  Private Link Policies For AzureAD in the given subscription.",
+          "operationId": "privateLinkForAzureAd_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicyListResult"
+                  }
+                }
+              },
+              "description": "OK -- Returns a list of private link policies."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyListBySubscription": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.aadiam/privateLinkForAzureAd": {
+        "get": {
+          "description": "Operation to return the list of Private Link Policies For AzureAD scoped to the resourceGroup.",
+          "operationId": "privateLinkForAzureAd_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicyListResult"
+                  }
+                }
+              },
+              "description": "Successful request to get list of Private Links configuration objects For AzureAD."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error, failed to get list of Private Links For AzureAD."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyGetList": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/microsoft.aadiam/privateLinkForAzureAd/{policyName}": {
+        "delete": {
+          "description": "Deletes a private link policy. When operation completes, status code 200 returned without content.",
+          "operationId": "privateLinkForAzureAd_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/policyNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK -- private link policy deleted."
+            },
+            "204": {
+              "description": "private link policy does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyDelete": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a private link policy with a given name.",
+          "operationId": "privateLinkForAzureAd_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/policyNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicy"
+                  }
+                }
+              },
+              "description": "OK -- Returns information about the private link policy."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyGet": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates private link policy tags with specified values.",
+          "operationId": "privateLinkForAzureAd_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/policyNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/privateLinkPolicyUpdateParameter"
+                }
+              }
+            },
+            "description": "Private Link Policy resource with the tags to be updated.",
+            "x-originalParamName": "privateLinkPolicy"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicy"
+                  }
+                }
+              },
+              "description": "OK -- Private Link Policy tags are updated."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyUpdate": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyUpdate.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a private link policy.",
+          "operationId": "privateLinkForAzureAd_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/policyNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/apiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/privateLinkPolicy"
+                }
+              }
+            },
+            "description": "private link Policy supplied to the operation.",
+            "required": true,
+            "x-originalParamName": "privateLinkPolicy"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicy"
+                  }
+                }
+              },
+              "description": "Created -- Private Link Policy created."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/privateLinkPolicy"
+                  }
+                }
+              },
+              "description": "OK -- Private Link Policy is updated."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "privateLinkForAzureAd"
+          ],
+          "x-ms-examples": {
+            "privateLinkPolicyCreate": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyCreate.json"
+            },
+            "privateLinkPolicyMinCreate": {
+              "$ref": "./examples/AzureADPrivateLinkPolicyMinCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}
