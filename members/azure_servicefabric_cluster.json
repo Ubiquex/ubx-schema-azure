@@ -1,0 +1,2130 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_servicefabric_cluster",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "api-version": {
+          "description": "The version of the Service Fabric resource provider API. This is a required parameter and it's value must be \"2021-06-01\" for this specification.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "default": "2021-06-01",
+            "enum": [
+              "2021-06-01"
+            ],
+            "type": "string"
+          },
+          "x-ms-parameter-location": "client"
+        },
+        "clusterNameParameter": {
+          "description": "The name of the cluster resource.",
+          "in": "path",
+          "name": "clusterName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "clusterVersion": {
+          "description": "The cluster code version.",
+          "in": "path",
+          "name": "clusterVersion",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "environment": {
+          "description": "The operating system of the cluster. The default means all.",
+          "in": "path",
+          "name": "environment",
+          "required": true,
+          "schema": {
+            "enum": [
+              "Windows",
+              "Linux"
+            ],
+            "type": "string"
+          },
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ClusterVersionsEnvironment"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "locationForClusterCodeVersions": {
+          "description": "The location for the cluster code versions. This is different from cluster location.",
+          "in": "path",
+          "name": "location",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "resourceGroupNameParameter": {
+          "description": "The name of the resource group.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "subscriptionId": {
+          "description": "The customer subscription identifier.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "client"
+        }
+      },
+      "schemas": {
+        "AddOnFeatures": {
+          "description": "Available cluster add-on features",
+          "enum": [
+            "RepairManager",
+            "DnsService",
+            "BackupRestoreService",
+            "ResourceMonitorService"
+          ],
+          "type": "string"
+        },
+        "ApplicationDeltaHealthPolicy": {
+          "description": "Defines a delta health policy used to evaluate the health of an application or one of its child entities when upgrading the cluster.\n",
+          "properties": {
+            "defaultServiceTypeDeltaHealthPolicy": {
+              "$ref": "#/components/schemas/ServiceTypeDeltaHealthPolicy"
+            },
+            "serviceTypeDeltaHealthPolicies": {
+              "$ref": "#/components/schemas/ServiceTypeDeltaHealthPolicyMap"
+            }
+          },
+          "type": "object"
+        },
+        "ApplicationDeltaHealthPolicyMap": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/ApplicationDeltaHealthPolicy"
+          },
+          "description": "Defines a map that contains specific application delta health policies for different applications.\nEach entry specifies as key the application name and as value an ApplicationDeltaHealthPolicy used to evaluate the application health when upgrading the cluster.\nThe application name should include the 'fabric:' URI scheme.\nThe map is empty by default.\n",
+          "type": "object"
+        },
+        "ApplicationHealthPolicy": {
+          "description": "Defines a health policy used to evaluate the health of an application or one of its children entities.\n",
+          "properties": {
+            "defaultServiceTypeHealthPolicy": {
+              "$ref": "#/components/schemas/ServiceTypeHealthPolicy"
+            },
+            "serviceTypeHealthPolicies": {
+              "$ref": "#/components/schemas/ServiceTypeHealthPolicyMap"
+            }
+          },
+          "type": "object"
+        },
+        "ApplicationHealthPolicyMap": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/ApplicationHealthPolicy"
+          },
+          "description": "Defines a map that contains specific application health policies for different applications.\nEach entry specifies as key the application name and as value an ApplicationHealthPolicy used to evaluate the application health.\nThe application name should include the 'fabric:' URI scheme.\nThe map is empty by default.\n",
+          "type": "object"
+        },
+        "ApplicationTypeVersionsCleanupPolicy": {
+          "properties": {
+            "maxUnusedVersionsToKeep": {
+              "description": "Number of unused versions per application type to keep.",
+              "format": "int64",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "maxUnusedVersionsToKeep"
+          ],
+          "type": "object"
+        },
+        "AvailableOperationDisplay": {
+          "description": "Operation supported by the Service Fabric resource provider",
+          "properties": {
+            "description": {
+              "description": "Operation description",
+              "type": "string"
+            },
+            "operation": {
+              "description": "The operation that can be performed.",
+              "type": "string"
+            },
+            "provider": {
+              "description": "The name of the provider.",
+              "type": "string"
+            },
+            "resource": {
+              "description": "The resource on which the operation is performed",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AzureActiveDirectory": {
+          "description": "The settings to enable AAD authentication on the cluster.",
+          "properties": {
+            "clientApplication": {
+              "description": "Azure active directory client application id.",
+              "type": "string"
+            },
+            "clusterApplication": {
+              "description": "Azure active directory cluster application id.",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Azure active directory tenant id.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CertificateDescription": {
+          "description": "Describes the certificate details.",
+          "properties": {
+            "thumbprint": {
+              "description": "Thumbprint of the primary certificate.",
+              "type": "string"
+            },
+            "thumbprintSecondary": {
+              "description": "Thumbprint of the secondary certificate.",
+              "type": "string"
+            },
+            "x509StoreName": {
+              "$ref": "#/components/schemas/StoreName"
+            }
+          },
+          "required": [
+            "thumbprint"
+          ],
+          "type": "object"
+        },
+        "ClientCertificateCommonName": {
+          "description": "Describes the client certificate details using common name.",
+          "properties": {
+            "certificateCommonName": {
+              "description": "The common name of the client certificate.",
+              "type": "string"
+            },
+            "certificateIssuerThumbprint": {
+              "description": "The issuer thumbprint of the client certificate.",
+              "type": "string"
+            },
+            "isAdmin": {
+              "description": "Indicates if the client certificate has admin access to the cluster. Non admin clients can perform only read only operations on the cluster.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "certificateCommonName",
+            "isAdmin",
+            "certificateIssuerThumbprint"
+          ],
+          "type": "object"
+        },
+        "ClientCertificateThumbprint": {
+          "description": "Describes the client certificate details using thumbprint.",
+          "properties": {
+            "certificateThumbprint": {
+              "description": "The thumbprint of the client certificate.",
+              "type": "string"
+            },
+            "isAdmin": {
+              "description": "Indicates if the client certificate has admin access to the cluster. Non admin clients can perform only read only operations on the cluster.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "certificateThumbprint",
+            "isAdmin"
+          ],
+          "type": "object"
+        },
+        "Cluster": {
+          "allOf": [
+            {
+              "description": "The cluster resource properties"
+            },
+            {
+              "$ref": "#/components/schemas/Resource"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "description": "The cluster resource\n",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ClusterProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterCodeVersionsListResult": {
+          "description": "The list results of the Service Fabric runtime versions.",
+          "properties": {
+            "nextLink": {
+              "description": "The URL to use for getting the next set of results.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/ClusterCodeVersionsResult"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterCodeVersionsResult": {
+          "description": "The result of the Service Fabric runtime versions",
+          "properties": {
+            "id": {
+              "description": "The identification of the result",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the result",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ClusterVersionDetails"
+            },
+            "type": {
+              "description": "The result resource type",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterEnvironment": {
+          "description": "Cluster operating system, the default will be Windows",
+          "enum": [
+            "Windows",
+            "Linux"
+          ],
+          "type": "string"
+        },
+        "ClusterHealthPolicy": {
+          "description": "Defines a health policy used to evaluate the health of the cluster or of a cluster node.\n",
+          "properties": {
+            "applicationHealthPolicies": {
+              "$ref": "#/components/schemas/ApplicationHealthPolicyMap"
+            },
+            "maxPercentUnhealthyApplications": {
+              "default": 0,
+              "description": "The maximum allowed percentage of unhealthy applications before reporting an error. For example, to allow 10% of applications to be unhealthy, this value would be 10.\n\nThe percentage represents the maximum tolerated percentage of applications that can be unhealthy before the cluster is considered in error.\nIf the percentage is respected but there is at least one unhealthy application, the health is evaluated as Warning.\nThis is calculated by dividing the number of unhealthy applications over the total number of application instances in the cluster, excluding applications of application types that are included in the ApplicationTypeHealthPolicyMap.\nThe computation rounds up to tolerate one failure on small numbers of applications. Default percentage is zero.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxPercentUnhealthyNodes": {
+              "default": 0,
+              "description": "The maximum allowed percentage of unhealthy nodes before reporting an error. For example, to allow 10% of nodes to be unhealthy, this value would be 10.\n\nThe percentage represents the maximum tolerated percentage of nodes that can be unhealthy before the cluster is considered in error.\nIf the percentage is respected but there is at least one unhealthy node, the health is evaluated as Warning.\nThe percentage is calculated by dividing the number of unhealthy nodes over the total number of nodes in the cluster.\nThe computation rounds up to tolerate one failure on small numbers of nodes. Default percentage is zero.\n\nIn large clusters, some nodes will always be down or out for repairs, so this percentage should be configured to tolerate that.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterListResult": {
+          "description": "Cluster list results",
+          "properties": {
+            "nextLink": {
+              "description": "The URL to use for getting the next set of results.",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/Cluster"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterProperties": {
+          "description": "Describes the cluster resource properties.",
+          "properties": {
+            "addOnFeatures": {
+              "description": "The list of add-on features to enable in the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/AddOnFeatures"
+              },
+              "type": "array"
+            },
+            "applicationTypeVersionsCleanupPolicy": {
+              "$ref": "#/components/schemas/ApplicationTypeVersionsCleanupPolicy"
+            },
+            "availableClusterVersions": {
+              "description": "The Service Fabric runtime versions available for this cluster.",
+              "items": {
+                "$ref": "#/components/schemas/ClusterVersionDetails"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "azureActiveDirectory": {
+              "$ref": "#/components/schemas/AzureActiveDirectory"
+            },
+            "certificate": {
+              "$ref": "#/components/schemas/CertificateDescription"
+            },
+            "certificateCommonNames": {
+              "$ref": "#/components/schemas/ServerCertificateCommonNames"
+            },
+            "clientCertificateCommonNames": {
+              "description": "The list of client certificates referenced by common name that are allowed to manage the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/ClientCertificateCommonName"
+              },
+              "type": "array"
+            },
+            "clientCertificateThumbprints": {
+              "description": "The list of client certificates referenced by thumbprint that are allowed to manage the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/ClientCertificateThumbprint"
+              },
+              "type": "array"
+            },
+            "clusterCodeVersion": {
+              "description": "The Service Fabric runtime version of the cluster. This property can only by set the user when **upgradeMode** is set to 'Manual'. To get list of available Service Fabric versions for new clusters use [ClusterVersion API](https://learn.microsoft.com/rest/api/servicefabric/cluster-versions/list). To get the list of available version for existing clusters use **availableClusterVersions**.",
+              "type": "string"
+            },
+            "clusterEndpoint": {
+              "description": "The Azure Resource Provider endpoint. A system service in the cluster connects to this  endpoint.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "clusterId": {
+              "description": "A service generated unique identifier for the cluster resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "clusterState": {
+              "$ref": "#/components/schemas/ClusterState"
+            },
+            "diagnosticsStorageAccountConfig": {
+              "$ref": "#/components/schemas/DiagnosticsStorageAccountConfig"
+            },
+            "eventStoreServiceEnabled": {
+              "description": "Indicates if the event store service is enabled.",
+              "type": "boolean"
+            },
+            "fabricSettings": {
+              "description": "The list of custom fabric settings to configure the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/SettingsSectionDescription"
+              },
+              "type": "array"
+            },
+            "infrastructureServiceManager": {
+              "description": "Indicates if infrastructure service manager is enabled.",
+              "type": "boolean"
+            },
+            "managementEndpoint": {
+              "description": "The http management endpoint of the cluster.",
+              "type": "string"
+            },
+            "nodeTypes": {
+              "description": "The list of node types in the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/NodeTypeDescription"
+              },
+              "type": "array"
+            },
+            "notifications": {
+              "description": "Indicates a list of notification channels for cluster events.",
+              "items": {
+                "$ref": "#/components/schemas/Notification"
+              },
+              "type": "array"
+            },
+            "provisioningState": {
+              "description": "The provisioning state of the cluster resource.",
+              "enum": [
+                "Updating",
+                "Succeeded",
+                "Failed",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ProvisioningState"
+              }
+            },
+            "reliabilityLevel": {
+              "$ref": "#/components/schemas/ReliabilityLevel"
+            },
+            "reverseProxyCertificate": {
+              "$ref": "#/components/schemas/CertificateDescription"
+            },
+            "reverseProxyCertificateCommonNames": {
+              "$ref": "#/components/schemas/ServerCertificateCommonNames"
+            },
+            "sfZonalUpgradeMode": {
+              "$ref": "#/components/schemas/SfZonalUpgradeMode"
+            },
+            "upgradeDescription": {
+              "$ref": "#/components/schemas/ClusterUpgradePolicy"
+            },
+            "upgradeMode": {
+              "$ref": "#/components/schemas/UpgradeMode"
+            },
+            "upgradePauseEndTimestampUtc": {
+              "description": "Indicates the end date and time to pause automatic runtime version upgrades on the cluster for an specific period of time on the cluster (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "upgradePauseStartTimestampUtc": {
+              "description": "Indicates the start date and time to pause automatic runtime version upgrades on the cluster for an specific period of time on the cluster (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "upgradeWave": {
+              "$ref": "#/components/schemas/ClusterUpgradeCadence"
+            },
+            "vmImage": {
+              "description": "The VM image VMSS has been configured with. Generic names such as Windows or Linux can be used.",
+              "type": "string"
+            },
+            "vmssZonalUpgradeMode": {
+              "$ref": "#/components/schemas/VmssZonalUpgradeMode"
+            },
+            "waveUpgradePaused": {
+              "description": "Boolean to pause automatic runtime version upgrades to the cluster.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "managementEndpoint",
+            "nodeTypes"
+          ],
+          "type": "object"
+        },
+        "ClusterPropertiesUpdateParameters": {
+          "description": "Describes the cluster resource properties that can be updated during PATCH operation.",
+          "properties": {
+            "addOnFeatures": {
+              "description": "The list of add-on features to enable in the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/AddOnFeatures"
+              },
+              "type": "array"
+            },
+            "applicationTypeVersionsCleanupPolicy": {
+              "$ref": "#/components/schemas/ApplicationTypeVersionsCleanupPolicy"
+            },
+            "certificate": {
+              "$ref": "#/components/schemas/CertificateDescription"
+            },
+            "certificateCommonNames": {
+              "$ref": "#/components/schemas/ServerCertificateCommonNames"
+            },
+            "clientCertificateCommonNames": {
+              "description": "The list of client certificates referenced by common name that are allowed to manage the cluster. This will overwrite the existing list.",
+              "items": {
+                "$ref": "#/components/schemas/ClientCertificateCommonName"
+              },
+              "type": "array"
+            },
+            "clientCertificateThumbprints": {
+              "description": "The list of client certificates referenced by thumbprint that are allowed to manage the cluster. This will overwrite the existing list.",
+              "items": {
+                "$ref": "#/components/schemas/ClientCertificateThumbprint"
+              },
+              "type": "array"
+            },
+            "clusterCodeVersion": {
+              "description": "The Service Fabric runtime version of the cluster. This property can only by set the user when **upgradeMode** is set to 'Manual'. To get list of available Service Fabric versions for new clusters use [ClusterVersion API](https://learn.microsoft.com/rest/api/servicefabric/cluster-versions/list). To get the list of available version for existing clusters use **availableClusterVersions**.",
+              "type": "string"
+            },
+            "eventStoreServiceEnabled": {
+              "description": "Indicates if the event store service is enabled.",
+              "type": "boolean"
+            },
+            "fabricSettings": {
+              "description": "The list of custom fabric settings to configure the cluster. This will overwrite the existing list.",
+              "items": {
+                "$ref": "#/components/schemas/SettingsSectionDescription"
+              },
+              "type": "array"
+            },
+            "infrastructureServiceManager": {
+              "description": "Indicates if infrastructure service manager is enabled.",
+              "type": "boolean"
+            },
+            "nodeTypes": {
+              "description": "The list of node types in the cluster. This will overwrite the existing list.",
+              "items": {
+                "$ref": "#/components/schemas/NodeTypeDescription"
+              },
+              "type": "array"
+            },
+            "notifications": {
+              "description": "Indicates a list of notification channels for cluster events.",
+              "items": {
+                "$ref": "#/components/schemas/Notification"
+              },
+              "type": "array"
+            },
+            "reliabilityLevel": {
+              "$ref": "#/components/schemas/ReliabilityLevel"
+            },
+            "reverseProxyCertificate": {
+              "$ref": "#/components/schemas/CertificateDescription"
+            },
+            "sfZonalUpgradeMode": {
+              "$ref": "#/components/schemas/SfZonalUpgradeMode"
+            },
+            "upgradeDescription": {
+              "$ref": "#/components/schemas/ClusterUpgradePolicy"
+            },
+            "upgradeMode": {
+              "$ref": "#/components/schemas/UpgradeMode"
+            },
+            "upgradePauseEndTimestampUtc": {
+              "description": "The end timestamp of pause runtime version upgrades on the cluster (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "upgradePauseStartTimestampUtc": {
+              "description": "The start timestamp to pause runtime version upgrades on the cluster (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "upgradeWave": {
+              "$ref": "#/components/schemas/ClusterUpgradeCadence"
+            },
+            "vmssZonalUpgradeMode": {
+              "$ref": "#/components/schemas/VmssZonalUpgradeMode"
+            },
+            "waveUpgradePaused": {
+              "description": "Boolean to pause automatic runtime version upgrades to the cluster.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterState": {
+          "description": "The current state of the cluster.\n\n  - WaitingForNodes - Indicates that the cluster resource is created and the resource provider is waiting for Service Fabric VM extension to boot up and report to it.\n  - Deploying - Indicates that the Service Fabric runtime is being installed on the VMs. Cluster resource will be in this state until the cluster boots up and system services are up.\n  - BaselineUpgrade - Indicates that the cluster is upgrading to establishes the cluster version. This upgrade is automatically initiated when the cluster boots up for the first time.\n  - UpdatingUserConfiguration - Indicates that the cluster is being upgraded with the user provided configuration.\n  - UpdatingUserCertificate - Indicates that the cluster is being upgraded with the user provided certificate.\n  - UpdatingInfrastructure - Indicates that the cluster is being upgraded with the latest Service Fabric runtime version. This happens only when the **upgradeMode** is set to 'Automatic'.\n  - EnforcingClusterVersion - Indicates that cluster is on a different version than expected and the cluster is being upgraded to the expected version.\n  - UpgradeServiceUnreachable - Indicates that the system service in the cluster is no longer polling the Resource Provider. Clusters in this state cannot be managed by the Resource Provider.\n  - AutoScale - Indicates that the ReliabilityLevel of the cluster is being adjusted.\n  - Ready - Indicates that the cluster is in a stable state.\n",
+          "enum": [
+            "WaitingForNodes",
+            "Deploying",
+            "BaselineUpgrade",
+            "UpdatingUserConfiguration",
+            "UpdatingUserCertificate",
+            "UpdatingInfrastructure",
+            "EnforcingClusterVersion",
+            "UpgradeServiceUnreachable",
+            "AutoScale",
+            "Ready"
+          ],
+          "type": "string"
+        },
+        "ClusterUpdateParameters": {
+          "description": "Cluster update request",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ClusterPropertiesUpdateParameters"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Cluster update parameters",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "ClusterUpgradeCadence": {
+          "description": "Indicates when new cluster runtime version upgrades will be applied after they are released. By default is Wave0.",
+          "enum": [
+            "Wave0",
+            "Wave1",
+            "Wave2"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "clusterUpgradeCadence",
+            "values": [
+              {
+                "description": "Cluster upgrade starts immediately after a new version is rolled out. Recommended for Test/Dev clusters.",
+                "value": "Wave0"
+              },
+              {
+                "description": "Cluster upgrade starts 7 days after a new version is rolled out. Recommended for Pre-prod clusters.",
+                "value": "Wave1"
+              },
+              {
+                "description": "Cluster upgrade starts 14 days after a new version is rolled out. Recommended for Production clusters.",
+                "value": "Wave2"
+              }
+            ]
+          }
+        },
+        "ClusterUpgradeDeltaHealthPolicy": {
+          "description": "Describes the delta health policies for the cluster upgrade.",
+          "properties": {
+            "applicationDeltaHealthPolicies": {
+              "$ref": "#/components/schemas/ApplicationDeltaHealthPolicyMap"
+            },
+            "maxPercentDeltaUnhealthyApplications": {
+              "description": "The maximum allowed percentage of applications health degradation allowed during cluster upgrades.\nThe delta is measured between the state of the applications at the beginning of upgrade and the state of the applications at the time of the health evaluation.\nThe check is performed after every upgrade domain upgrade completion to make sure the global state of the cluster is within tolerated limits. System services are not included in this.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxPercentDeltaUnhealthyNodes": {
+              "description": "The maximum allowed percentage of nodes health degradation allowed during cluster upgrades.\nThe delta is measured between the state of the nodes at the beginning of upgrade and the state of the nodes at the time of the health evaluation.\nThe check is performed after every upgrade domain upgrade completion to make sure the global state of the cluster is within tolerated limits.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxPercentUpgradeDomainDeltaUnhealthyNodes": {
+              "description": "The maximum allowed percentage of upgrade domain nodes health degradation allowed during cluster upgrades.\nThe delta is measured between the state of the upgrade domain nodes at the beginning of upgrade and the state of the upgrade domain nodes at the time of the health evaluation.\nThe check is performed after every upgrade domain upgrade completion for all completed upgrade domains to make sure the state of the upgrade domains is within tolerated limits.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "maxPercentDeltaUnhealthyApplications",
+            "maxPercentDeltaUnhealthyNodes",
+            "maxPercentUpgradeDomainDeltaUnhealthyNodes"
+          ],
+          "type": "object"
+        },
+        "ClusterUpgradePolicy": {
+          "description": "Describes the policy used when upgrading the cluster.",
+          "properties": {
+            "deltaHealthPolicy": {
+              "$ref": "#/components/schemas/ClusterUpgradeDeltaHealthPolicy"
+            },
+            "forceRestart": {
+              "description": "If true, then processes are forcefully restarted during upgrade even when the code version has not changed (the upgrade only changes configuration or data).",
+              "type": "boolean"
+            },
+            "healthCheckRetryTimeout": {
+              "description": "The amount of time to retry health evaluation when the application or cluster is unhealthy before the upgrade rolls back. The timeout can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            },
+            "healthCheckStableDuration": {
+              "description": "The amount of time that the application or cluster must remain healthy before the upgrade proceeds to the next upgrade domain. The duration can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            },
+            "healthCheckWaitDuration": {
+              "description": "The length of time to wait after completing an upgrade domain before performing health checks. The duration can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            },
+            "healthPolicy": {
+              "$ref": "#/components/schemas/ClusterHealthPolicy"
+            },
+            "upgradeDomainTimeout": {
+              "description": "The amount of time each upgrade domain has to complete before the upgrade rolls back. The timeout can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            },
+            "upgradeReplicaSetCheckTimeout": {
+              "description": "The maximum amount of time to block processing of an upgrade domain and prevent loss of availability when there are unexpected issues. When this timeout expires, processing of the upgrade domain will proceed regardless of availability loss issues. The timeout is reset at the start of each upgrade domain. The timeout can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            },
+            "upgradeTimeout": {
+              "description": "The amount of time the overall upgrade has to complete before the upgrade rolls back. The timeout can be in either hh:mm:ss or in d.hh:mm:ss.ms format.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "healthCheckRetryTimeout",
+            "healthCheckStableDuration",
+            "healthCheckWaitDuration",
+            "healthPolicy",
+            "upgradeDomainTimeout",
+            "upgradeReplicaSetCheckTimeout",
+            "upgradeTimeout"
+          ],
+          "type": "object"
+        },
+        "ClusterVersionDetails": {
+          "description": "The detail of the Service Fabric runtime version result",
+          "properties": {
+            "codeVersion": {
+              "description": "The Service Fabric runtime version of the cluster.",
+              "type": "string"
+            },
+            "environment": {
+              "$ref": "#/components/schemas/ClusterEnvironment"
+            },
+            "supportExpiryUtc": {
+              "description": "The date of expiry of support of the version.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticsStorageAccountConfig": {
+          "description": "The storage account information for storing Service Fabric diagnostic logs.",
+          "properties": {
+            "blobEndpoint": {
+              "description": "The blob endpoint of the azure storage account.",
+              "type": "string"
+            },
+            "protectedAccountKeyName": {
+              "description": "The protected diagnostics storage key name.",
+              "type": "string"
+            },
+            "protectedAccountKeyName2": {
+              "description": "The secondary protected diagnostics storage key name. If one of the storage account keys is rotated the cluster will fallback to using the other.",
+              "type": "string"
+            },
+            "queueEndpoint": {
+              "description": "The queue endpoint of the azure storage account.",
+              "type": "string"
+            },
+            "storageAccountName": {
+              "description": "The Azure storage account name.",
+              "type": "string"
+            },
+            "tableEndpoint": {
+              "description": "The table endpoint of the azure storage account.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "blobEndpoint",
+            "protectedAccountKeyName",
+            "queueEndpoint",
+            "storageAccountName",
+            "tableEndpoint"
+          ],
+          "type": "object"
+        },
+        "DurabilityLevel": {
+          "description": "The durability level of the node type. Learn about [DurabilityLevel](https://docs.microsoft.com/azure/service-fabric/service-fabric-cluster-capacity).\n\n  - Bronze - No privileges. This is the default.\n  - Silver - The infrastructure jobs can be paused for a duration of 10 minutes per UD.\n  - Gold - The infrastructure jobs can be paused for a duration of 2 hours per UD. Gold durability can be enabled only on full node VM skus like D15_V2, G5 etc.\n",
+          "enum": [
+            "Bronze",
+            "Silver",
+            "Gold"
+          ],
+          "type": "string"
+        },
+        "EndpointRangeDescription": {
+          "description": "Port range details",
+          "properties": {
+            "endPort": {
+              "description": "End port of a range of ports",
+              "format": "int32",
+              "type": "integer"
+            },
+            "startPort": {
+              "description": "Starting port of a range of ports",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "endPort",
+            "startPort"
+          ],
+          "type": "object"
+        },
+        "ErrorModel": {
+          "description": "The structure of the error.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorModelError"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorModelError": {
+          "description": "The error details.",
+          "properties": {
+            "code": {
+              "description": "The error code.",
+              "type": "string"
+            },
+            "message": {
+              "description": "The error message.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NodeTypeDescription": {
+          "description": "Describes a node type in the cluster, each node type represents sub set of nodes in the cluster.",
+          "properties": {
+            "applicationPorts": {
+              "$ref": "#/components/schemas/EndpointRangeDescription"
+            },
+            "capacities": {
+              "additionalProperties": {
+                "description": "Capacity tag value",
+                "type": "string"
+              },
+              "description": "The capacity tags applied to the nodes in the node type, the cluster resource manager uses these tags to understand how much resource a node has.",
+              "type": "object"
+            },
+            "clientConnectionEndpointPort": {
+              "description": "The TCP cluster management endpoint port.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "durabilityLevel": {
+              "$ref": "#/components/schemas/DurabilityLevel"
+            },
+            "ephemeralPorts": {
+              "$ref": "#/components/schemas/EndpointRangeDescription"
+            },
+            "httpGatewayEndpointPort": {
+              "description": "The HTTP cluster management endpoint port.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "isPrimary": {
+              "description": "The node type on which system services will run. Only one node type should be marked as primary. Primary node type cannot be deleted or changed for existing clusters.",
+              "type": "boolean"
+            },
+            "isStateless": {
+              "description": "Indicates if the node type can only host Stateless workloads.",
+              "type": "boolean"
+            },
+            "multipleAvailabilityZones": {
+              "description": "Indicates if the node type is enabled to support multiple zones.",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the node type.",
+              "type": "string"
+            },
+            "placementProperties": {
+              "additionalProperties": {
+                "description": "Placement tag value",
+                "type": "string"
+              },
+              "description": "The placement tags applied to nodes in the node type, which can be used to indicate where certain services (workload) should run.",
+              "type": "object"
+            },
+            "reverseProxyEndpointPort": {
+              "description": "The endpoint used by reverse proxy.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "vmInstanceCount": {
+              "description": "VMInstanceCount should be 1 to n, where n indicates the number of VM instances corresponding to this nodeType. VMInstanceCount = 0 can be done only in these scenarios: NodeType is a secondary nodeType. Durability = Bronze or Durability \u003e= Bronze and InfrastructureServiceManager = true. If VMInstanceCount = 0, implies the VMs for this nodeType will not be used for the initial cluster size computation.",
+              "format": "int32",
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "clientConnectionEndpointPort",
+            "httpGatewayEndpointPort",
+            "isPrimary",
+            "name",
+            "vmInstanceCount"
+          ],
+          "type": "object"
+        },
+        "Notification": {
+          "description": "Describes the notification channel for cluster events.",
+          "properties": {
+            "isEnabled": {
+              "description": "Indicates if the notification is enabled.",
+              "type": "boolean"
+            },
+            "notificationCategory": {
+              "description": "The category of notification.",
+              "enum": [
+                "WaveProgress"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "notificationCategory",
+                "values": [
+                  {
+                    "description": "Notification will be regarding wave progress.",
+                    "value": "WaveProgress"
+                  }
+                ]
+              }
+            },
+            "notificationLevel": {
+              "description": "The level of notification.",
+              "enum": [
+                "Critical",
+                "All"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "notificationLevel",
+                "values": [
+                  {
+                    "description": "Receive only critical notifications.",
+                    "value": "Critical"
+                  },
+                  {
+                    "description": "Receive all notifications.",
+                    "value": "All"
+                  }
+                ]
+              }
+            },
+            "notificationTargets": {
+              "description": "List of targets that subscribe to the notification.",
+              "items": {
+                "$ref": "#/components/schemas/NotificationTarget"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "isEnabled",
+            "notificationCategory",
+            "notificationLevel",
+            "notificationTargets"
+          ],
+          "type": "object"
+        },
+        "NotificationTarget": {
+          "description": "Describes the notification target properties.",
+          "properties": {
+            "notificationChannel": {
+              "description": "The notification channel indicates the type of receivers subscribed to the notification, either user or subscription.",
+              "enum": [
+                "EmailUser",
+                "EmailSubscription"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "notificationChannel",
+                "values": [
+                  {
+                    "description": "For email user receivers. In this case, the parameter receivers should be a list of email addresses that will receive the notifications.",
+                    "value": "EmailUser"
+                  },
+                  {
+                    "description": "For subscription receivers. In this case, the parameter receivers should be a list of roles of the subscription for the cluster (eg. Owner, AccountAdmin, etc) that will receive the notifications.",
+                    "value": "EmailSubscription"
+                  }
+                ]
+              }
+            },
+            "receivers": {
+              "description": "List of targets that subscribe to the notification.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "notificationChannel",
+            "receivers"
+          ],
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "Describes the result of the request to list Service Fabric resource provider operations.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results if there are any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the Service Fabric resource provider.",
+              "items": {
+                "$ref": "#/components/schemas/OperationResult"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "OperationResult": {
+          "description": "Available operation list result",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/AvailableOperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation.",
+              "type": "string"
+            },
+            "nextLink": {
+              "description": "The URL to use for getting the next set of results.",
+              "type": "string"
+            },
+            "origin": {
+              "description": "Origin result",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReliabilityLevel": {
+          "description": "The reliability level sets the replica set size of system services. Learn about [ReliabilityLevel](https://docs.microsoft.com/azure/service-fabric/service-fabric-cluster-capacity).\n\n  - None - Run the System services with a target replica set count of 1. This should only be used for test clusters.\n  - Bronze - Run the System services with a target replica set count of 3. This should only be used for test clusters.\n  - Silver - Run the System services with a target replica set count of 5.\n  - Gold - Run the System services with a target replica set count of 7.\n  - Platinum - Run the System services with a target replica set count of 9.\n",
+          "enum": [
+            "None",
+            "Bronze",
+            "Silver",
+            "Gold",
+            "Platinum"
+          ],
+          "type": "string"
+        },
+        "Resource": {
+          "description": "The resource model definition.",
+          "properties": {
+            "etag": {
+              "description": "Azure resource etag.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "id": {
+              "description": "Azure resource identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "location": {
+              "description": "Azure resource location.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "name": {
+              "description": "Azure resource name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/SystemData"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Azure resource tags.",
+              "type": "object"
+            },
+            "type": {
+              "description": "Azure resource type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ServerCertificateCommonName": {
+          "description": "Describes the server certificate details using common name.",
+          "properties": {
+            "certificateCommonName": {
+              "description": "The common name of the server certificate.",
+              "type": "string"
+            },
+            "certificateIssuerThumbprint": {
+              "description": "The issuer thumbprint of the server certificate.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "certificateCommonName",
+            "certificateIssuerThumbprint"
+          ],
+          "type": "object"
+        },
+        "ServerCertificateCommonNames": {
+          "description": "Describes a list of server certificates referenced by common name that are used to secure the cluster.",
+          "properties": {
+            "commonNames": {
+              "description": "The list of server certificates referenced by common name that are used to secure the cluster.",
+              "items": {
+                "$ref": "#/components/schemas/ServerCertificateCommonName"
+              },
+              "type": "array"
+            },
+            "x509StoreName": {
+              "$ref": "#/components/schemas/StoreName"
+            }
+          },
+          "type": "object"
+        },
+        "ServiceTypeDeltaHealthPolicy": {
+          "description": "Represents the delta health policy used to evaluate the health of services belonging to a service type when upgrading the cluster.\n",
+          "properties": {
+            "maxPercentDeltaUnhealthyServices": {
+              "default": 0,
+              "description": "The maximum allowed percentage of services health degradation allowed during cluster upgrades.\nThe delta is measured between the state of the services at the beginning of upgrade and the state of the services at the time of the health evaluation.\nThe check is performed after every upgrade domain upgrade completion to make sure the global state of the cluster is within tolerated limits.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "ServiceTypeDeltaHealthPolicyMap": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/ServiceTypeDeltaHealthPolicy"
+          },
+          "description": "Defines a map that contains specific delta health policies for different service types.\nEach entry specifies as key the service type name and as value a ServiceTypeDeltaHealthPolicy used to evaluate the service health when upgrading the cluster.\nThe map is empty by default.\n",
+          "type": "object"
+        },
+        "ServiceTypeHealthPolicy": {
+          "description": "Represents the health policy used to evaluate the health of services belonging to a service type.\n",
+          "properties": {
+            "maxPercentUnhealthyServices": {
+              "default": 0,
+              "description": "The maximum percentage of services allowed to be unhealthy before your application is considered in error.\n",
+              "format": "int32",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "ServiceTypeHealthPolicyMap": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/ServiceTypeHealthPolicy"
+          },
+          "description": "Defines a ServiceTypeHealthPolicy per service type name.\n\nThe entries in the map replace the default service type health policy for each specified service type.\nFor example, in an application that contains both a stateless gateway service type and a stateful engine service type, the health policies for the stateless and stateful services can be configured differently.\nWith policy per service type, there's more granular control of the health of the service.\n\nIf no policy is specified for a service type name, the DefaultServiceTypeHealthPolicy is used for evaluation.\n",
+          "type": "object"
+        },
+        "SettingsParameterDescription": {
+          "description": "Describes a parameter in fabric settings of the cluster.",
+          "properties": {
+            "name": {
+              "description": "The parameter name of fabric setting.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The parameter value of fabric setting.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "value"
+          ],
+          "type": "object"
+        },
+        "SettingsSectionDescription": {
+          "description": "Describes a section in the fabric settings of the cluster.",
+          "properties": {
+            "name": {
+              "description": "The section name of the fabric settings.",
+              "type": "string"
+            },
+            "parameters": {
+              "description": "The collection of parameters in the section.",
+              "items": {
+                "$ref": "#/components/schemas/SettingsParameterDescription"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "name",
+            "parameters"
+          ],
+          "type": "object"
+        },
+        "SfZonalUpgradeMode": {
+          "description": "This property controls the logical grouping of VMs in upgrade domains (UDs). This property can't be modified if a node type with multiple Availability Zones is already present in the cluster.",
+          "enum": [
+            "Parallel",
+            "Hierarchical"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "sfZonalUpgradeMode",
+            "values": [
+              {
+                "description": "VMs under the node type are grouped into UDs and ignore the zone info in five UDs. This setting causes UDs across all zones to be upgraded at the same time. This deployment mode is faster for upgrades, we don't recommend it because it goes against the SDP guidelines, which state that the updates should be applied to one zone at a time.",
+                "value": "Parallel"
+              },
+              {
+                "description": "If this value is omitted or set to Hierarchical, VMs are grouped to reflect the zonal distribution in up to 15 UDs. Each of the three zones has five UDs. This ensures that the zones are updated one at a time, moving to next zone only after completing five UDs within the first zone. This update process is safer for the cluster and the user application.",
+                "value": "Hierarchical"
+              }
+            ]
+          }
+        },
+        "StoreName": {
+          "description": "The local certificate store location.",
+          "enum": [
+            "AddressBook",
+            "AuthRoot",
+            "CertificateAuthority",
+            "Disallowed",
+            "My",
+            "Root",
+            "TrustedPeople",
+            "TrustedPublisher"
+          ],
+          "type": "string"
+        },
+        "SystemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "type": "string"
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "type": "string"
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "UpgradableVersionPathResult": {
+          "description": "The list of intermediate cluster code versions for an upgrade or downgrade. Or minimum and maximum upgradable version if no target was given",
+          "properties": {
+            "supportedPath": {
+              "items": {
+                "description": "The cluster code version.",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "UpgradableVersionsDescription": {
+          "properties": {
+            "targetVersion": {
+              "description": "The target code version.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "targetVersion"
+          ],
+          "type": "object"
+        },
+        "UpgradeMode": {
+          "default": "Automatic",
+          "description": "The upgrade mode of the cluster when new Service Fabric runtime version is available.",
+          "enum": [
+            "Automatic",
+            "Manual"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UpgradeMode",
+            "values": [
+              {
+                "description": "The cluster will be automatically upgraded to the latest Service Fabric runtime version, **upgradeWave** will determine when the upgrade starts after the new version becomes available.",
+                "value": "Automatic"
+              },
+              {
+                "description": "The cluster will not be automatically upgraded to the latest Service Fabric runtime version. The cluster is upgraded by setting the **clusterCodeVersion** property in the cluster resource.",
+                "value": "Manual"
+              }
+            ]
+          }
+        },
+        "VmssZonalUpgradeMode": {
+          "description": "This property defines the upgrade mode for the virtual machine scale set, it is mandatory if a node type with multiple Availability Zones is added.",
+          "enum": [
+            "Parallel",
+            "Hierarchical"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "vmssZonalUpgradeMode",
+            "values": [
+              {
+                "description": "Updates will happen in all Availability Zones at once for the virtual machine scale sets.",
+                "value": "Parallel"
+              },
+              {
+                "description": "VMs are grouped to reflect the zonal distribution in up to 15 UDs. Each of the three zones has five UDs. This ensures that the zones are updated one at a time, moving to next zone only after completing five UDs within the first zone.",
+                "value": "Hierarchical"
+              }
+            ]
+          }
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Service Fabric Resource Provider API Client",
+      "title": "ServiceFabricManagementClient",
+      "version": "2021-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.ServiceFabric/operations": {
+        "get": {
+          "description": "Get the list of available Service Fabric resource provider API operations.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "description": "The version of the Service Fabric resource provider API",
+              "in": "query",
+              "name": "api-version",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "OK. The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Lists all of the available Service Fabric resource provider API operations.",
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "ListOperations": {
+              "$ref": "./examples/ListOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ServiceFabric/clusters": {
+        "get": {
+          "description": "Gets all Service Fabric cluster resources created or in the process of being created in the subscription.",
+          "operationId": "Clusters_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets the list of Service Fabric cluster resources created in the specified subscription.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "List clusters": {
+              "$ref": "./examples/ClusterListOperation_example.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ServiceFabric/locations/{location}/clusterVersions": {
+        "get": {
+          "description": "Gets all available code versions for Service Fabric cluster resources by location.",
+          "operationId": "ClusterVersions_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/locationForClusterCodeVersions"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterCodeVersionsListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets the list of Service Fabric cluster code versions available for the specified location.",
+          "tags": [
+            "ClusterVersion"
+          ],
+          "x-ms-examples": {
+            "List cluster versions": {
+              "$ref": "./examples/ClusterVersionsList_example.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ServiceFabric/locations/{location}/clusterVersions/{clusterVersion}": {
+        "get": {
+          "description": "Gets information about an available Service Fabric cluster code version.",
+          "operationId": "ClusterVersions_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/locationForClusterCodeVersions"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/clusterVersion"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterCodeVersionsListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets information about a Service Fabric cluster code version available in the specified location.",
+          "tags": [
+            "ClusterVersion"
+          ],
+          "x-ms-examples": {
+            "Get cluster version": {
+              "$ref": "./examples/ClusterVersionsGet_example.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ServiceFabric/locations/{location}/environments/{environment}/clusterVersions": {
+        "get": {
+          "description": "Gets all available code versions for Service Fabric cluster resources by environment.",
+          "operationId": "ClusterVersions_ListByEnvironment",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/locationForClusterCodeVersions"
+            },
+            {
+              "$ref": "#/components/parameters/environment"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterCodeVersionsListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets the list of Service Fabric cluster code versions available for the specified environment.",
+          "tags": [
+            "ClusterVersion"
+          ],
+          "x-ms-examples": {
+            "List cluster versions by environment": {
+              "$ref": "./examples/ClusterVersionsListByEnvironment.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.ServiceFabric/locations/{location}/environments/{environment}/clusterVersions/{clusterVersion}": {
+        "get": {
+          "description": "Gets information about an available Service Fabric cluster code version by environment.",
+          "operationId": "ClusterVersions_GetByEnvironment",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/locationForClusterCodeVersions"
+            },
+            {
+              "$ref": "#/components/parameters/environment"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/clusterVersion"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterCodeVersionsListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets information about a Service Fabric cluster code version available for the specified environment.",
+          "tags": [
+            "ClusterVersion"
+          ],
+          "x-ms-examples": {
+            "Get cluster version by environment": {
+              "$ref": "./examples/ClusterVersionsGetByEnvironment_example.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ServiceFabric/clusters/{clusterName}": {
+        "delete": {
+          "description": "Delete a Service Fabric cluster resource with the specified name.",
+          "operationId": "Clusters_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/clusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The operation completed successfully."
+            },
+            "204": {
+              "description": "The resource was not found."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Deletes a Service Fabric cluster resource.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "Delete a cluster": {
+              "$ref": "./examples/ClusterDeleteOperation_example.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a Service Fabric cluster resource created or in the process of being created in the specified resource group.",
+          "operationId": "Clusters_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/clusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Cluster"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets a Service Fabric cluster resource.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "Get a cluster": {
+              "$ref": "./examples/ClusterGetOperation_example.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update the configuration of a Service Fabric cluster resource with the specified name.",
+          "operationId": "Clusters_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/clusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClusterUpdateParameters"
+                }
+              }
+            },
+            "description": "The parameters which contains the property value and property name which used to update the cluster configuration.",
+            "required": true,
+            "x-ms-parameter-location": "method",
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Cluster"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Cluster"
+                  }
+                }
+              },
+              "description": "The request was accepted and the operation will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Updates the configuration of a Service Fabric cluster resource.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "Patch a cluster": {
+              "$ref": "./examples/ClusterPatchOperation_example.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "put": {
+          "description": "Create or update a Service Fabric cluster resource with the specified name.",
+          "operationId": "Clusters_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/clusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cluster"
+                }
+              }
+            },
+            "description": "The cluster resource.",
+            "required": true,
+            "x-ms-parameter-location": "method",
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Cluster"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Cluster"
+                  }
+                }
+              },
+              "description": "The request was accepted and the operation will complete asynchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Creates or updates a Service Fabric cluster resource.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "Put a cluster with maximum parameters": {
+              "$ref": "./examples/ClusterPutOperation_example_max.json"
+            },
+            "Put a cluster with minimum parameters": {
+              "$ref": "./examples/ClusterPutOperation_example_min.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ServiceFabric/clusters/{clusterName}/listUpgradableVersions": {
+        "post": {
+          "description": "If a target is not provided, it will get the minimum and maximum versions available from the current cluster version. If a target is given, it will provide the required path to get from the current cluster version to the target version.",
+          "operationId": "Clusters_ListUpgradableVersions",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/clusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradableVersionsDescription"
+                }
+              }
+            },
+            "description": "The upgrade path description with target version.",
+            "x-ms-parameter-location": "method",
+            "x-originalParamName": "versionsDescription"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UpgradableVersionPathResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Operation to get the minimum and maximum upgradable version from the current cluster version, or the required path to get to the an specific target version.",
+          "tags": [
+            "ListUpgradableVersions"
+          ],
+          "x-ms-examples": {
+            "Get minimum and maximum code versions": {
+              "$ref": "./examples/ListUpgradableVersionsMinMax_example.json"
+            },
+            "Get upgrade path": {
+              "$ref": "./examples/ListUpgradableVersionsPath_example.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.ServiceFabric/clusters": {
+        "get": {
+          "description": "Gets all Service Fabric cluster resources created or in the process of being created in the resource group.",
+          "operationId": "Clusters_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/resourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ClusterListResult"
+                  }
+                }
+              },
+              "description": "The operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorModel"
+                  }
+                }
+              },
+              "description": "The detailed error response."
+            }
+          },
+          "summary": "Gets the list of Service Fabric cluster resources created in the specified resource group.",
+          "tags": [
+            "Cluster"
+          ],
+          "x-ms-examples": {
+            "List cluster by resource group": {
+              "$ref": "./examples/ClusterListByResourceGroupOperation_example.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

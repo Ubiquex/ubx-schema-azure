@@ -1,0 +1,903 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_azurestackhci_marketplacegalleryimages",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "MarketplaceGalleryImageNameParameter": {
+          "description": "Name of the marketplace gallery image",
+          "in": "path",
+          "name": "marketplaceGalleryImageName",
+          "required": true,
+          "schema": {
+            "maxLength": 80,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-._a-zA-Z0-9]{0,78}[a-zA-Z0-9]$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ExtendedLocation": {
+          "description": "The complex type of the extended location.",
+          "properties": {
+            "name": {
+              "description": "The name of the extended location.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ExtendedLocationType"
+            }
+          },
+          "type": "object"
+        },
+        "ExtendedLocationType": {
+          "description": "The type of extendedLocation.",
+          "enum": [
+            "CustomLocation"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ExtendedLocationTypes"
+          }
+        },
+        "GalleryDiskImage": {
+          "description": "This is the disk image base class.",
+          "properties": {
+            "sizeInMB": {
+              "description": "This property indicates the size of the VHD to be created.",
+              "format": "int64",
+              "readOnly": true,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "GalleryImageIdentifier": {
+          "description": "This is the gallery image definition identifier.",
+          "properties": {
+            "offer": {
+              "description": "The name of the gallery image definition offer.",
+              "type": "string"
+            },
+            "publisher": {
+              "description": "The name of the gallery image definition publisher.",
+              "type": "string"
+            },
+            "sku": {
+              "description": "The name of the gallery image definition SKU.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "publisher",
+            "offer",
+            "sku"
+          ],
+          "type": "object"
+        },
+        "GalleryImageVersion": {
+          "description": "Specifies information about the gallery image version that you want to create or update.",
+          "properties": {
+            "name": {
+              "description": "This is the version of the gallery image.",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/GalleryImageVersionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "GalleryImageVersionProperties": {
+          "description": "Describes the properties of a gallery image version.",
+          "properties": {
+            "storageProfile": {
+              "$ref": "#/components/schemas/GalleryImageVersionStorageProfile"
+            }
+          },
+          "required": [
+            "storageProfile"
+          ],
+          "type": "object"
+        },
+        "GalleryImageVersionStorageProfile": {
+          "description": "This is the storage profile of a Gallery Image Version.",
+          "properties": {
+            "osDiskImage": {
+              "$ref": "#/components/schemas/GalleryOSDiskImage"
+            }
+          },
+          "type": "object"
+        },
+        "GalleryOSDiskImage": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/GalleryDiskImage"
+            }
+          ],
+          "description": "This is the OS disk image."
+        },
+        "MarketplaceGalleryImageProperties": {
+          "description": "Properties under the marketplace gallery image resource",
+          "properties": {
+            "cloudInitDataSource": {
+              "description": "Datasource for the gallery image when provisioning with cloud-init [NoCloud, Azure]",
+              "enum": [
+                "NoCloud",
+                "Azure"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "CloudInitDataSource"
+              }
+            },
+            "containerId": {
+              "description": "Storage ContainerID of the storage container to be used for marketplace gallery image",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.AzureStackHCI/storageContainers"
+                  }
+                ]
+              }
+            },
+            "hyperVGeneration": {
+              "description": "The hypervisor generation of the Virtual Machine [V1, V2]",
+              "enum": [
+                "V1",
+                "V2"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "HyperVGeneration"
+              }
+            },
+            "identifier": {
+              "$ref": "#/components/schemas/GalleryImageIdentifier"
+            },
+            "osType": {
+              "description": "Operating system type that the gallery image uses [Windows, Linux]",
+              "enum": [
+                "Windows",
+                "Linux"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "OperatingSystemTypes"
+              }
+            },
+            "provisioningState": {
+              "description": "Provisioning state of the marketplace gallery image.",
+              "enum": [
+                "Succeeded",
+                "Failed",
+                "InProgress",
+                "Accepted",
+                "Deleting",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ProvisioningStateEnum"
+              }
+            },
+            "status": {
+              "$ref": "#/components/schemas/MarketplaceGalleryImageStatus"
+            },
+            "version": {
+              "$ref": "#/components/schemas/GalleryImageVersion"
+            }
+          },
+          "required": [
+            "osType"
+          ],
+          "type": "object",
+          "x-ms-client-flatten": true
+        },
+        "MarketplaceGalleryImageStatus": {
+          "description": "The observed state of marketplace gallery images",
+          "properties": {
+            "downloadStatus": {
+              "description": "The download status of the gallery image",
+              "properties": {
+                "downloadSizeInMB": {
+                  "description": "The downloaded sized of the image in MB",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "errorCode": {
+              "description": "MarketplaceGalleryImage provisioning error code",
+              "type": "string"
+            },
+            "errorMessage": {
+              "description": "Descriptive error message",
+              "type": "string"
+            },
+            "progressPercentage": {
+              "description": "The progress of the operation in percentage",
+              "format": "int64",
+              "type": "integer"
+            },
+            "provisioningStatus": {
+              "properties": {
+                "operationId": {
+                  "description": "The ID of the operation performed on the gallery image",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The status of the operation performed on the gallery image [Succeeded, Failed, InProgress]",
+                  "enum": [
+                    "Succeeded",
+                    "Failed",
+                    "InProgress"
+                  ],
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": true,
+                    "name": "Status"
+                  }
+                }
+              },
+              "type": "object"
+            }
+          },
+          "readOnly": true,
+          "type": "object",
+          "x-ms-client-flatten": true
+        },
+        "MarketplaceGalleryImages": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "The marketplace gallery image resource definition.",
+          "properties": {
+            "extendedLocation": {
+              "$ref": "#/components/schemas/ExtendedLocation"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/MarketplaceGalleryImageProperties"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true,
+          "x-ms-client-flatten": true
+        },
+        "MarketplaceGalleryImagesListResult": {
+          "properties": {
+            "nextLink": {
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/MarketplaceGalleryImages"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "MarketplaceGalleryImagesUpdateRequest": {
+          "description": "The marketplace gallery image resource patch definition.",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Microsoft.AzureStackHCI Rest API spec.",
+      "title": "AzureStackHCI",
+      "version": "2024-01-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.AzureStackHCI/marketplaceGalleryImages": {
+        "get": {
+          "description": "Lists all of the marketplace gallery images in the specified subscription. Use the nextLink property in the response to get the next page of marketplace gallery images.",
+          "operationId": "MarketplaceGalleryImages_ListAll",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImagesListResult"
+                  }
+                }
+              },
+              "description": "Lists all marketplace gallery images under the subscription."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "ListMarketplaceGalleryImageBySubscription": {
+              "$ref": "./examples/ListMarketplaceGalleryImageBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/marketplaceGalleryImages": {
+        "get": {
+          "description": "Lists all of the marketplace gallery images in the specified resource group. Use the nextLink property in the response to get the next page of marketplace gallery images.",
+          "operationId": "MarketplaceGalleryImages_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImagesListResult"
+                  }
+                }
+              },
+              "description": "Lists all marketplace gallery images under the resource group."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "ListMarketplaceGalleryImageByResourceGroup": {
+              "$ref": "./examples/ListMarketplaceGalleryImageByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/marketplaceGalleryImages/{marketplaceGalleryImageName}": {
+        "delete": {
+          "description": "The operation to delete a marketplace gallery image.",
+          "operationId": "MarketplaceGalleryImages_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/MarketplaceGalleryImageNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Accepted",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "No content"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "DeleteMarketplaceGalleryImage": {
+              "$ref": "./examples/DeleteMarketplaceGalleryImage.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets a marketplace gallery image",
+          "operationId": "MarketplaceGalleryImages_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/MarketplaceGalleryImageNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImages"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "GetMarketplaceGalleryImage": {
+              "$ref": "./examples/GetMarketplaceGalleryImage.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "The operation to update a marketplace gallery image.",
+          "operationId": "MarketplaceGalleryImages_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/MarketplaceGalleryImageNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceGalleryImagesUpdateRequest"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "marketplaceGalleryImages"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImages"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "202": {
+              "description": "Updates the marketplace gallery image resource.",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "UpdateMarketplaceGalleryImage": {
+              "$ref": "./examples/UpdateMarketplaceGalleryImage.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "The operation to create or update a marketplace gallery image. Please note some properties can be set only during marketplace gallery image creation.",
+          "operationId": "MarketplaceGalleryImages_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/MarketplaceGalleryImageNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceGalleryImages"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "marketplaceGalleryImages"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImages"
+                  }
+                }
+              },
+              "description": "Updates the marketplace gallery image resource."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MarketplaceGalleryImages"
+                  }
+                }
+              },
+              "description": "Creates the marketplace gallery image resource."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "PutMarketplaceGalleryImage": {
+              "$ref": "./examples/PutMarketplaceGalleryImage.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

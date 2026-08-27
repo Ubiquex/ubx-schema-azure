@@ -1,0 +1,707 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_apimanagement_apimportalconfigs",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "IfMatchRequiredParameter": {
+          "description": "ETag of the Entity. ETag should match the current entity state from the header response of the GET request or it should be * for unconditional update.",
+          "in": "header",
+          "name": "If-Match",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "PortalConfigIdParameter": {
+          "description": "Portal configuration identifier.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "portalConfigId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ServiceNameParameter": {
+          "description": "The name of the API Management service.",
+          "in": "path",
+          "maxLength": 50,
+          "minLength": 1,
+          "name": "serviceName",
+          "pattern": "^[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "PortalConfigCollection": {
+          "description": "The collection of the developer portal configurations.",
+          "properties": {
+            "nextLink": {
+              "description": "Next page link if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The developer portal configurations.",
+              "items": {
+                "$ref": "#/components/schemas/PortalConfigContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The developer portal configuration contract.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PortalConfigProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The developer portal configuration contract.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PortalConfigProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigCorsProperties": {
+          "description": "The developer portal Cross-Origin Resource Sharing (CORS) settings.",
+          "properties": {
+            "allowedOrigins": {
+              "description": "Allowed origins, e.g. `https://trusted.com`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigCspProperties": {
+          "description": "The developer portal Content Security Policy (CSP) settings.",
+          "properties": {
+            "allowedSources": {
+              "description": "Allowed sources, e.g. `*.trusted.com`, `trusted.com`, `https://`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "mode": {
+              "default": "disabled",
+              "description": "The mode of the developer portal Content Security Policy (CSP).",
+              "enum": [
+                "enabled",
+                "disabled",
+                "reportOnly"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "PortalSettingsCspMode",
+                "values": [
+                  {
+                    "description": "The browser will block requests not matching allowed origins.",
+                    "value": "enabled"
+                  },
+                  {
+                    "description": "The browser will not apply the origin restrictions.",
+                    "value": "disabled"
+                  },
+                  {
+                    "description": "The browser will report requests not matching allowed origins without blocking them.",
+                    "value": "reportOnly"
+                  }
+                ]
+              }
+            },
+            "reportUri": {
+              "description": "The URLs used by the browser to report CSP violations.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigDelegationProperties": {
+          "properties": {
+            "delegateRegistration": {
+              "default": false,
+              "description": "Enable or disable delegation for user registration.",
+              "type": "boolean"
+            },
+            "delegateSubscription": {
+              "default": false,
+              "description": "Enable or disable delegation for product subscriptions.",
+              "type": "boolean"
+            },
+            "delegationUrl": {
+              "description": "A delegation endpoint URL.",
+              "type": "string"
+            },
+            "validationKey": {
+              "description": "A base64-encoded validation key to ensure requests originate from Azure API Management service.",
+              "type": "string",
+              "x-ms-secret": true
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigProperties": {
+          "description": "The developer portal configuration contract properties.",
+          "properties": {
+            "cors": {
+              "$ref": "#/components/schemas/PortalConfigCorsProperties"
+            },
+            "csp": {
+              "$ref": "#/components/schemas/PortalConfigCspProperties"
+            },
+            "delegation": {
+              "$ref": "#/components/schemas/PortalConfigDelegationProperties"
+            },
+            "enableBasicAuth": {
+              "default": true,
+              "description": "Enable or disable Basic authentication method.",
+              "type": "boolean"
+            },
+            "signin": {
+              "properties": {
+                "require": {
+                  "default": false,
+                  "description": "Redirect anonymous users to the sign-in page.",
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            "signup": {
+              "properties": {
+                "termsOfService": {
+                  "$ref": "#/components/schemas/PortalConfigTermsOfServiceProperties"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "PortalConfigTermsOfServiceProperties": {
+          "description": "Terms of service contract properties.",
+          "properties": {
+            "requireConsent": {
+              "default": false,
+              "description": "Ask user for consent to the terms of service.",
+              "type": "boolean"
+            },
+            "text": {
+              "description": "A terms of service text.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use this REST API to perform operations on the developer portal configuration.",
+      "title": "ApiManagementClient",
+      "version": "2024-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/portalconfigs": {
+        "get": {
+          "description": "Lists the developer portal configurations.",
+          "operationId": "PortalConfig_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PortalConfigCollection"
+                  }
+                }
+              },
+              "description": "The developer portal configuration."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PortalConfig"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListPortalConfig": {
+              "$ref": "./examples/ApiManagementListPortalConfig.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/portalconfigs/{portalConfigId}": {
+        "get": {
+          "description": "Get the developer portal configuration.",
+          "operationId": "PortalConfig_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PortalConfigIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PortalConfigContract_2"
+                  }
+                }
+              },
+              "description": "The developer portal configuration.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PortalConfig"
+          ],
+          "x-ms-examples": {
+            "ApiManagementPortalConfig": {
+              "$ref": "./examples/ApiManagementPortalConfig.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Gets the entity state (Etag) version of the developer portal configuration.",
+          "operationId": "PortalConfig_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PortalConfigIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operation completed successfully.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PortalConfig"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadPortalConfig": {
+              "$ref": "./examples/ApiManagementHeadPortalConfig.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update the developer portal configuration.",
+          "operationId": "PortalConfig_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PortalConfigIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalConfigContract_2"
+                }
+              }
+            },
+            "description": "Update the developer portal configuration.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PortalConfigContract_2"
+                  }
+                }
+              },
+              "description": "Operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PortalConfig"
+          ],
+          "x-ms-examples": {
+            "ApiManagementUpdatePortalConfig": {
+              "$ref": "./examples/ApiManagementUpdatePortalConfig.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update the developer portal configuration.",
+          "operationId": "PortalConfig_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PortalConfigIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalConfigContract_2"
+                }
+              }
+            },
+            "description": "Update the developer portal configuration.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PortalConfigContract_2"
+                  }
+                }
+              },
+              "description": "Operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PortalConfig"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreatePortalConfig": {
+              "$ref": "./examples/ApiManagementCreatePortalConfig.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

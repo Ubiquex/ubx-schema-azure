@@ -1,0 +1,557 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_hdinsight_privateendpointconnections",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The HDInsight client API Version.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "ClusterNameParameter": {
+          "description": "The name of the cluster.",
+          "in": "path",
+          "name": "clusterName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "PrivateEndpointConnectionNameParameter": {
+          "description": "The name of the private endpoint connection.",
+          "in": "path",
+          "name": "privateEndpointConnectionName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "ErrorResponse": {
+          "description": "Describes the format of Error response.",
+          "properties": {
+            "code": {
+              "description": "Error code",
+              "type": "string"
+            },
+            "message": {
+              "description": "Error message indicating why the operation failed.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpoint": {
+          "description": "The private endpoint.",
+          "properties": {
+            "id": {
+              "description": "The private endpoint id.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The private endpoint connection.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointConnectionListResult": {
+          "description": "The list private endpoint connections response.",
+          "properties": {
+            "nextLink": {
+              "description": "The link (url) to the next page of results.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of private endpoint connections.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "The private endpoint connection properties.",
+          "properties": {
+            "linkIdentifier": {
+              "description": "The link identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionState"
+            },
+            "provisioningState": {
+              "description": "The provisioning state, which only appears in the response.",
+              "enum": [
+                "InProgress",
+                "Updating",
+                "Failed",
+                "Succeeded",
+                "Canceled",
+                "Deleting"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "PrivateEndpointConnectionProvisioningState"
+              }
+            }
+          },
+          "required": [
+            "privateLinkServiceConnectionState"
+          ],
+          "type": "object"
+        },
+        "PrivateLinkServiceConnectionState": {
+          "description": "The private link service connection state.",
+          "properties": {
+            "actionsRequired": {
+              "description": "Whether there is further actions.",
+              "type": "string"
+            },
+            "description": {
+              "description": "The optional description of the status.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The concrete private link service connection.",
+              "enum": [
+                "Approved",
+                "Rejected",
+                "Pending",
+                "Removed"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "PrivateLinkServiceConnectionStatus"
+              }
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The HDInsight Management Client.",
+      "title": "HDInsightManagementClient",
+      "version": "2021-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/privateEndpointConnections": {
+        "get": {
+          "description": "Lists the private endpoint connections for a HDInsight cluster.",
+          "operationId": "PrivateEndpointConnections_ListByCluster",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionListResult"
+                  }
+                }
+              },
+              "description": "OK response definition."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Get all private endpoint connections for a specific HDInsight cluster.": {
+              "$ref": "./examples/GetAllPrivateEndpointConnectionsInCluster.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.HDInsight/clusters/{clusterName}/privateEndpointConnections/{privateEndpointConnectionName}": {
+        "delete": {
+          "description": "Deletes the specific private endpoint connection.",
+          "operationId": "PrivateEndpointConnections_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok response definition."
+            },
+            "202": {
+              "description": "Accepted response definition."
+            },
+            "204": {
+              "description": "No Content response definition."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Delete specific private endpoint connection for a specific HDInsight cluster.": {
+              "$ref": "./examples/DeletePrivateEndpointConnection.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets the specific private endpoint connection.",
+          "operationId": "PrivateEndpointConnections_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "OK response definition."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Get specific private endpoint connection for a specific HDInsight cluster.": {
+              "$ref": "./examples/GetPrivateEndpointConnection.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Approve or reject a private endpoint connection manually.",
+          "operationId": "PrivateEndpointConnections_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ClusterNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/PrivateEndpointConnectionNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateEndpointConnection"
+                }
+              }
+            },
+            "description": "The private endpoint connection create or update request.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "OK response definition."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Created response definition"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "Approve a private endpoint connection manually.": {
+              "$ref": "./examples/ApprovePrivateEndpointConnection.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

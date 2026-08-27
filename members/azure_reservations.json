@@ -1,0 +1,4828 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_reservations",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AppliedReservationList": {
+          "description": "Paginated list of applied reservations",
+          "properties": {
+            "nextLink": {
+              "description": "Url to get the next page of reservations",
+              "type": "string"
+            },
+            "value": {
+              "description": "Array of reservation resource ids",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "AppliedReservations": {
+          "description": "The response for applied reservations api",
+          "properties": {
+            "id": {
+              "description": "Identifier of the applied reservations",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AppliedReservationsProperties"
+            },
+            "type": {
+              "description": "Type of resource. \"Microsoft.Capacity/AppliedReservations\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AppliedReservationsProperties": {
+          "description": "Properties for applied reservations returned",
+          "properties": {
+            "reservationOrderIds": {
+              "$ref": "#/components/schemas/AppliedReservationList"
+            }
+          },
+          "type": "object"
+        },
+        "AppliedScopeProperties": {
+          "description": "Properties specific to applied scope type. Not required if not applicable. Required and need to provide tenantId and managementGroupId if AppliedScopeType is ManagementGroup",
+          "properties": {
+            "displayName": {
+              "description": "Display name",
+              "type": "string"
+            },
+            "managementGroupId": {
+              "description": "Fully-qualified identifier of the management group where the benefit must be applied.",
+              "type": "string"
+            },
+            "resourceGroupId": {
+              "description": "Fully-qualified identifier of the resource group.",
+              "type": "string"
+            },
+            "subscriptionId": {
+              "description": "Fully-qualified identifier of the subscription.",
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Tenant ID where the savings plan should apply benefit.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AppliedScopeType": {
+          "description": "Type of the Applied Scope.",
+          "enum": [
+            "Single",
+            "Shared",
+            "ManagementGroup"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AppliedScopeType",
+            "values": [
+              {
+                "description": "Single",
+                "name": "Single",
+                "value": "Single"
+              },
+              {
+                "description": "Shared",
+                "name": "Shared",
+                "value": "Shared"
+              },
+              {
+                "description": "ManagementGroup",
+                "name": "ManagementGroup",
+                "value": "ManagementGroup"
+              }
+            ]
+          }
+        },
+        "AvailableScopeProperties": {
+          "description": "The response of available scope api containing scopes and their eligibilities.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SubscriptionScopeProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AvailableScopeRequest": {
+          "description": "Available scope",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AvailableScopeRequestProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AvailableScopeRequestProperties": {
+          "description": "Available scope request properties",
+          "properties": {
+            "scopes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "BillingInformation": {
+          "description": "billing information",
+          "properties": {
+            "billingCurrencyProratedAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "billingCurrencyRemainingCommitmentAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "billingCurrencyTotalPaidAmount": {
+              "$ref": "#/components/schemas/Price"
+            }
+          },
+          "type": "object"
+        },
+        "BillingPlan": {
+          "description": "Represents the billing plan in ISO 8601 format. Required only for monthly billing plans.",
+          "enum": [
+            "P1M"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "BillingPlan",
+            "values": [
+              {
+                "description": "P1M",
+                "name": "P1M",
+                "value": "P1M"
+              }
+            ]
+          }
+        },
+        "CalculateExchangeOperationResultResponse": {
+          "description": "CalculateExchange operation result",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/OperationResultError"
+            },
+            "id": {
+              "description": "It should match what is used to GET the operation result.",
+              "type": "string"
+            },
+            "name": {
+              "description": "It must match the last segment of the id field, and will typically be a GUID / system generated value.",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/CalculateExchangeResponseProperties"
+            },
+            "status": {
+              "$ref": "#/components/schemas/CalculateExchangeOperationResultStatus"
+            }
+          },
+          "type": "object"
+        },
+        "CalculateExchangeOperationResultStatus": {
+          "description": "Status of the operation.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Cancelled",
+            "Pending"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CalculateExchangeOperationResultStatus",
+            "values": [
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Cancelled",
+                "name": "Cancelled",
+                "value": "Cancelled"
+              },
+              {
+                "description": "Pending",
+                "name": "Pending",
+                "value": "Pending"
+              }
+            ]
+          }
+        },
+        "CalculateExchangeRequest": {
+          "description": "Calculate exchange request",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CalculateExchangeRequestProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CalculateExchangeRequestProperties": {
+          "description": "Calculate exchange request properties",
+          "properties": {
+            "reservationsToExchange": {
+              "description": "List of reservations that are being returned in this exchange.",
+              "items": {
+                "$ref": "#/components/schemas/ReservationToReturn"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "reservationId"
+              ]
+            },
+            "reservationsToPurchase": {
+              "description": "List of reservations that are being purchased in this exchange.",
+              "items": {
+                "$ref": "#/components/schemas/PurchaseRequest"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "savingsPlansToPurchase": {
+              "description": "List of savings plans that are being purchased in this exchange.",
+              "items": {
+                "$ref": "#/components/schemas/SavingsPlanPurchaseRequest"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "CalculateExchangeResponseProperties": {
+          "description": "CalculateExchange response properties",
+          "properties": {
+            "netPayable": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "policyResult": {
+              "$ref": "#/components/schemas/ExchangePolicyErrors"
+            },
+            "purchasesTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "refundsTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "reservationsToExchange": {
+              "description": "Details of the reservations being returned",
+              "items": {
+                "$ref": "#/components/schemas/ReservationToExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "reservationId"
+              ]
+            },
+            "reservationsToPurchase": {
+              "description": "Details of the reservations being purchased",
+              "items": {
+                "$ref": "#/components/schemas/ReservationToPurchaseCalculateExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "savingsPlansToPurchase": {
+              "description": "Details of the savings plans being purchased",
+              "items": {
+                "$ref": "#/components/schemas/SavingsPlanToPurchaseCalculateExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "sessionId": {
+              "description": "Exchange session identifier",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CalculatePriceResponse": {
+          "description": "The response of calculate price for reservation.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/CalculatePriceResponseProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CalculatePriceResponseProperties": {
+          "description": "Properties for calculate price response",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/CalculatePriceResponsePropertiesBillingCurrencyTotal"
+            },
+            "grandTotal": {
+              "description": "Total amount in pricing currency.",
+              "format": "double",
+              "type": "number"
+            },
+            "isBillingPartnerManaged": {
+              "description": "True if billing is managed by Microsoft Partner. Used only for CSP accounts.",
+              "type": "boolean"
+            },
+            "isTaxIncluded": {
+              "description": "Whether or not tax is included in grand total",
+              "type": "boolean"
+            },
+            "netTotal": {
+              "description": "Net total amount in pricing currency.",
+              "format": "double",
+              "type": "number"
+            },
+            "paymentSchedule": {
+              "items": {
+                "$ref": "#/components/schemas/PaymentDetail"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "pricingCurrencyTotal": {
+              "$ref": "#/components/schemas/CalculatePriceResponsePropertiesPricingCurrencyTotal"
+            },
+            "reservationOrderId": {
+              "description": "GUID that represents reservation order that can be placed after calculating price.",
+              "type": "string"
+            },
+            "skuDescription": {
+              "description": "Description of sku that is being purchased.",
+              "type": "string"
+            },
+            "skuTitle": {
+              "description": "Title of sku that is being purchased.",
+              "type": "string"
+            },
+            "taxTotal": {
+              "description": "Tax amount in pricing currency.",
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "CalculatePriceResponsePropertiesBillingCurrencyTotal": {
+          "description": "Currency and amount that customer will be charged in customer's local currency. Tax is not included.",
+          "properties": {
+            "amount": {
+              "description": "Amount in pricing currency. Tax is not included.",
+              "format": "double",
+              "type": "number"
+            },
+            "currencyCode": {
+              "description": "The ISO 4217 3-letter currency code for the currency used by this purchase record.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CalculatePriceResponsePropertiesPricingCurrencyTotal": {
+          "description": "Amount that Microsoft uses for record. Used during refund for calculating refund limit. Tax is not included.",
+          "properties": {
+            "amount": {
+              "format": "float",
+              "type": "number"
+            },
+            "currencyCode": {
+              "description": "The ISO 4217 3-letter currency code for the currency used by this purchase record.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CalculateRefundRequest": {
+          "description": "Request containing information needed for calculating refund.",
+          "properties": {
+            "id": {
+              "description": "Fully qualified identifier of the reservation order being returned",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/CalculateRefundRequestProperties"
+            }
+          },
+          "type": "object"
+        },
+        "CalculateRefundRequestProperties": {
+          "description": "Properties needed for calculate refund including the scope and the reservation to be returned.",
+          "properties": {
+            "reservationToReturn": {
+              "$ref": "#/components/schemas/ReservationToReturn"
+            },
+            "scope": {
+              "description": "The scope of the refund, e.g. Reservation",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CalculateRefundResponse": {
+          "description": "The response of calculate refund containing refund information of reservation",
+          "properties": {
+            "id": {
+              "description": "Fully qualified identifier of the reservation being returned",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/RefundResponseProperties"
+            }
+          },
+          "type": "object"
+        },
+        "Catalog": {
+          "description": "Product details of a type of resource.",
+          "properties": {
+            "billingPlans": {
+              "additionalProperties": {
+                "items": {
+                  "$ref": "#/components/schemas/ReservationBillingPlan"
+                },
+                "type": "array"
+              },
+              "description": "The billing plan options available for this sku.",
+              "type": "object"
+            },
+            "capabilities": {
+              "items": {
+                "$ref": "#/components/schemas/SkuCapability"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "locations": {
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "msrp": {
+              "$ref": "#/components/schemas/CatalogMsrp"
+            },
+            "name": {
+              "description": "The name of sku",
+              "readOnly": true,
+              "type": "string"
+            },
+            "resourceType": {
+              "description": "The type of resource the sku applies to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "restrictions": {
+              "items": {
+                "$ref": "#/components/schemas/SkuRestriction"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "size": {
+              "description": "The size of this sku",
+              "readOnly": true,
+              "type": "string"
+            },
+            "skuProperties": {
+              "items": {
+                "$ref": "#/components/schemas/SkuProperty"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "terms": {
+              "description": "Available reservation terms for this resource",
+              "items": {
+                "$ref": "#/components/schemas/ReservationTerm"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "tier": {
+              "description": "The tier of this sku",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CatalogMsrp": {
+          "description": "Pricing information about the sku",
+          "properties": {
+            "p1Y": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "p3Y": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "p5Y": {
+              "$ref": "#/components/schemas/Price"
+            }
+          },
+          "type": "object"
+        },
+        "CatalogsResult": {
+          "description": "The list of catalogs and pagination information.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "totalItems": {
+              "description": "The total amount of catalog items.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "value": {
+              "description": "The Catalog items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Catalog"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ChangeDirectoryRequest": {
+          "description": "Request body for change directory of a reservation.",
+          "properties": {
+            "destinationTenantId": {
+              "description": "Tenant id GUID that reservation order is to be transferred to",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ChangeDirectoryResponse": {
+          "description": "Change directory response",
+          "properties": {
+            "reservationOrder": {
+              "$ref": "#/components/schemas/ChangeDirectoryResult"
+            },
+            "reservations": {
+              "items": {
+                "$ref": "#/components/schemas/ChangeDirectoryResult"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ChangeDirectoryResult": {
+          "description": "Change directory result for reservation order or reservation",
+          "properties": {
+            "error": {
+              "description": "Error reason if operation failed. Null otherwise",
+              "type": "string"
+            },
+            "id": {
+              "description": "Identifier of the reservation order or reservation",
+              "type": "string"
+            },
+            "isSucceeded": {
+              "description": "True if change directory operation succeeded on this reservation order or reservation",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the reservation order or reservation",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Commitment": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Price"
+            }
+          ],
+          "description": "Commitment towards the benefit.",
+          "properties": {
+            "grain": {
+              "$ref": "#/components/schemas/CommitmentGrain"
+            }
+          },
+          "type": "object"
+        },
+        "CommitmentGrain": {
+          "description": "Commitment grain.",
+          "enum": [
+            "Hourly"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CommitmentGrain",
+            "values": [
+              {
+                "description": "Hourly",
+                "name": "Hourly",
+                "value": "Hourly"
+              }
+            ]
+          }
+        },
+        "Error": {
+          "description": "Error information",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ExtendedErrorInfo"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetails": {
+          "description": "The details of the error.",
+          "properties": {
+            "code": {
+              "description": "Error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "message": {
+              "description": "Error message indicating why the operation failed.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The target of the particular error.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Error response indicates that the service is not able to process the incoming request. The reason is provided in the error message.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetails"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponseCode": {
+          "description": "Error code describing the reason that service is not able to process the incoming request",
+          "enum": [
+            "NotSpecified",
+            "InternalServerError",
+            "ServerTimeout",
+            "AuthorizationFailed",
+            "BadRequest",
+            "ClientCertificateThumbprintNotSet",
+            "InvalidRequestContent",
+            "OperationFailed",
+            "HttpMethodNotSupported",
+            "InvalidRequestUri",
+            "MissingTenantId",
+            "InvalidTenantId",
+            "InvalidReservationOrderId",
+            "InvalidReservationId",
+            "ReservationIdNotInReservationOrder",
+            "ReservationOrderNotFound",
+            "InvalidSubscriptionId",
+            "InvalidAccessToken",
+            "InvalidLocationId",
+            "UnauthenticatedRequestsThrottled",
+            "InvalidHealthCheckType",
+            "Forbidden",
+            "BillingScopeIdCannotBeChanged",
+            "AppliedScopesNotAssociatedWithCommerceAccount",
+            "PatchValuesSameAsExisting",
+            "RoleAssignmentCreationFailed",
+            "ReservationOrderCreationFailed",
+            "ReservationOrderNotEnabled",
+            "CapacityUpdateScopesFailed",
+            "UnsupportedReservationTerm",
+            "ReservationOrderIdAlreadyExists",
+            "RiskCheckFailed",
+            "CreateQuoteFailed",
+            "ActivateQuoteFailed",
+            "NonsupportedAccountId",
+            "PaymentInstrumentNotFound",
+            "MissingAppliedScopesForSingle",
+            "NoValidReservationsToReRate",
+            "ReRateOnlyAllowedForEA",
+            "OperationCannotBePerformedInCurrentState",
+            "InvalidSingleAppliedScopesCount",
+            "InvalidFulfillmentRequestParameters",
+            "NotSupportedCountry",
+            "InvalidRefundQuantity",
+            "PurchaseError",
+            "BillingCustomerInputError",
+            "BillingPaymentInstrumentSoftError",
+            "BillingPaymentInstrumentHardError",
+            "BillingTransientError",
+            "BillingError",
+            "FulfillmentConfigurationError",
+            "FulfillmentOutOfStockError",
+            "FulfillmentTransientError",
+            "FulfillmentError",
+            "CalculatePriceFailed",
+            "AppliedScopesSameAsExisting",
+            "SelfServiceRefundNotSupported",
+            "RefundLimitExceeded"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ErrorResponseCode",
+            "values": [
+              {
+                "description": "NotSpecified",
+                "name": "NotSpecified",
+                "value": "NotSpecified"
+              },
+              {
+                "description": "InternalServerError",
+                "name": "InternalServerError",
+                "value": "InternalServerError"
+              },
+              {
+                "description": "ServerTimeout",
+                "name": "ServerTimeout",
+                "value": "ServerTimeout"
+              },
+              {
+                "description": "AuthorizationFailed",
+                "name": "AuthorizationFailed",
+                "value": "AuthorizationFailed"
+              },
+              {
+                "description": "BadRequest",
+                "name": "BadRequest",
+                "value": "BadRequest"
+              },
+              {
+                "description": "ClientCertificateThumbprintNotSet",
+                "name": "ClientCertificateThumbprintNotSet",
+                "value": "ClientCertificateThumbprintNotSet"
+              },
+              {
+                "description": "InvalidRequestContent",
+                "name": "InvalidRequestContent",
+                "value": "InvalidRequestContent"
+              },
+              {
+                "description": "OperationFailed",
+                "name": "OperationFailed",
+                "value": "OperationFailed"
+              },
+              {
+                "description": "HttpMethodNotSupported",
+                "name": "HttpMethodNotSupported",
+                "value": "HttpMethodNotSupported"
+              },
+              {
+                "description": "InvalidRequestUri",
+                "name": "InvalidRequestUri",
+                "value": "InvalidRequestUri"
+              },
+              {
+                "description": "MissingTenantId",
+                "name": "MissingTenantId",
+                "value": "MissingTenantId"
+              },
+              {
+                "description": "InvalidTenantId",
+                "name": "InvalidTenantId",
+                "value": "InvalidTenantId"
+              },
+              {
+                "description": "InvalidReservationOrderId",
+                "name": "InvalidReservationOrderId",
+                "value": "InvalidReservationOrderId"
+              },
+              {
+                "description": "InvalidReservationId",
+                "name": "InvalidReservationId",
+                "value": "InvalidReservationId"
+              },
+              {
+                "description": "ReservationIdNotInReservationOrder",
+                "name": "ReservationIdNotInReservationOrder",
+                "value": "ReservationIdNotInReservationOrder"
+              },
+              {
+                "description": "ReservationOrderNotFound",
+                "name": "ReservationOrderNotFound",
+                "value": "ReservationOrderNotFound"
+              },
+              {
+                "description": "InvalidSubscriptionId",
+                "name": "InvalidSubscriptionId",
+                "value": "InvalidSubscriptionId"
+              },
+              {
+                "description": "InvalidAccessToken",
+                "name": "InvalidAccessToken",
+                "value": "InvalidAccessToken"
+              },
+              {
+                "description": "InvalidLocationId",
+                "name": "InvalidLocationId",
+                "value": "InvalidLocationId"
+              },
+              {
+                "description": "UnauthenticatedRequestsThrottled",
+                "name": "UnauthenticatedRequestsThrottled",
+                "value": "UnauthenticatedRequestsThrottled"
+              },
+              {
+                "description": "InvalidHealthCheckType",
+                "name": "InvalidHealthCheckType",
+                "value": "InvalidHealthCheckType"
+              },
+              {
+                "description": "Forbidden",
+                "name": "Forbidden",
+                "value": "Forbidden"
+              },
+              {
+                "description": "BillingScopeIdCannotBeChanged",
+                "name": "BillingScopeIdCannotBeChanged",
+                "value": "BillingScopeIdCannotBeChanged"
+              },
+              {
+                "description": "AppliedScopesNotAssociatedWithCommerceAccount",
+                "name": "AppliedScopesNotAssociatedWithCommerceAccount",
+                "value": "AppliedScopesNotAssociatedWithCommerceAccount"
+              },
+              {
+                "description": "PatchValuesSameAsExisting",
+                "name": "PatchValuesSameAsExisting",
+                "value": "PatchValuesSameAsExisting"
+              },
+              {
+                "description": "RoleAssignmentCreationFailed",
+                "name": "RoleAssignmentCreationFailed",
+                "value": "RoleAssignmentCreationFailed"
+              },
+              {
+                "description": "ReservationOrderCreationFailed",
+                "name": "ReservationOrderCreationFailed",
+                "value": "ReservationOrderCreationFailed"
+              },
+              {
+                "description": "ReservationOrderNotEnabled",
+                "name": "ReservationOrderNotEnabled",
+                "value": "ReservationOrderNotEnabled"
+              },
+              {
+                "description": "CapacityUpdateScopesFailed",
+                "name": "CapacityUpdateScopesFailed",
+                "value": "CapacityUpdateScopesFailed"
+              },
+              {
+                "description": "UnsupportedReservationTerm",
+                "name": "UnsupportedReservationTerm",
+                "value": "UnsupportedReservationTerm"
+              },
+              {
+                "description": "ReservationOrderIdAlreadyExists",
+                "name": "ReservationOrderIdAlreadyExists",
+                "value": "ReservationOrderIdAlreadyExists"
+              },
+              {
+                "description": "RiskCheckFailed",
+                "name": "RiskCheckFailed",
+                "value": "RiskCheckFailed"
+              },
+              {
+                "description": "CreateQuoteFailed",
+                "name": "CreateQuoteFailed",
+                "value": "CreateQuoteFailed"
+              },
+              {
+                "description": "ActivateQuoteFailed",
+                "name": "ActivateQuoteFailed",
+                "value": "ActivateQuoteFailed"
+              },
+              {
+                "description": "NonsupportedAccountId",
+                "name": "NonsupportedAccountId",
+                "value": "NonsupportedAccountId"
+              },
+              {
+                "description": "PaymentInstrumentNotFound",
+                "name": "PaymentInstrumentNotFound",
+                "value": "PaymentInstrumentNotFound"
+              },
+              {
+                "description": "MissingAppliedScopesForSingle",
+                "name": "MissingAppliedScopesForSingle",
+                "value": "MissingAppliedScopesForSingle"
+              },
+              {
+                "description": "NoValidReservationsToReRate",
+                "name": "NoValidReservationsToReRate",
+                "value": "NoValidReservationsToReRate"
+              },
+              {
+                "description": "ReRateOnlyAllowedForEA",
+                "name": "ReRateOnlyAllowedForEA",
+                "value": "ReRateOnlyAllowedForEA"
+              },
+              {
+                "description": "OperationCannotBePerformedInCurrentState",
+                "name": "OperationCannotBePerformedInCurrentState",
+                "value": "OperationCannotBePerformedInCurrentState"
+              },
+              {
+                "description": "InvalidSingleAppliedScopesCount",
+                "name": "InvalidSingleAppliedScopesCount",
+                "value": "InvalidSingleAppliedScopesCount"
+              },
+              {
+                "description": "InvalidFulfillmentRequestParameters",
+                "name": "InvalidFulfillmentRequestParameters",
+                "value": "InvalidFulfillmentRequestParameters"
+              },
+              {
+                "description": "NotSupportedCountry",
+                "name": "NotSupportedCountry",
+                "value": "NotSupportedCountry"
+              },
+              {
+                "description": "InvalidRefundQuantity",
+                "name": "InvalidRefundQuantity",
+                "value": "InvalidRefundQuantity"
+              },
+              {
+                "description": "PurchaseError",
+                "name": "PurchaseError",
+                "value": "PurchaseError"
+              },
+              {
+                "description": "BillingCustomerInputError",
+                "name": "BillingCustomerInputError",
+                "value": "BillingCustomerInputError"
+              },
+              {
+                "description": "BillingPaymentInstrumentSoftError",
+                "name": "BillingPaymentInstrumentSoftError",
+                "value": "BillingPaymentInstrumentSoftError"
+              },
+              {
+                "description": "BillingPaymentInstrumentHardError",
+                "name": "BillingPaymentInstrumentHardError",
+                "value": "BillingPaymentInstrumentHardError"
+              },
+              {
+                "description": "BillingTransientError",
+                "name": "BillingTransientError",
+                "value": "BillingTransientError"
+              },
+              {
+                "description": "BillingError",
+                "name": "BillingError",
+                "value": "BillingError"
+              },
+              {
+                "description": "FulfillmentConfigurationError",
+                "name": "FulfillmentConfigurationError",
+                "value": "FulfillmentConfigurationError"
+              },
+              {
+                "description": "FulfillmentOutOfStockError",
+                "name": "FulfillmentOutOfStockError",
+                "value": "FulfillmentOutOfStockError"
+              },
+              {
+                "description": "FulfillmentTransientError",
+                "name": "FulfillmentTransientError",
+                "value": "FulfillmentTransientError"
+              },
+              {
+                "description": "FulfillmentError",
+                "name": "FulfillmentError",
+                "value": "FulfillmentError"
+              },
+              {
+                "description": "CalculatePriceFailed",
+                "name": "CalculatePriceFailed",
+                "value": "CalculatePriceFailed"
+              },
+              {
+                "description": "AppliedScopesSameAsExisting",
+                "name": "AppliedScopesSameAsExisting",
+                "value": "AppliedScopesSameAsExisting"
+              },
+              {
+                "description": "SelfServiceRefundNotSupported",
+                "name": "SelfServiceRefundNotSupported",
+                "value": "SelfServiceRefundNotSupported"
+              },
+              {
+                "description": "RefundLimitExceeded",
+                "name": "RefundLimitExceeded",
+                "value": "RefundLimitExceeded"
+              }
+            ]
+          }
+        },
+        "ExchangeOperationResultResponse": {
+          "description": "Exchange operation result",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/OperationResultError"
+            },
+            "id": {
+              "description": "It should match what is used to GET the operation result.",
+              "type": "string"
+            },
+            "name": {
+              "description": "It must match the last segment of the id field, and will typically be a GUID / system generated value.",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ExchangeResponseProperties"
+            },
+            "status": {
+              "$ref": "#/components/schemas/ExchangeOperationResultStatus"
+            }
+          },
+          "type": "object"
+        },
+        "ExchangeOperationResultStatus": {
+          "description": "Status of the operation.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Cancelled",
+            "PendingRefunds",
+            "PendingPurchases"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ExchangeOperationResultStatus",
+            "values": [
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Cancelled",
+                "name": "Cancelled",
+                "value": "Cancelled"
+              },
+              {
+                "description": "PendingRefunds",
+                "name": "PendingRefunds",
+                "value": "PendingRefunds"
+              },
+              {
+                "description": "PendingPurchases",
+                "name": "PendingPurchases",
+                "value": "PendingPurchases"
+              }
+            ]
+          }
+        },
+        "ExchangePolicyError": {
+          "description": "error details",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExchangePolicyErrors": {
+          "description": "Exchange policy errors",
+          "properties": {
+            "policyErrors": {
+              "description": "Exchange Policy errors",
+              "items": {
+                "$ref": "#/components/schemas/ExchangePolicyError"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ExchangeRequest": {
+          "description": "Exchange request",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ExchangeRequestProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ExchangeRequestProperties": {
+          "description": "Exchange request properties",
+          "properties": {
+            "sessionId": {
+              "description": "SessionId that was returned by CalculateExchange API.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExchangeResponseProperties": {
+          "description": "Exchange response properties",
+          "properties": {
+            "netPayable": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "policyResult": {
+              "$ref": "#/components/schemas/ExchangePolicyErrors"
+            },
+            "purchasesTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "refundsTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "reservationsToExchange": {
+              "description": "Details of the reservations being returned",
+              "items": {
+                "$ref": "#/components/schemas/ReservationToReturnForExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "reservationId"
+              ]
+            },
+            "reservationsToPurchase": {
+              "description": "Details of the reservations being purchased",
+              "items": {
+                "$ref": "#/components/schemas/ReservationToPurchaseExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "reservationId"
+              ]
+            },
+            "savingsPlansToPurchase": {
+              "description": "Details of the savings plans being purchased",
+              "items": {
+                "$ref": "#/components/schemas/SavingsPlanToPurchaseExchange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "savingsPlanId"
+              ]
+            },
+            "sessionId": {
+              "description": "Exchange session identifier",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExtendedErrorInfo": {
+          "description": "Extended error information including error code and error message",
+          "properties": {
+            "code": {
+              "$ref": "#/components/schemas/ErrorResponseCode"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ExtendedStatusInfo": {
+          "properties": {
+            "message": {
+              "description": "The message giving detailed information about the status code.",
+              "type": "string"
+            },
+            "statusCode": {
+              "$ref": "#/components/schemas/ReservationStatusCode"
+            }
+          },
+          "type": "object"
+        },
+        "InstanceFlexibility": {
+          "description": "Turning this on will apply the reservation discount to other VMs in the same VM size group. Only specify for VirtualMachines reserved resource type.",
+          "enum": [
+            "On",
+            "Off"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "InstanceFlexibility",
+            "values": [
+              {
+                "description": "On",
+                "name": "On",
+                "value": "On"
+              },
+              {
+                "description": "Off",
+                "name": "Off",
+                "value": "Off"
+              }
+            ]
+          }
+        },
+        "MergeProperties": {
+          "description": "Properties for reservation merge",
+          "properties": {
+            "sources": {
+              "description": "Format of the resource id should be /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "MergeRequest": {
+          "description": "The request for reservation merge",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/MergeProperties"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplay": {
+          "description": "Information about an operation",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "operation": {
+              "type": "string"
+            },
+            "provider": {
+              "type": "string"
+            },
+            "resource": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationList": {
+          "properties": {
+            "nextLink": {
+              "description": "Url to get the next page of items.",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/OperationResponse"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "OperationResponse": {
+          "description": "The response containing operation information",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the operation",
+              "type": "string"
+            },
+            "origin": {
+              "description": "Origin of the operation",
+              "type": "string"
+            },
+            "properties": {
+              "description": "Properties of the operation"
+            }
+          },
+          "type": "object"
+        },
+        "OperationResultError": {
+          "description": "Required if status == failed or status == canceled.",
+          "properties": {
+            "code": {
+              "description": "Required if status == failed or status == cancelled. If status == failed, provide an invariant error code used for error troubleshooting, aggregation, and analysis.",
+              "type": "string"
+            },
+            "message": {
+              "description": "Required if status == failed. Localized. If status == failed, provide an actionable error message indicating what error occurred, and what the user can do to address the issue.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationStatus": {
+          "description": "Status of the individual operation.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Cancelled",
+            "Pending"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "OperationStatus",
+            "values": [
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Cancelled",
+                "name": "Cancelled",
+                "value": "Cancelled"
+              },
+              {
+                "description": "Pending",
+                "name": "Pending",
+                "value": "Pending"
+              }
+            ]
+          }
+        },
+        "Patch": {
+          "description": "The request for reservation patch",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PatchProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PatchProperties": {
+          "description": "Properties for reservation patch",
+          "properties": {
+            "appliedScopeProperties": {
+              "$ref": "#/components/schemas/AppliedScopeProperties"
+            },
+            "appliedScopeType": {
+              "$ref": "#/components/schemas/AppliedScopeType"
+            },
+            "appliedScopes": {
+              "description": "List of the subscriptions that the benefit will be applied. Do not specify if AppliedScopeType is Shared. This property will be deprecated and replaced by appliedScopeProperties instead for Single AppliedScopeType.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "instanceFlexibility": {
+              "$ref": "#/components/schemas/InstanceFlexibility"
+            },
+            "name": {
+              "description": "Display name of the reservation",
+              "type": "string"
+            },
+            "renew": {
+              "default": false,
+              "description": "Setting this to true will automatically purchase a new reservation on the expiration date time.",
+              "type": "boolean"
+            },
+            "renewProperties": {
+              "$ref": "#/components/schemas/PatchPropertiesRenewProperties"
+            },
+            "reviewDateTime": {
+              "description": "This is the date-time when the Azure hybrid benefit needs to be reviewed.",
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PatchPropertiesRenewProperties": {
+          "properties": {
+            "purchaseProperties": {
+              "$ref": "#/components/schemas/PurchaseRequest"
+            }
+          },
+          "type": "object"
+        },
+        "PaymentDetail": {
+          "description": "Information about payment related to a reservation order.",
+          "properties": {
+            "billingAccount": {
+              "description": "Shows the Account that is charged for this payment.",
+              "type": "string"
+            },
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "dueDate": {
+              "description": "Date when the payment needs to be done.",
+              "format": "date",
+              "type": "string"
+            },
+            "extendedStatusInfo": {
+              "$ref": "#/components/schemas/ExtendedStatusInfo"
+            },
+            "paymentDate": {
+              "description": "Date when the transaction is completed. Is null when it is scheduled.",
+              "format": "date",
+              "type": "string"
+            },
+            "pricingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "status": {
+              "$ref": "#/components/schemas/PaymentStatus"
+            }
+          },
+          "type": "object"
+        },
+        "PaymentStatus": {
+          "description": "Describes whether the payment is completed, failed, cancelled or scheduled in the future.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Scheduled",
+            "Cancelled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PaymentStatus",
+            "values": [
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Scheduled",
+                "name": "Scheduled",
+                "value": "Scheduled"
+              },
+              {
+                "description": "Cancelled",
+                "name": "Cancelled",
+                "value": "Cancelled"
+              }
+            ]
+          }
+        },
+        "Price": {
+          "description": "Pricing information containing the amount and the currency code",
+          "properties": {
+            "amount": {
+              "format": "double",
+              "type": "number"
+            },
+            "currencyCode": {
+              "description": "The ISO 4217 3-letter currency code for the currency used by this purchase record.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "Represent the current state of the Reservation.",
+          "enum": [
+            "Creating",
+            "PendingResourceHold",
+            "ConfirmedResourceHold",
+            "PendingBilling",
+            "ConfirmedBilling",
+            "Created",
+            "Succeeded",
+            "Cancelled",
+            "Expired",
+            "BillingFailed",
+            "Failed",
+            "Split",
+            "Merged"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Creating",
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "description": "PendingResourceHold",
+                "name": "PendingResourceHold",
+                "value": "PendingResourceHold"
+              },
+              {
+                "description": "ConfirmedResourceHold",
+                "name": "ConfirmedResourceHold",
+                "value": "ConfirmedResourceHold"
+              },
+              {
+                "description": "PendingBilling",
+                "name": "PendingBilling",
+                "value": "PendingBilling"
+              },
+              {
+                "description": "ConfirmedBilling",
+                "name": "ConfirmedBilling",
+                "value": "ConfirmedBilling"
+              },
+              {
+                "description": "Created",
+                "name": "Created",
+                "value": "Created"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Cancelled",
+                "name": "Cancelled",
+                "value": "Cancelled"
+              },
+              {
+                "description": "Expired",
+                "name": "Expired",
+                "value": "Expired"
+              },
+              {
+                "description": "BillingFailed",
+                "name": "BillingFailed",
+                "value": "BillingFailed"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Split",
+                "name": "Split",
+                "value": "Split"
+              },
+              {
+                "description": "Merged",
+                "name": "Merged",
+                "value": "Merged"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "PurchaseRequest": {
+          "description": "The request for reservation purchase",
+          "properties": {
+            "location": {
+              "description": "The Azure region where the reserved resource lives.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "update",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PurchaseRequestProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/SkuName"
+            }
+          },
+          "type": "object"
+        },
+        "PurchaseRequestProperties": {
+          "description": "Properties of reservation purchase request",
+          "properties": {
+            "appliedScopeProperties": {
+              "$ref": "#/components/schemas/AppliedScopeProperties"
+            },
+            "appliedScopeType": {
+              "$ref": "#/components/schemas/AppliedScopeType"
+            },
+            "appliedScopes": {
+              "description": "List of the subscriptions that the benefit will be applied. Do not specify if AppliedScopeType is Shared. This property will be deprecated and replaced by appliedScopeProperties instead for Single AppliedScopeType.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "billingPlan": {
+              "$ref": "#/components/schemas/ReservationBillingPlan"
+            },
+            "billingScopeId": {
+              "description": "Subscription that will be charged for purchasing reservation or savings plan",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Friendly name of the reservation",
+              "type": "string"
+            },
+            "quantity": {
+              "description": "Quantity of the skus that are part of the reservation.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "renew": {
+              "default": false,
+              "description": "Setting this to true will automatically purchase a new reservation on the expiration date time.",
+              "type": "boolean"
+            },
+            "reservedResourceProperties": {
+              "$ref": "#/components/schemas/PurchaseRequestPropertiesReservedResourceProperties"
+            },
+            "reservedResourceType": {
+              "$ref": "#/components/schemas/ReservedResourceType"
+            },
+            "reviewDateTime": {
+              "description": "This is the date-time when the Azure hybrid benefit needs to be reviewed.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "term": {
+              "$ref": "#/components/schemas/ReservationTerm"
+            }
+          },
+          "type": "object"
+        },
+        "PurchaseRequestPropertiesReservedResourceProperties": {
+          "description": "Properties specific to each reserved resource type. Not required if not applicable.",
+          "properties": {
+            "instanceFlexibility": {
+              "$ref": "#/components/schemas/InstanceFlexibility"
+            }
+          },
+          "type": "object"
+        },
+        "RefundBillingInformation": {
+          "description": "billing information",
+          "properties": {
+            "billingCurrencyProratedAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "billingCurrencyRemainingCommitmentAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "billingCurrencyTotalPaidAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "billingPlan": {
+              "$ref": "#/components/schemas/ReservationBillingPlan"
+            },
+            "completedTransactions": {
+              "description": "The number of completed transactions in this reservation's payment",
+              "format": "int32",
+              "type": "integer"
+            },
+            "totalTransactions": {
+              "description": "The number of total transactions in this reservation's payment",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "RefundPolicyError": {
+          "description": "error details",
+          "properties": {
+            "code": {
+              "$ref": "#/components/schemas/ErrorResponseCode"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RefundPolicyResult": {
+          "description": "Refund policy result",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RefundPolicyResultProperty"
+            }
+          },
+          "type": "object"
+        },
+        "RefundPolicyResultProperty": {
+          "description": "Refund policy result property",
+          "properties": {
+            "consumedRefundsTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "maxRefundLimit": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "policyErrors": {
+              "description": "Refund Policy errors",
+              "items": {
+                "$ref": "#/components/schemas/RefundPolicyError"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "RefundRequest": {
+          "description": "Request containing information needed for returning reservation.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RefundRequestProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RefundRequestProperties": {
+          "description": "Properties needed for refund request including the session id from calculate refund, the scope, the reservation to be returned and the return reason.",
+          "properties": {
+            "reservationToReturn": {
+              "$ref": "#/components/schemas/ReservationToReturn"
+            },
+            "returnReason": {
+              "description": "The reason of returning the reservation",
+              "type": "string"
+            },
+            "scope": {
+              "description": "The scope of the refund, e.g. Reservation",
+              "type": "string"
+            },
+            "sessionId": {
+              "description": "SessionId that was returned by CalculateRefund API.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RefundResponse": {
+          "description": "The response of refund request containing refund information of reservation",
+          "properties": {
+            "id": {
+              "description": "Fully qualified identifier of the reservation being returned",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/RefundResponseProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RefundResponseProperties": {
+          "description": "The refund properties of reservation",
+          "properties": {
+            "billingInformation": {
+              "$ref": "#/components/schemas/RefundBillingInformation"
+            },
+            "billingRefundAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "policyResult": {
+              "$ref": "#/components/schemas/RefundPolicyResult"
+            },
+            "pricingRefundAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "quantity": {
+              "description": "Quantity to be returned",
+              "format": "int32",
+              "type": "integer"
+            },
+            "sessionId": {
+              "description": "Refund session identifier",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RenewPropertiesResponse": {
+          "description": "The renew properties for a reservation.",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/RenewPropertiesResponseBillingCurrencyTotal"
+            },
+            "pricingCurrencyTotal": {
+              "$ref": "#/components/schemas/RenewPropertiesResponsePricingCurrencyTotal"
+            },
+            "purchaseProperties": {
+              "$ref": "#/components/schemas/PurchaseRequest"
+            }
+          },
+          "type": "object"
+        },
+        "RenewPropertiesResponseBillingCurrencyTotal": {
+          "description": "Currency and amount that customer will be charged in customer's local currency for renewal purchase. Tax is not included.",
+          "properties": {
+            "amount": {
+              "format": "float",
+              "type": "number"
+            },
+            "currencyCode": {
+              "description": "The ISO 4217 3-letter currency code for the currency used by this purchase record.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RenewPropertiesResponsePricingCurrencyTotal": {
+          "description": "Amount that Microsoft uses for record. Used during refund for calculating refund limit. Tax is not included. This is locked price 30 days before expiry.",
+          "properties": {
+            "amount": {
+              "format": "float",
+              "type": "number"
+            },
+            "currencyCode": {
+              "description": "The ISO 4217 3-letter currency code for the currency used by this purchase record.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationBillingPlan": {
+          "description": "Represent the billing plans.",
+          "enum": [
+            "Upfront",
+            "Monthly"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReservationBillingPlan",
+            "values": [
+              {
+                "description": "Upfront",
+                "name": "Upfront",
+                "value": "Upfront"
+              },
+              {
+                "description": "Monthly",
+                "name": "Monthly",
+                "value": "Monthly"
+              }
+            ]
+          }
+        },
+        "ReservationList": {
+          "description": "List of `Reservation`s",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ReservationResponse items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ReservationResponse"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ReservationMergeProperties": {
+          "description": "Properties of reservation merge",
+          "properties": {
+            "mergeDestination": {
+              "description": "Reservation resource id Created due to the merge. Format of the resource id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "type": "string"
+            },
+            "mergeSources": {
+              "description": "Resource ids of the source reservation's merged to form this reservation. Format of the resource id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationOrderBillingPlanInformation": {
+          "description": "Information describing the type of billing plan for this reservation.",
+          "properties": {
+            "nextPaymentDueDate": {
+              "description": "For recurring billing plans, indicates the date when next payment will be processed. Null when total is paid off.",
+              "format": "date",
+              "type": "string"
+            },
+            "pricingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "startDate": {
+              "description": "Date when the billing plan has started.",
+              "format": "date",
+              "type": "string"
+            },
+            "transactions": {
+              "items": {
+                "$ref": "#/components/schemas/PaymentDetail"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ReservationOrderList": {
+          "description": "List of `ReservationOrder`s",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ReservationOrderResponse items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ReservationOrderResponse"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ReservationOrderProperties": {
+          "description": "Properties of a reservation order.",
+          "properties": {
+            "benefitStartTime": {
+              "description": "This is the DateTime when the reservation benefit started.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "billingPlan": {
+              "$ref": "#/components/schemas/ReservationBillingPlan"
+            },
+            "createdDateTime": {
+              "description": "This is the DateTime when the reservation was created.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Friendly name for user to easily identified the reservation.",
+              "type": "string"
+            },
+            "expiryDate": {
+              "description": "This is the date when the reservation will expire.",
+              "format": "date",
+              "type": "string"
+            },
+            "expiryDateTime": {
+              "description": "This is the date-time when the reservation will expire.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "originalQuantity": {
+              "description": "Total Quantity of the skus purchased in the reservation.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "planInformation": {
+              "$ref": "#/components/schemas/ReservationOrderBillingPlanInformation"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "requestDateTime": {
+              "description": "This is the DateTime when the reservation was initially requested for purchase.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "reservations": {
+              "items": {
+                "$ref": "#/components/schemas/ReservationResponse"
+              },
+              "type": "array"
+            },
+            "reviewDateTime": {
+              "description": "This is the date-time when the Azure Hybrid Benefit needs to be reviewed.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "term": {
+              "$ref": "#/components/schemas/ReservationTerm"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationOrderResponse": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Details of a reservation order being returned.",
+          "properties": {
+            "etag": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ReservationOrderProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationResponse": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The definition of the reservation.",
+          "properties": {
+            "etag": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "kind": {
+              "description": "Resource Provider type to be reserved.",
+              "enum": [
+                "Microsoft.Compute"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false
+              }
+            },
+            "location": {
+              "description": "The Azure region where the reserved resource lives.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ReservationsProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/SkuName"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationResponseArray": {
+          "items": {
+            "$ref": "#/components/schemas/ReservationResponse"
+          },
+          "type": "array"
+        },
+        "ReservationSplitProperties": {
+          "description": "Properties of reservation split",
+          "properties": {
+            "splitDestinations": {
+              "description": "List of destination resource id that are created due to split. Format of the resource id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "splitSource": {
+              "description": "Resource id of the reservation from which this is split. Format of the resource id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationStatusCode": {
+          "enum": [
+            "None",
+            "Pending",
+            "Processing",
+            "Active",
+            "PurchaseError",
+            "PaymentInstrumentError",
+            "Split",
+            "Merged",
+            "Expired",
+            "Succeeded"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReservationStatusCode",
+            "values": [
+              {
+                "description": "None",
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "description": "Pending",
+                "name": "Pending",
+                "value": "Pending"
+              },
+              {
+                "description": "Processing",
+                "name": "Processing",
+                "value": "Processing"
+              },
+              {
+                "description": "Active",
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "description": "PurchaseError",
+                "name": "PurchaseError",
+                "value": "PurchaseError"
+              },
+              {
+                "description": "PaymentInstrumentError",
+                "name": "PaymentInstrumentError",
+                "value": "PaymentInstrumentError"
+              },
+              {
+                "description": "Split",
+                "name": "Split",
+                "value": "Split"
+              },
+              {
+                "description": "Merged",
+                "name": "Merged",
+                "value": "Merged"
+              },
+              {
+                "description": "Expired",
+                "name": "Expired",
+                "value": "Expired"
+              },
+              {
+                "description": "Succeeded",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              }
+            ]
+          }
+        },
+        "ReservationSummary": {
+          "description": "The roll up count summary of reservations in each state",
+          "properties": {
+            "cancelledCount": {
+              "description": "The number of reservation in Cancelled state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "expiredCount": {
+              "description": "The number of reservation in Expired state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "expiringCount": {
+              "description": "The number of reservation in Expiring state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "failedCount": {
+              "description": "The number of reservation in Failed state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "noBenefitCount": {
+              "description": "The number of reservation in NoBenefit state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "pendingCount": {
+              "description": "The number of reservation in Pending state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "processingCount": {
+              "description": "The number of reservation in Processing state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "succeededCount": {
+              "description": "The number of reservation in Succeeded state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "warningCount": {
+              "description": "The number of reservation in Warning state",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationSwapProperties": {
+          "description": "Properties of reservation swap",
+          "properties": {
+            "swapDestination": {
+              "description": "Reservation resource id that the original resource gets swapped to. Format of the resource id is /providers/microsoft.capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "type": "string"
+            },
+            "swapSource": {
+              "description": "Resource id of the source reservation that gets swapped. Format of the resource id is /providers/microsoft.capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationTerm": {
+          "description": "Represent the term of reservation.",
+          "enum": [
+            "P1Y",
+            "P3Y",
+            "P5Y"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReservationTerm",
+            "values": [
+              {
+                "description": "P1Y",
+                "name": "P1Y",
+                "value": "P1Y"
+              },
+              {
+                "description": "P3Y",
+                "name": "P3Y",
+                "value": "P3Y"
+              },
+              {
+                "description": "P5Y",
+                "name": "P5Y",
+                "value": "P5Y"
+              }
+            ]
+          }
+        },
+        "ReservationToExchange": {
+          "description": "Reservation refund details",
+          "properties": {
+            "billingInformation": {
+              "$ref": "#/components/schemas/BillingInformation"
+            },
+            "billingRefundAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "quantity": {
+              "description": "Quantity to be returned",
+              "format": "int32",
+              "type": "integer"
+            },
+            "reservationId": {
+              "description": "Fully qualified id of the reservation being returned.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationToPurchaseCalculateExchange": {
+          "description": "Reservation purchase details",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PurchaseRequest"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationToPurchaseExchange": {
+          "description": "Reservation purchase details",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PurchaseRequest"
+            },
+            "reservationId": {
+              "description": "Fully qualified id of the reservation being purchased. This value is only guaranteed to be non-null if the purchase is successful.",
+              "type": "string"
+            },
+            "reservationOrderId": {
+              "description": "Fully qualified id of the reservationOrder being purchased",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OperationStatus"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationToReturn": {
+          "description": "Reservation to return",
+          "properties": {
+            "quantity": {
+              "description": "Quantity to be returned. Must be greater than zero.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "reservationId": {
+              "description": "Fully qualified identifier of the reservation being returned",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationToReturnForExchange": {
+          "description": "Reservation refund details",
+          "properties": {
+            "billingInformation": {
+              "$ref": "#/components/schemas/BillingInformation"
+            },
+            "billingRefundAmount": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "quantity": {
+              "description": "Quantity to be returned",
+              "format": "int32",
+              "type": "integer"
+            },
+            "reservationId": {
+              "description": "Fully qualified id of the reservation being returned.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OperationStatus"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationUtilizationAggregates": {
+          "description": "The aggregate values of reservation utilization",
+          "properties": {
+            "grain": {
+              "description": "The grain of the aggregate",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "grainUnit": {
+              "description": "The grain unit of the aggregate",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The aggregate value",
+              "format": "float",
+              "readOnly": true,
+              "type": "number"
+            },
+            "valueUnit": {
+              "description": "The aggregate value unit",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationsListResult": {
+          "description": "The list of reservations and summary of roll out count of reservations in each state.",
+          "properties": {
+            "nextLink": {
+              "description": "The link (url) to the next page of results.",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "summary": {
+              "$ref": "#/components/schemas/ReservationSummary"
+            },
+            "value": {
+              "description": "The list of reservations.",
+              "items": {
+                "$ref": "#/components/schemas/ReservationResponse"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationsProperties": {
+          "description": "The properties of the reservations",
+          "properties": {
+            "appliedScopeProperties": {
+              "$ref": "#/components/schemas/AppliedScopeProperties"
+            },
+            "appliedScopeType": {
+              "$ref": "#/components/schemas/AppliedScopeType"
+            },
+            "appliedScopes": {
+              "description": "The list of applied scopes",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "archived": {
+              "description": "Indicates if the reservation is archived",
+              "type": "boolean"
+            },
+            "benefitStartTime": {
+              "description": "This is the DateTime when the reservation benefit started.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "billingPlan": {
+              "$ref": "#/components/schemas/ReservationBillingPlan"
+            },
+            "billingScopeId": {
+              "description": "Subscription that will be charged for purchasing reservation or savings plan",
+              "type": "string"
+            },
+            "capabilities": {
+              "description": "Capabilities of the reservation",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "Friendly name for user to easily identify the reservation",
+              "type": "string"
+            },
+            "displayProvisioningState": {
+              "description": "The provisioning state of the reservation for display, e.g. Succeeded",
+              "readOnly": true,
+              "type": "string"
+            },
+            "effectiveDateTime": {
+              "description": "DateTime of the reservation starting when this version is effective from.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "expiryDate": {
+              "description": "This is the date when the reservation will expire.",
+              "format": "date",
+              "type": "string"
+            },
+            "expiryDateTime": {
+              "description": "This is the date-time when the reservation will expire.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "extendedStatusInfo": {
+              "$ref": "#/components/schemas/ExtendedStatusInfo"
+            },
+            "instanceFlexibility": {
+              "$ref": "#/components/schemas/InstanceFlexibility"
+            },
+            "lastUpdatedDateTime": {
+              "description": "DateTime of the last time the reservation was updated.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "mergeProperties": {
+              "$ref": "#/components/schemas/ReservationMergeProperties"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "provisioningSubState": {
+              "description": "The provisioning sub-state of the reservation, e.g. Succeeded",
+              "readOnly": true,
+              "type": "string"
+            },
+            "purchaseDate": {
+              "description": "This is the date when the reservation was purchased.",
+              "format": "date",
+              "type": "string"
+            },
+            "purchaseDateTime": {
+              "description": "This is the date-time when the reservation was purchased.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "quantity": {
+              "description": "Quantity of the skus that are part of the reservation. Must be greater than zero.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "renew": {
+              "default": false,
+              "description": "Setting this to true will automatically purchase a new reservation on the expiration date time.",
+              "type": "boolean"
+            },
+            "renewDestination": {
+              "description": "Reservation Id of the reservation which is purchased because of renew. Format of the resource Id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}.",
+              "type": "string"
+            },
+            "renewProperties": {
+              "$ref": "#/components/schemas/RenewPropertiesResponse"
+            },
+            "renewSource": {
+              "description": "Reservation Id of the reservation from which this reservation is renewed. Format of the resource Id is /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}.",
+              "type": "string"
+            },
+            "reservedResourceType": {
+              "$ref": "#/components/schemas/ReservedResourceType"
+            },
+            "reviewDateTime": {
+              "description": "This is the date-time when the Azure Hybrid Benefit needs to be reviewed.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "skuDescription": {
+              "description": "Description of the sku in english.",
+              "type": "string"
+            },
+            "splitProperties": {
+              "$ref": "#/components/schemas/ReservationSplitProperties"
+            },
+            "swapProperties": {
+              "$ref": "#/components/schemas/ReservationSwapProperties"
+            },
+            "term": {
+              "$ref": "#/components/schemas/ReservationTerm"
+            },
+            "userFriendlyAppliedScopeType": {
+              "description": "The applied scope type of the reservation for display, e.g. Shared",
+              "readOnly": true,
+              "type": "string"
+            },
+            "userFriendlyRenewState": {
+              "description": "The renew state of the reservation for display, e.g. On",
+              "readOnly": true,
+              "type": "string"
+            },
+            "utilization": {
+              "$ref": "#/components/schemas/ReservationsPropertiesUtilization"
+            }
+          },
+          "type": "object"
+        },
+        "ReservationsPropertiesUtilization": {
+          "description": "Reservation utilization",
+          "properties": {
+            "aggregates": {
+              "description": "The array of aggregates of a reservation's utilization",
+              "items": {
+                "$ref": "#/components/schemas/ReservationUtilizationAggregates"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "trend": {
+              "description": "last 7 day utilization trend for a reservation",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ReservedResourceType": {
+          "description": "The type of the resource that is being reserved. In addition to below types we have also added the following: OpenAIPTU, MDC, Sentinel.",
+          "enum": [
+            "VirtualMachines",
+            "SqlDatabases",
+            "SuseLinux",
+            "CosmosDb",
+            "RedHat",
+            "SqlDataWarehouse",
+            "VMwareCloudSimple",
+            "RedHatOsa",
+            "Databricks",
+            "AppService",
+            "ManagedDisk",
+            "BlockBlob",
+            "RedisCache",
+            "AzureDataExplorer",
+            "MySql",
+            "MariaDb",
+            "PostgreSql",
+            "DedicatedHost",
+            "SapHana",
+            "SqlAzureHybridBenefit",
+            "AVS",
+            "DataFactory",
+            "NetAppStorage",
+            "AzureFiles",
+            "SqlEdge",
+            "VirtualMachineSoftware"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReservedResourceType",
+            "values": [
+              {
+                "description": "VirtualMachines",
+                "name": "VirtualMachines",
+                "value": "VirtualMachines"
+              },
+              {
+                "description": "SqlDatabases",
+                "name": "SqlDatabases",
+                "value": "SqlDatabases"
+              },
+              {
+                "description": "SuseLinux",
+                "name": "SuseLinux",
+                "value": "SuseLinux"
+              },
+              {
+                "description": "CosmosDb",
+                "name": "CosmosDb",
+                "value": "CosmosDb"
+              },
+              {
+                "description": "RedHat",
+                "name": "RedHat",
+                "value": "RedHat"
+              },
+              {
+                "description": "SqlDataWarehouse",
+                "name": "SqlDataWarehouse",
+                "value": "SqlDataWarehouse"
+              },
+              {
+                "description": "VMwareCloudSimple",
+                "name": "VMwareCloudSimple",
+                "value": "VMwareCloudSimple"
+              },
+              {
+                "description": "RedHatOsa",
+                "name": "RedHatOsa",
+                "value": "RedHatOsa"
+              },
+              {
+                "description": "Databricks",
+                "name": "Databricks",
+                "value": "Databricks"
+              },
+              {
+                "description": "AppService",
+                "name": "AppService",
+                "value": "AppService"
+              },
+              {
+                "description": "ManagedDisk",
+                "name": "ManagedDisk",
+                "value": "ManagedDisk"
+              },
+              {
+                "description": "BlockBlob",
+                "name": "BlockBlob",
+                "value": "BlockBlob"
+              },
+              {
+                "description": "RedisCache",
+                "name": "RedisCache",
+                "value": "RedisCache"
+              },
+              {
+                "description": "AzureDataExplorer",
+                "name": "AzureDataExplorer",
+                "value": "AzureDataExplorer"
+              },
+              {
+                "description": "MySql",
+                "name": "MySql",
+                "value": "MySql"
+              },
+              {
+                "description": "MariaDb",
+                "name": "MariaDb",
+                "value": "MariaDb"
+              },
+              {
+                "description": "PostgreSql",
+                "name": "PostgreSql",
+                "value": "PostgreSql"
+              },
+              {
+                "description": "DedicatedHost",
+                "name": "DedicatedHost",
+                "value": "DedicatedHost"
+              },
+              {
+                "description": "SapHana",
+                "name": "SapHana",
+                "value": "SapHana"
+              },
+              {
+                "description": "SqlAzureHybridBenefit",
+                "name": "SqlAzureHybridBenefit",
+                "value": "SqlAzureHybridBenefit"
+              },
+              {
+                "description": "AVS",
+                "name": "AVS",
+                "value": "AVS"
+              },
+              {
+                "description": "DataFactory",
+                "name": "DataFactory",
+                "value": "DataFactory"
+              },
+              {
+                "description": "NetAppStorage",
+                "name": "NetAppStorage",
+                "value": "NetAppStorage"
+              },
+              {
+                "description": "AzureFiles",
+                "name": "AzureFiles",
+                "value": "AzureFiles"
+              },
+              {
+                "description": "SqlEdge",
+                "name": "SqlEdge",
+                "value": "SqlEdge"
+              },
+              {
+                "description": "VirtualMachineSoftware",
+                "name": "VirtualMachineSoftware",
+                "value": "VirtualMachineSoftware"
+              }
+            ]
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SavingsPlanPurchaseRequest": {
+          "description": "Request body for savings plan purchase",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SavingsPlanPurchaseRequestProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/SkuName"
+            }
+          },
+          "type": "object"
+        },
+        "SavingsPlanPurchaseRequestProperties": {
+          "description": "Properties of a savings plan purchase",
+          "properties": {
+            "appliedScopeProperties": {
+              "$ref": "#/components/schemas/AppliedScopeProperties"
+            },
+            "appliedScopeType": {
+              "$ref": "#/components/schemas/AppliedScopeType"
+            },
+            "billingPlan": {
+              "$ref": "#/components/schemas/BillingPlan"
+            },
+            "billingScopeId": {
+              "description": "Subscription that will be charged for purchasing reservation or savings plan",
+              "type": "string"
+            },
+            "commitment": {
+              "$ref": "#/components/schemas/Commitment"
+            },
+            "displayName": {
+              "description": "Friendly name of the savings plan",
+              "type": "string"
+            },
+            "term": {
+              "$ref": "#/components/schemas/SavingsPlanTerm"
+            }
+          },
+          "type": "object"
+        },
+        "SavingsPlanTerm": {
+          "description": "Represent savings plan term in ISO 8601 format.",
+          "enum": [
+            "P1Y",
+            "P3Y"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SavingsPlanTerm",
+            "values": [
+              {
+                "description": "P1Y",
+                "name": "P1Y",
+                "value": "P1Y"
+              },
+              {
+                "description": "P3Y",
+                "name": "P3Y",
+                "value": "P3Y"
+              }
+            ]
+          }
+        },
+        "SavingsPlanToPurchaseCalculateExchange": {
+          "description": "Savings plan purchase details",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/SavingsPlanPurchaseRequest"
+            }
+          },
+          "type": "object"
+        },
+        "SavingsPlanToPurchaseExchange": {
+          "description": "Savings plan purchase details",
+          "properties": {
+            "billingCurrencyTotal": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/SavingsPlanPurchaseRequest"
+            },
+            "savingsPlanId": {
+              "description": "Fully qualified id of the savings plan being purchased. This value is only guaranteed to be non-null if the purchase is successful.",
+              "type": "string"
+            },
+            "savingsPlanOrderId": {
+              "description": "Fully qualified id of the savings plan order being purchased",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/OperationStatus"
+            }
+          },
+          "type": "object"
+        },
+        "ScopeProperties": {
+          "description": "The scope and whether it is valid.",
+          "properties": {
+            "scope": {
+              "type": "string"
+            },
+            "valid": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "SkuCapability": {
+          "description": "Capability of a sku.",
+          "properties": {
+            "name": {
+              "description": "An invariant to describe the feature.",
+              "type": "string"
+            },
+            "value": {
+              "description": "An invariant if the feature is measured by quantity.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SkuName": {
+          "description": "The name of sku",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SkuProperty": {
+          "description": "Property of a sku.",
+          "properties": {
+            "name": {
+              "description": "An invariant to describe the feature.",
+              "type": "string"
+            },
+            "value": {
+              "description": "An invariant if the feature is measured by quantity.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SkuRestriction": {
+          "description": "Restriction of a sku.",
+          "properties": {
+            "reasonCode": {
+              "description": "The reason for restriction.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of restrictions.",
+              "type": "string"
+            },
+            "values": {
+              "description": "The value of restrictions. If the restriction type is set to location. This would be different locations where the sku is restricted.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SplitProperties": {
+          "description": "Properties for reservation split",
+          "properties": {
+            "quantities": {
+              "description": "List of the quantities in the new reservations to create.",
+              "items": {
+                "format": "int32",
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "reservationId": {
+              "description": "Resource id of the reservation to be split. Format of the resource id should be /providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SplitRequest": {
+          "description": "The request for reservation split",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SplitProperties"
+            }
+          },
+          "type": "object"
+        },
+        "SubscriptionScopeProperties": {
+          "description": "The scopes checked by the available scope api.",
+          "properties": {
+            "scopes": {
+              "items": {
+                "$ref": "#/components/schemas/ScopeProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "This API describe Azure Reservation",
+      "title": "Azure Reservation API",
+      "version": "2022-11-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Capacity/calculateExchange": {
+        "post": {
+          "description": "Calculates price for exchanging `Reservations` if there are no policy errors.",
+          "operationId": "CalculateExchange_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalculateExchangeRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculateExchangeOperationResultResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Calculates the refund amounts and price of the new purchases.",
+          "tags": [
+            "Exchange"
+          ],
+          "x-ms-examples": {
+            "CalculateExchange": {
+              "$ref": "./examples/CalculateExchange.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/CalculateExchangeOperationResultResponse",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/calculatePrice": {
+        "post": {
+          "description": "Calculate price for placing a `ReservationOrder`.",
+          "operationId": "ReservationOrder_Calculate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculatePriceResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Calculate price for a `ReservationOrder`.",
+          "tags": [
+            "Reservation, Calculate"
+          ],
+          "x-ms-examples": {
+            "CalculatePrice": {
+              "$ref": "./examples/CalculateReservationOrder.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/exchange": {
+        "post": {
+          "description": "Returns one or more `Reservations` in exchange for one or more `Reservation` purchases.",
+          "operationId": "Exchange_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ExchangeOperationResultResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Exchange Reservation(s)",
+          "tags": [
+            "Exchange"
+          ],
+          "x-ms-examples": {
+            "Exchange": {
+              "$ref": "./examples/Exchange.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ExchangeOperationResultResponse",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/operations": {
+        "get": {
+          "description": "List all the operations.",
+          "operationId": "Operation_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get operations.",
+          "tags": [
+            "Operation"
+          ],
+          "x-ms-examples": {
+            "GetOperations": {
+              "$ref": "./examples/GetOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders": {
+        "get": {
+          "description": "List of all the `ReservationOrder`s that the user has access to in the current tenant.",
+          "operationId": "ReservationOrder_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationOrderList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get all `ReservationOrder`s.",
+          "tags": [
+            "Reservation"
+          ],
+          "x-ms-examples": {
+            "ReservationOrderList": {
+              "$ref": "./examples/GetReservationOrders.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}": {
+        "get": {
+          "description": "Get the details of the `ReservationOrder`.",
+          "operationId": "ReservationOrder_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "May be used to expand the planInformation.",
+              "in": "query",
+              "name": "$expand",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationOrderResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get a specific `ReservationOrder`.",
+          "tags": [
+            "Reservation"
+          ],
+          "x-ms-examples": {
+            "GetReservationOrder": {
+              "$ref": "./examples/GetReservationOrderDetails.json"
+            },
+            "GetReservationWithExpandPayments": {
+              "$ref": "./examples/GetReservationOrderDetailsWithExpandPlanInformation.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Purchase `ReservationOrder` and create resource under the specified URI.",
+          "operationId": "ReservationOrder_Purchase",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseRequest"
+                }
+              }
+            },
+            "description": "Information needed for calculate or purchase reservation",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationOrderResponse"
+                  }
+                }
+              },
+              "description": "Resource 'ReservationOrderResponse' update operation succeeded"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationOrderResponse"
+                  }
+                }
+              },
+              "description": "The request has been accepted for processing, but processing has not yet completed.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Purchase `ReservationOrder`",
+          "tags": [
+            "Reservation, Purchase"
+          ],
+          "x-ms-examples": {
+            "Purchase": {
+              "$ref": "./examples/PurchaseReservationOrder.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ReservationOrderResponse",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/calculateRefund": {
+        "post": {
+          "description": "Calculate price for returning `Reservations` if there are no policy errors.",
+          "operationId": "CalculateRefund_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalculateRefundRequest"
+                }
+              }
+            },
+            "description": "Information needed for calculating refund of a reservation.",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CalculateRefundResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Calculate the refund amount of a reservation order.",
+          "tags": [
+            "CalculateRefund"
+          ],
+          "x-ms-examples": {
+            "CalculateRefund": {
+              "$ref": "./examples/CalculateRefund.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/changeDirectory": {
+        "post": {
+          "description": "Change directory (tenant) of `ReservationOrder` and all `Reservation` under it to specified tenant id",
+          "operationId": "ReservationOrder_ChangeDirectory",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeDirectoryRequest"
+                }
+              }
+            },
+            "description": "Information needed to change directory of reservation order",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ChangeDirectoryResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Change directory of `ReservationOrder`.",
+          "tags": [
+            "ReservationOrder, ChangeDirectory"
+          ],
+          "x-ms-examples": {
+            "ChangeDirectory": {
+              "$ref": "./examples/ChangeDirectoryReservationOrder.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/merge": {
+        "post": {
+          "description": "Merge the specified `Reservation`s into a new `Reservation`. The two `Reservation`s being merged must have same properties.",
+          "operationId": "Reservation_Merge",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MergeRequest"
+                }
+              }
+            },
+            "description": "Information needed for commercial request for a reservation",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/ReservationResponse"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Merges two `Reservation`s.",
+          "tags": [
+            "Reservation, Merge"
+          ],
+          "x-ms-examples": {
+            "Merge": {
+              "$ref": "./examples/MergeReservations.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ReservationResponseArray",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations": {
+        "get": {
+          "description": "List `Reservation`s within a single `ReservationOrder`.",
+          "operationId": "Reservation_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get `Reservation`s in a given reservation Order",
+          "tags": [
+            "Reservation"
+          ],
+          "x-ms-examples": {
+            "ReservationList": {
+              "$ref": "./examples/GetReservationsFromOrder.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}": {
+        "get": {
+          "description": "Get specific `Reservation` details.",
+          "operationId": "Reservation_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Supported value of this query is renewProperties",
+              "in": "query",
+              "name": "$expand",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get `Reservation` details.",
+          "tags": [
+            "Reservation"
+          ],
+          "x-ms-examples": {
+            "GetReservation": {
+              "$ref": "./examples/GetReservationDetails.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the applied scopes of the `Reservation`.",
+          "operationId": "Reservation_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patch"
+                }
+              }
+            },
+            "description": "Information needed to patch a reservation item",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "format": "uri",
+                    "type": "string"
+                  }
+                },
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Updates a `Reservation`.",
+          "tags": [
+            "Reservation",
+            "ApplyScope"
+          ],
+          "x-ms-examples": {
+            "PatchReservation": {
+              "$ref": "./examples/UpdateReservation.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ReservationResponse",
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}/archive": {
+        "post": {
+          "description": "Archiving a `Reservation` moves it to `Archived` state.",
+          "operationId": "Reservation_Archive",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Archive a `Reservation`.",
+          "tags": [
+            "Reservation, Archive"
+          ],
+          "x-ms-examples": {
+            "Archive": {
+              "$ref": "./examples/Archive.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}/availableScopes": {
+        "post": {
+          "description": "Check whether the scopes from request is valid for `Reservation`.",
+          "operationId": "Reservation_AvailableScopes",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableScopeRequest"
+                }
+              }
+            },
+            "description": "Scopes to be checked for eligibility.",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AvailableScopeProperties"
+                  }
+                }
+              },
+              "description": "The request has succeeded.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get Available Scopes for `Reservation`.",
+          "tags": [
+            "Reservation, AvailableScopes"
+          ],
+          "x-ms-examples": {
+            "AvailableScopes": {
+              "$ref": "./examples/GetAvailableScope.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/AvailableScopeProperties",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}/revisions": {
+        "get": {
+          "description": "List of all the revisions for the `Reservation`.",
+          "operationId": "Reservation_ListRevisions",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get `Reservation` revisions.",
+          "tags": [
+            "Reservation"
+          ],
+          "x-ms-examples": {
+            "ReservationRevisions": {
+              "$ref": "./examples/GetReservationRevisions.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/reservations/{reservationId}/unarchive": {
+        "post": {
+          "description": "Restores a `Reservation` to the state it was before archiving.",
+          "operationId": "Reservation_Unarchive",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Id of the reservation item",
+              "in": "path",
+              "name": "reservationId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Unarchive a `Reservation`.",
+          "tags": [
+            "Reservation, Unarchive"
+          ],
+          "x-ms-examples": {
+            "Unarchive": {
+              "$ref": "./examples/Unarchive.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/return": {
+        "post": {
+          "description": "Return a reservation and get refund information.",
+          "operationId": "Return_Post",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundRequest"
+                }
+              }
+            },
+            "description": "Information needed for returning reservation.",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationOrderResponse"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RefundResponse"
+                  }
+                }
+              },
+              "description": "The request has been accepted for processing, but processing has not yet completed.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Return a reservation.",
+          "tags": [
+            "Return"
+          ],
+          "x-ms-examples": {
+            "Return a reservation": {
+              "$ref": "./examples/Return.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ReservationOrderResponse",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservationOrders/{reservationOrderId}/split": {
+        "post": {
+          "description": "Split a `Reservation` into two `Reservation`s with specified quantity distribution.",
+          "operationId": "Reservation_Split",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "Order Id of the reservation",
+              "in": "path",
+              "name": "reservationOrderId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SplitRequest"
+                }
+              }
+            },
+            "description": "Information needed to Split a reservation item",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/ReservationResponse"
+                    },
+                    "type": "array"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Split the `Reservation`.",
+          "tags": [
+            "Reservation, Split"
+          ],
+          "x-ms-examples": {
+            "Split": {
+              "$ref": "./examples/SplitReservation.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/ReservationResponseArray",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Capacity/reservations": {
+        "get": {
+          "description": "List the reservations and the roll up counts of reservations group by provisioning states that the user has access to in the current tenant.",
+          "operationId": "Reservation_ListAll",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "May be used to filter by reservation properties. The filter supports 'eq', 'or', and 'and'. It does not currently support 'ne', 'gt', 'le', 'ge', or 'not'. Reservation properties include sku/name, properties/{appliedScopeType, archived, displayName, displayProvisioningState, effectiveDateTime, expiryDate, expiryDateTime, provisioningState, quantity, renew, reservedResourceType, term, userFriendlyAppliedScopeType, userFriendlyRenewState}",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "May be used to sort order by reservation properties.",
+              "in": "query",
+              "name": "$orderby",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "To indicate whether to refresh the roll up counts of the reservations group by provisioning states",
+              "in": "query",
+              "name": "refreshSummary",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The number of reservations to skip from the list before returning results",
+              "in": "query",
+              "name": "$skiptoken",
+              "schema": {
+                "format": "float",
+                "type": "number"
+              }
+            },
+            {
+              "description": "The selected provisioning state",
+              "in": "query",
+              "name": "selectedState",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "To number of reservations to return",
+              "in": "query",
+              "name": "take",
+              "schema": {
+                "format": "float",
+                "type": "number"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReservationsListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "ReservationListAll": {
+              "$ref": "./examples/GetReservations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Capacity/appliedReservations": {
+        "get": {
+          "description": "Get applicable `Reservation`s that are applied to this subscription or a resource group under this subscription.",
+          "operationId": "GetAppliedReservationList",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AppliedReservations"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get list of applicable `Reservation`s.",
+          "tags": [
+            "AppliedReservation"
+          ],
+          "x-ms-examples": {
+            "AppliedReservationList": {
+              "$ref": "./examples/GetAppliedReservations.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Capacity/catalogs": {
+        "get": {
+          "description": "Get the regions and skus that are available for RI purchase for the specified Azure subscription.",
+          "operationId": "GetCatalog",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "The type of the resource for which the skus should be provided.",
+              "in": "query",
+              "name": "reservedResourceType",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Filters the skus based on the location specified in this parameter. This can be an azure region or global",
+              "in": "query",
+              "name": "location",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Publisher id used to get the third party products",
+              "in": "query",
+              "name": "publisherId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Offer id used to get the third party products",
+              "in": "query",
+              "name": "offerId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Plan id used to get the third party products",
+              "in": "query",
+              "name": "planId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "May be used to filter by Catalog properties. The filter supports 'eq', 'or', and 'and'.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The number of reservations to skip from the list before returning results",
+              "in": "query",
+              "name": "$skip",
+              "schema": {
+                "format": "float",
+                "type": "number"
+              }
+            },
+            {
+              "description": "To number of reservations to return",
+              "in": "query",
+              "name": "$take",
+              "schema": {
+                "format": "float",
+                "type": "number"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CatalogsResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "summary": "Get the regions and skus that are available for RI purchase for the specified Azure subscription.",
+          "tags": [
+            "Catalog"
+          ],
+          "x-ms-examples": {
+            "Catalog": {
+              "$ref": "./examples/GetCatalog.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Catalog"
+      },
+      {
+        "name": "AppliedReservation"
+      },
+      {
+        "name": "Operation"
+      },
+      {
+        "name": "Reservation"
+      },
+      {
+        "name": "ApplyScope"
+      },
+      {
+        "name": "Reservation, AvailableScopes"
+      },
+      {
+        "name": "Reservation, Archive"
+      },
+      {
+        "name": "Reservation, Unarchive"
+      },
+      {
+        "name": "Reservation, Purchase"
+      },
+      {
+        "name": "Reservation, Split"
+      },
+      {
+        "name": "Reservation, Merge"
+      },
+      {
+        "name": "ReservationOrder, ChangeDirectory"
+      },
+      {
+        "name": "CalculateRefund"
+      },
+      {
+        "name": "Return"
+      },
+      {
+        "name": "Reservation, Calculate"
+      },
+      {
+        "name": "Exchange"
+      }
+    ]
+  }
+}

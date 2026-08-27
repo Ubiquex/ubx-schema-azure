@@ -1,0 +1,579 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_security_datascanners",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Common.CloudError": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/Common.CloudErrorBody"
+            }
+          },
+          "type": "object",
+          "x-ms-external": true
+        },
+        "Common.CloudErrorBody": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/Common.CloudErrorBody"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-external": true
+        },
+        "DataScanner": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The data scanner resource used by Defender for Storage to scan data for malware and sensitive data discovery.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/SystemAssignedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/DataScannerProperties"
+            }
+          },
+          "type": "object"
+        },
+        "DataScannerList": {
+          "description": "List of data scanner resources.",
+          "properties": {
+            "nextLink": {
+              "description": "The URI to fetch the next page.",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The list of data scanner resources.",
+              "items": {
+                "$ref": "#/components/schemas/DataScanner"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "DataScannerProperties": {
+          "description": "Data scanner resource properties. The data scanner is an identity-only resource defined solely by its assigned managed identity.",
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SystemAssignedServiceIdentity": {
+          "description": "Managed service identity (either system assigned, or none)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/SystemAssignedServiceIdentityType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "SystemAssignedServiceIdentityType": {
+          "description": "Type of managed service identity (either system assigned, or none).",
+          "enum": [
+            "None",
+            "SystemAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SystemAssignedServiceIdentityType"
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "API spec for Microsoft.Security (Azure Security Center) data scanners resource provider.",
+      "title": "Security Center",
+      "version": "2026-08-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/{scopeId}/providers/Microsoft.Security/dataScanners": {
+        "get": {
+          "description": "Lists all data scanner resources for the specified scope.",
+          "operationId": "DataScanners_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The scope of the data scanner. Valid scopes are a subscription (format: 'subscriptions/{subscriptionId}') or a resource group (format: 'subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "in": "path",
+              "name": "scopeId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DataScannerList"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Common.CloudError"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DataScanners"
+          ],
+          "x-ms-examples": {
+            "Lists all data scanner resources at subscription scope.": {
+              "$ref": "./examples/DataScanners/ListDataScanners.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/{scopeId}/providers/Microsoft.Security/dataScanners/{scannerName}": {
+        "delete": {
+          "description": "Deletes a data scanner resource for the specified scope.",
+          "operationId": "DataScanners_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The scope of the data scanner. Valid scopes are a subscription (format: 'subscriptions/{subscriptionId}') or a resource group (format: 'subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "in": "path",
+              "name": "scopeId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the data scanner.",
+              "in": "path",
+              "name": "scannerName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9-]{1,260}$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Common.CloudError"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DataScanners"
+          ],
+          "x-ms-examples": {
+            "Deletes a data scanner resource at resource group scope.": {
+              "$ref": "./examples/DataScanners/DeleteDataScannerResourceGroupScope.json"
+            },
+            "Deletes a data scanner resource at subscription scope.": {
+              "$ref": "./examples/DataScanners/DeleteDataScanner.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a data scanner resource for the specified scope.",
+          "operationId": "DataScanners_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The scope of the data scanner. Valid scopes are a subscription (format: 'subscriptions/{subscriptionId}') or a resource group (format: 'subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "in": "path",
+              "name": "scopeId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the data scanner.",
+              "in": "path",
+              "name": "scannerName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9-]{1,260}$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DataScanner"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Common.CloudError"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DataScanners"
+          ],
+          "x-ms-examples": {
+            "Gets a data scanner resource at resource group scope.": {
+              "$ref": "./examples/DataScanners/GetDataScannerResourceGroupScope.json"
+            },
+            "Gets a data scanner resource at subscription scope.": {
+              "$ref": "./examples/DataScanners/GetDataScanner.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a data scanner resource for the specified scope.",
+          "operationId": "DataScanners_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The scope of the data scanner. Valid scopes are a subscription (format: 'subscriptions/{subscriptionId}') or a resource group (format: 'subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "in": "path",
+              "name": "scopeId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the data scanner.",
+              "in": "path",
+              "name": "scannerName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9-]{1,260}$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataScanner"
+                }
+              }
+            },
+            "description": "The data scanner resource.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DataScanner"
+                  }
+                }
+              },
+              "description": "Resource 'DataScanner' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DataScanner"
+                  }
+                }
+              },
+              "description": "Resource 'DataScanner' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Common.CloudError"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DataScanners"
+          ],
+          "x-ms-examples": {
+            "Creates or updates a data scanner resource at resource group scope.": {
+              "$ref": "./examples/DataScanners/CreateOrUpdateDataScannerResourceGroupScope.json"
+            },
+            "Creates or updates a data scanner resource at subscription scope.": {
+              "$ref": "./examples/DataScanners/CreateOrUpdateDataScanner.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "DataScanners"
+      }
+    ]
+  }
+}

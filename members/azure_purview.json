@@ -1,0 +1,2947 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_purview",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "accountName": {
+          "description": "The name of the account.",
+          "in": "path",
+          "name": "accountName",
+          "required": true,
+          "schema": {
+            "maxLength": 63,
+            "minLength": 3,
+            "pattern": "^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "api-version": {
+          "description": "The api version to use.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "resourceGroupName": {
+          "description": "The resource group name.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "subscriptionId": {
+          "description": "The subscription identifier",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "AccessKeys": {
+          "description": "The Account access keys.",
+          "properties": {
+            "atlasKafkaPrimaryEndpoint": {
+              "description": "Gets or sets the primary connection string.",
+              "type": "string"
+            },
+            "atlasKafkaSecondaryEndpoint": {
+              "description": "Gets or sets the secondary connection string.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Account": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Account resource",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/AccountProperties"
+            },
+            "sku": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/AccountSku"
+                }
+              ],
+              "description": "Gets or sets the Sku.",
+              "readOnly": true
+            }
+          },
+          "type": "object"
+        },
+        "AccountEndpoints": {
+          "description": "The account endpoints",
+          "properties": {
+            "catalog": {
+              "description": "Gets the catalog endpoint.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "guardian": {
+              "description": "Gets the guardian endpoint.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "scan": {
+              "description": "Gets the scan endpoint.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AccountList": {
+          "description": "Paged list of Account resources",
+          "properties": {
+            "count": {
+              "description": "Total item count.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of items of type results.",
+              "items": {
+                "$ref": "#/components/schemas/Account"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AccountProperties": {
+          "description": "The account properties",
+          "properties": {
+            "accountStatus": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/AccountStatus"
+                }
+              ],
+              "description": "Gets or sets the status of the account.",
+              "readOnly": true
+            },
+            "cloudConnectors": {
+              "$ref": "#/components/schemas/CloudConnectors"
+            },
+            "createdAt": {
+              "description": "Gets the time at which the entity was created.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "Gets the creator of the entity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createdByObjectId": {
+              "description": "Gets the creators of the entity's object id.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "endpoints": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/AccountEndpoints"
+                }
+              ],
+              "description": "The URIs that are the public endpoints of the account.",
+              "readOnly": true
+            },
+            "friendlyName": {
+              "description": "Gets or sets the friendly name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "managedEventHubState": {
+              "default": "NotSpecified",
+              "description": " Gets or sets the state of managed eventhub. If enabled managed eventhub will be created, if disabled the managed eventhub will be removed.",
+              "enum": [
+                "NotSpecified",
+                "Disabled",
+                "Enabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "managedEventHubState"
+              }
+            },
+            "managedResourceGroupName": {
+              "description": "Gets or sets the managed resource group name",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "managedResources": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ManagedResources"
+                }
+              ],
+              "description": "Gets the resource identifiers of the managed resources.",
+              "readOnly": true
+            },
+            "managedResourcesPublicNetworkAccess": {
+              "default": "NotSpecified",
+              "description": "Gets or sets the public network access for managed resources.",
+              "enum": [
+                "NotSpecified",
+                "Enabled",
+                "Disabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "managedResourcesPublicNetworkAccess"
+              }
+            },
+            "privateEndpointConnections": {
+              "description": "Gets the private endpoint connections information.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "provisioningState": {
+              "description": "Gets or sets the state of the provisioning.",
+              "enum": [
+                "Unknown",
+                "Creating",
+                "Moving",
+                "Deleting",
+                "SoftDeleting",
+                "SoftDeleted",
+                "Failed",
+                "Succeeded",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "provisioningState"
+              }
+            },
+            "publicNetworkAccess": {
+              "default": "Enabled",
+              "description": "Gets or sets the public network access.",
+              "enum": [
+                "NotSpecified",
+                "Enabled",
+                "Disabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "publicNetworkAccess"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "AccountSku": {
+          "description": "The Sku",
+          "properties": {
+            "capacity": {
+              "description": "Gets or sets the sku capacity.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "name": {
+              "description": "Gets or sets the sku name.",
+              "enum": [
+                "Standard"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "name"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "AccountStatus": {
+          "description": "The account status.",
+          "properties": {
+            "accountProvisioningState": {
+              "description": "Gets the account status code.",
+              "enum": [
+                "Unknown",
+                "Creating",
+                "Updating",
+                "Moving",
+                "Deleting",
+                "SoftDeleting",
+                "SoftDeleted",
+                "Failed",
+                "Succeeded",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "accountProvisioningState"
+              }
+            },
+            "errorDetails": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              ],
+              "description": "Gets the account error details.",
+              "readOnly": true
+            }
+          },
+          "type": "object"
+        },
+        "AccountUpdateParameters": {
+          "description": "The account update properties.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AccountProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Tags on the azure resource.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "BatchFeatureRequest": {
+          "description": "Feature request model",
+          "properties": {
+            "features": {
+              "description": "Set of features",
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "type": "object"
+        },
+        "BatchFeatureStatus": {
+          "description": "List of features with enabled status",
+          "properties": {
+            "features": {
+              "additionalProperties": {
+                "type": "boolean"
+              },
+              "description": "Features with enabled status",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityRequest": {
+          "description": "The request payload for CheckNameAvailability API",
+          "properties": {
+            "name": {
+              "description": "Resource name to verify for availability",
+              "type": "string"
+            },
+            "type": {
+              "description": "Fully qualified resource type which includes provider namespace",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityResult": {
+          "description": "The response payload for CheckNameAvailability API",
+          "properties": {
+            "message": {
+              "description": "Error message",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Indicates if name is valid and available.",
+              "type": "boolean"
+            },
+            "reason": {
+              "description": "The reason the name is not available.",
+              "enum": [
+                "Invalid",
+                "AlreadyExists"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "reason"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "CloudConnectors": {
+          "description": "External Cloud Service connectors",
+          "properties": {
+            "awsExternalId": {
+              "description": "AWS external identifier.\r\nConfigured in AWS to allow use of the role arn used for scanning",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CollectionAdminUpdate": {
+          "description": "Collection administrator update.",
+          "properties": {
+            "objectId": {
+              "description": "Gets or sets the object identifier of the admin.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Credentials": {
+          "description": "Credentials to access the event streaming service attached to the purview account.",
+          "properties": {
+            "identityId": {
+              "description": "Identity identifier for UserAssign type.",
+              "type": "string"
+            },
+            "type": {
+              "description": "Identity Type.",
+              "enum": [
+                "None",
+                "SystemAssigned",
+                "UserAssigned"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "CredentialsType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "DefaultAccountPayload": {
+          "description": "Payload to get and set the default account in the given scope",
+          "properties": {
+            "accountName": {
+              "description": "The name of the account that is set as the default.",
+              "type": "string"
+            },
+            "resourceGroupName": {
+              "description": "The resource group name of the account that is set as the default.",
+              "type": "string"
+            },
+            "scope": {
+              "description": "The scope object ID. For example, sub ID or tenant ID.",
+              "type": "string"
+            },
+            "scopeTenantId": {
+              "description": "The scope tenant in which the default account is set.",
+              "type": "string"
+            },
+            "scopeType": {
+              "description": "The scope where the default account is set.",
+              "enum": [
+                "Tenant",
+                "Subscription"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "scopeType"
+              }
+            },
+            "subscriptionId": {
+              "description": "The subscription ID of the account that is set as the default.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DimensionProperties": {
+          "description": "properties for dimension",
+          "properties": {
+            "displayName": {
+              "description": "localized display name of the dimension to customer",
+              "type": "string"
+            },
+            "name": {
+              "description": "dimension name",
+              "type": "string"
+            },
+            "toBeExportedForCustomer": {
+              "description": "flag indicating whether this dimension should be included to the customer in Azure Monitor logs (aka Shoebox)",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorModel": {
+          "description": "Default error model",
+          "properties": {
+            "code": {
+              "description": "Gets or sets the code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "Gets or sets the details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorModel"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "code"
+              ]
+            },
+            "message": {
+              "description": "Gets or sets the messages.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "Gets or sets the target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponseModel": {
+          "description": "Default error response model",
+          "properties": {
+            "error": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              ],
+              "description": "Gets or sets the error.",
+              "readOnly": true
+            }
+          },
+          "type": "object"
+        },
+        "Identity": {
+          "description": "The Managed Identity of the resource",
+          "properties": {
+            "principalId": {
+              "description": "Service principal object Id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "Tenant Id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "Identity Type",
+              "enum": [
+                "None",
+                "SystemAssigned",
+                "UserAssigned"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "type"
+              }
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity"
+              },
+              "description": "User Assigned Identities",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "KafkaConfiguration": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "The configuration of the event streaming service resource attached to the Purview account for kafka notifications.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/KafkaConfigurationProperties"
+            }
+          },
+          "type": "object"
+        },
+        "KafkaConfigurationList": {
+          "description": "Paged list of kafka configuration resources",
+          "properties": {
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of items of type results.",
+              "items": {
+                "$ref": "#/components/schemas/KafkaConfiguration"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "KafkaConfigurationProperties": {
+          "description": "The kafka configuration properties of the event streaming service attached to the Purview account for kafka notifications.",
+          "properties": {
+            "consumerGroup": {
+              "description": "Consumer group for hook event hub.",
+              "type": "string"
+            },
+            "credentials": {
+              "$ref": "#/components/schemas/Credentials"
+            },
+            "eventHubPartitionId": {
+              "description": "Optional partition Id for notification event hub. If not set, all partitions will be leveraged.",
+              "type": "string"
+            },
+            "eventHubResourceId": {
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.EventHub/namespaces/eventHubs"
+                  }
+                ]
+              }
+            },
+            "eventHubType": {
+              "description": "The event hub type.",
+              "enum": [
+                "Notification",
+                "Hook"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "eventHubType"
+              }
+            },
+            "eventStreamingState": {
+              "default": "Enabled",
+              "description": "The state of the event streaming service",
+              "enum": [
+                "Disabled",
+                "Enabled"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "eventStreamingState"
+              }
+            },
+            "eventStreamingType": {
+              "default": "None",
+              "description": "The event streaming service type",
+              "enum": [
+                "None",
+                "Managed",
+                "Azure"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "eventStreamingType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ManagedResources": {
+          "description": "The managed resources in customer subscription.",
+          "properties": {
+            "eventHubNamespace": {
+              "description": "Gets the managed event hub namespace resource identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "resourceGroup": {
+              "description": "Gets the managed resource group resource identifier. This resource group will host resource dependencies for the account.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "storageAccount": {
+              "description": "Gets the managed storage account resource identifier.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Operation resource",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Whether operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Operation name for display purposes",
+              "type": "string"
+            },
+            "origin": {
+              "description": "origin of the operation",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/OperationProperties"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplay": {
+          "description": "The response model for get operation properties",
+          "properties": {
+            "description": {
+              "description": "Description of the operation for display purposes",
+              "type": "string"
+            },
+            "operation": {
+              "description": "Name of the operation for display purposes",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Name of the provider for display purposes",
+              "type": "string"
+            },
+            "resource": {
+              "description": "Name of the resource type for display purposes",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationList": {
+          "description": "Paged list of operation resources",
+          "properties": {
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of items of type results.",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "OperationMetaLogSpecification": {
+          "description": "log specifications for operation api",
+          "properties": {
+            "blobDuration": {
+              "description": "blob duration of the log",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "localized name of the log category",
+              "type": "string"
+            },
+            "name": {
+              "description": "name of the log category",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationMetaMetricSpecification": {
+          "description": "metric specifications for the operation",
+          "properties": {
+            "aggregationType": {
+              "description": "aggregation type of metric",
+              "type": "string"
+            },
+            "dimensions": {
+              "description": "properties for dimension",
+              "items": {
+                "$ref": "#/components/schemas/DimensionProperties"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "displayDescription": {
+              "description": "description of the metric",
+              "type": "string"
+            },
+            "displayName": {
+              "description": "localized name of the metric",
+              "type": "string"
+            },
+            "enableRegionalMdmAccount": {
+              "description": "enable regional mdm account",
+              "type": "string"
+            },
+            "internalMetricName": {
+              "description": "internal metric name",
+              "type": "string"
+            },
+            "name": {
+              "description": "name of the metric",
+              "type": "string"
+            },
+            "resourceIdDimensionNameOverride": {
+              "description": "dimension name use to replace resource id if specified",
+              "type": "string"
+            },
+            "sourceMdmNamespace": {
+              "description": "Metric namespace.\r\nOnly set the namespace if different from the default value, \r\nleaving it empty makes it use the value from the ARM manifest.",
+              "type": "string"
+            },
+            "supportedAggregationTypes": {
+              "description": "supported aggregation types",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "supportedTimeGrainTypes": {
+              "description": "supported time grain types",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "unit": {
+              "description": "units for the metric",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationMetaServiceSpecification": {
+          "description": "The operation meta service specification",
+          "properties": {
+            "logSpecifications": {
+              "description": "log specifications for the operation",
+              "items": {
+                "$ref": "#/components/schemas/OperationMetaLogSpecification"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "metricSpecifications": {
+              "description": "metric specifications for the operation",
+              "items": {
+                "$ref": "#/components/schemas/OperationMetaMetricSpecification"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "OperationProperties": {
+          "description": "properties on meta info",
+          "properties": {
+            "serviceSpecification": {
+              "$ref": "#/components/schemas/OperationMetaServiceSpecification"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpoint": {
+          "description": "A private endpoint class.",
+          "properties": {
+            "id": {
+              "description": "The private endpoint identifier.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A private endpoint connection class.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionList": {
+          "description": "Paged list of private endpoint connections",
+          "properties": {
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of items of type results.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "A private endpoint connection properties class.",
+          "properties": {
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionState"
+            },
+            "provisioningState": {
+              "description": "The provisioning state.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkResource": {
+          "description": "A privately linkable resource.",
+          "properties": {
+            "id": {
+              "description": "The private link resource identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The private link resource name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PrivateLinkResourceProperties"
+            },
+            "type": {
+              "description": "The private link resource type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkResourceList": {
+          "description": "Paged list of private link resources",
+          "properties": {
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of items of type results.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateLinkResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateLinkResourceProperties": {
+          "description": "A privately linkable resource properties.",
+          "properties": {
+            "groupId": {
+              "description": "The private link resource group identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requiredMembers": {
+              "description": "This translates to how many Private IPs should be created for each privately linkable resource.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "requiredZoneNames": {
+              "description": "The required zone names for private link resource.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkServiceConnectionState": {
+          "description": "The private link service connection state.",
+          "properties": {
+            "actionsRequired": {
+              "description": "The required actions.",
+              "type": "string"
+            },
+            "description": {
+              "description": "The description.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The status.",
+              "enum": [
+                "Unknown",
+                "Pending",
+                "Approved",
+                "Rejected",
+                "Disconnected"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "status"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "description": "Proxy Azure Resource",
+          "properties": {
+            "id": {
+              "description": "Gets or sets the identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Gets or sets the name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SystemData"
+                }
+              ],
+              "description": "Metadata pertaining to creation and last modification of the resource.",
+              "readOnly": true
+            },
+            "type": {
+              "description": "Gets or sets the type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "QuotaName": {
+          "description": "Quota name",
+          "properties": {
+            "localizedValue": {
+              "description": "Gets or sets the localized name value.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Gets or sets the name value.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SystemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of the last modification the resource (UTC).",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "lastModifiedByType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "description": "Azure ARM Tracked Resource",
+          "properties": {
+            "id": {
+              "description": "Gets or sets the identifier.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "location": {
+              "description": "Gets or sets the location.",
+              "type": "string"
+            },
+            "name": {
+              "description": "Gets or sets the name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SystemData"
+                }
+              ],
+              "description": "Metadata pertaining to creation and last modification of the resource.",
+              "readOnly": true
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Tags on the azure resource.",
+              "type": "object"
+            },
+            "type": {
+              "description": "Gets or sets the type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Usage": {
+          "description": "Response for usage information",
+          "properties": {
+            "currentValue": {
+              "description": "Current usage quota value",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "id": {
+              "description": "Fully qualified ARM resource Id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "limit": {
+              "description": "Usage quota limit",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "name": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/QuotaName"
+                }
+              ],
+              "description": "Quota name",
+              "readOnly": true
+            },
+            "unit": {
+              "description": "Quota usage unit.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "UsageList": {
+          "description": "Response for usage get request",
+          "properties": {
+            "nextLink": {
+              "description": "The Url of next result page.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of usage values.",
+              "items": {
+                "$ref": "#/components/schemas/Usage"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "Uses client ID and Principal ID",
+          "properties": {
+            "clientId": {
+              "description": "Gets or Sets Client ID",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "Gets or Sets Principal ID",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Creates a Microsoft.Purview management client.",
+      "title": "PurviewManagementClient",
+      "version": "2021-12-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Purview/getDefaultAccount": {
+        "get": {
+          "description": "Get the default account for the scope.",
+          "operationId": "DefaultAccounts_Get",
+          "parameters": [
+            {
+              "description": "The tenant ID.",
+              "in": "query",
+              "name": "scopeTenantId",
+              "required": true,
+              "schema": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The scope for the default account.",
+              "in": "query",
+              "name": "scopeType",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "Tenant",
+                  "Subscription"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ScopeType"
+              }
+            },
+            {
+              "description": "The Id of the scope object, for example if the scope is \"Subscription\" then it is the ID of that subscription.",
+              "in": "query",
+              "name": "scope",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DefaultAccountPayload"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the default account information set for the scope.",
+          "tags": [
+            "DefaultAccount"
+          ],
+          "x-ms-examples": {
+            "DefaultAccounts_Get": {
+              "$ref": "./examples/DefaultAccounts_Get.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Purview/operations": {
+        "get": {
+          "description": "List of available operations",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Lists the available operations",
+          "tags": [
+            "Operation"
+          ],
+          "x-ms-examples": {
+            "Operations_List": {
+              "$ref": "./examples/Operations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Purview/removeDefaultAccount": {
+        "post": {
+          "description": "Removes the default account from the scope.",
+          "operationId": "DefaultAccounts_Remove",
+          "parameters": [
+            {
+              "description": "The tenant ID.",
+              "in": "query",
+              "name": "scopeTenantId",
+              "required": true,
+              "schema": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "description": "The scope for the default account.",
+              "in": "query",
+              "name": "scopeType",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "Tenant",
+                  "Subscription"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ScopeType"
+              }
+            },
+            {
+              "description": "The Id of the scope object, for example if the scope is \"Subscription\" then it is the ID of that subscription.",
+              "in": "query",
+              "name": "scope",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "204": {
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Removes the default account from the scope.",
+          "tags": [
+            "DefaultAccount"
+          ],
+          "x-ms-examples": {
+            "DefaultAccounts_Remove": {
+              "$ref": "./examples/DefaultAccounts_Remove.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Purview/setDefaultAccount": {
+        "post": {
+          "description": "Sets the default account for the scope.",
+          "operationId": "DefaultAccounts_Set",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultAccountPayload"
+                }
+              }
+            },
+            "description": "The payload containing the default account information and the scope.",
+            "required": true,
+            "x-originalParamName": "defaultAccountPayload"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DefaultAccountPayload"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Sets the default account for the scope.",
+          "tags": [
+            "DefaultAccount"
+          ],
+          "x-ms-examples": {
+            "DefaultAccounts_Set": {
+              "$ref": "./examples/DefaultAccounts_Set.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Purview/accounts": {
+        "get": {
+          "description": "List accounts in Subscription",
+          "operationId": "Accounts_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "description": "The skip token.",
+              "in": "query",
+              "name": "$skipToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccountList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the accounts resources by subscription.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_ListBySubscription": {
+              "$ref": "./examples/Accounts_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Purview/checkNameAvailability": {
+        "post": {
+          "description": "Checks if account name is available.",
+          "operationId": "Accounts_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+                }
+              }
+            },
+            "description": "The check name availability request.",
+            "required": true,
+            "x-originalParamName": "checkNameAvailabilityRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResult"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Checks the account name availability.",
+          "tags": [
+            "Provider"
+          ],
+          "x-ms-examples": {
+            "Accounts_CheckNameAvailability": {
+              "$ref": "./examples/Accounts_CheckNameAvailability.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Purview/locations/{locations}/listFeatures": {
+        "post": {
+          "description": "Gets details from a list of feature names.",
+          "operationId": "Features_SubscriptionGet",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "description": "Location of feature.",
+              "in": "path",
+              "name": "locations",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchFeatureRequest"
+                }
+              }
+            },
+            "description": "Request body with feature names.",
+            "required": true,
+            "x-originalParamName": "featureRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BatchFeatureStatus"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets a list of features and their status for the location and subscription.\r\nStatus of enabled features will be true. Status of disabled features will be false.\r\nFeatures that don't exist will be excluded from the results.",
+          "tags": [
+            "Feature"
+          ],
+          "x-ms-examples": {
+            "Features_SubscriptionGet": {
+              "$ref": "./examples/Features_SubscriptionGet.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Purview/locations/{location}/usages": {
+        "get": {
+          "description": "Get the usage quota configuration",
+          "operationId": "Usages_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "description": "The region.",
+              "in": "path",
+              "name": "location",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsageList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the Usage quota configuration.",
+          "tags": [
+            "Usages"
+          ],
+          "x-ms-examples": {
+            "Usages_Get": {
+              "$ref": "./examples/Usages_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts": {
+        "get": {
+          "description": "List accounts in ResourceGroup",
+          "operationId": "Accounts_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "description": "The skip token.",
+              "in": "query",
+              "name": "$skipToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccountList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the accounts resources by resource group.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_ListByResourceGroup": {
+              "$ref": "./examples/Accounts_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}": {
+        "delete": {
+          "description": "Deletes an account resource",
+          "operationId": "Accounts_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "202": {
+              "description": "Accepted"
+            },
+            "204": {
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Deletes the account resource.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_Delete": {
+              "$ref": "./examples/Accounts_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "get": {
+          "description": "Get an account",
+          "operationId": "Accounts_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the account resource.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_Get": {
+              "$ref": "./examples/Accounts_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates an account",
+          "operationId": "Accounts_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountUpdateParameters"
+                }
+              }
+            },
+            "description": "The account update parameters.",
+            "required": true,
+            "x-originalParamName": "accountUpdateParameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              },
+              "description": "Accepted"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Patches the account resource.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_Update": {
+              "$ref": "./examples/Accounts_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "put": {
+          "description": "Creates or updates an account",
+          "operationId": "Accounts_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            },
+            "description": "The account.",
+            "required": true,
+            "x-originalParamName": "account"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Create or update an account resource",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_CreateOrUpdate": {
+              "$ref": "./examples/Accounts_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/addRootCollectionAdmin": {
+        "post": {
+          "description": "Add the administrator for root collection associated with this account.",
+          "operationId": "Accounts_AddRootCollectionAdmin",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionAdminUpdate"
+                }
+              }
+            },
+            "description": "The collection admin update payload.",
+            "required": true,
+            "x-originalParamName": "collectionAdminUpdate"
+          },
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Add the administrator for root collection.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_AddRootCollectionAdmin": {
+              "$ref": "./examples/Accounts_AddRootCollectionAdmin.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/kafkaConfigurations": {
+        "get": {
+          "description": "Lists the Kafka configurations in the Account",
+          "operationId": "KafkaConfigurations_ListByAccount",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "description": "The skip token.",
+              "in": "query",
+              "name": "$skipToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/KafkaConfigurationList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the list of Kafka configurations for the account.",
+          "tags": [
+            "KafkaConfiguration"
+          ],
+          "x-ms-examples": {
+            "KafkaConfigurations_ListByAccount": {
+              "$ref": "./examples/KafkaConfigurations_ListByAccount.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/kafkaConfigurations/{kafkaConfigurationName}": {
+        "delete": {
+          "description": "Deletes a KafkaConfiguration resource.",
+          "operationId": "KafkaConfigurations_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "Name of kafka configuration.",
+              "in": "path",
+              "name": "kafkaConfigurationName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "204": {
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Deletes the kafka configuration on the account.",
+          "tags": [
+            "KafkaConfiguration"
+          ],
+          "x-ms-examples": {
+            "KafkaConfigurations_Delete": {
+              "$ref": "./examples/KafkaConfigurations_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the kafka configuration for the account",
+          "operationId": "KafkaConfigurations_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "Name of kafka configuration.",
+              "in": "path",
+              "name": "kafkaConfigurationName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/KafkaConfiguration"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets the kafka configuration.",
+          "tags": [
+            "KafkaConfiguration"
+          ],
+          "x-ms-examples": {
+            "KafkaConfigurations_Get": {
+              "$ref": "./examples/KafkaConfigurations_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update Kafka Configuration",
+          "operationId": "KafkaConfigurations_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "The kafka configuration name.",
+              "in": "path",
+              "name": "kafkaConfigurationName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KafkaConfiguration"
+                }
+              }
+            },
+            "description": "The kafka configuration of the account.",
+            "required": true,
+            "x-originalParamName": "kafkaConfiguration"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/KafkaConfiguration"
+                  }
+                }
+              },
+              "description": "Create or Update Successful"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/KafkaConfiguration"
+                  }
+                }
+              },
+              "description": "Create or Update Successful"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Create or update the kafka configuration.",
+          "tags": [
+            "KafkaConfiguration"
+          ],
+          "x-ms-examples": {
+            "KafkaConfigurations_CreateOrUpdate": {
+              "$ref": "./examples/KafkaConfigurations_CreateOrUpdate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/listFeatures": {
+        "post": {
+          "description": "Gets details from a list of feature names.",
+          "operationId": "Features_AccountGet",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchFeatureRequest"
+                }
+              }
+            },
+            "description": "Request body with feature names.",
+            "required": true,
+            "x-originalParamName": "featureRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BatchFeatureStatus"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets a list of features and their status for the account.\r\nStatus of enabled features will be true. Status of disabled features will be false.\r\nFeatures that don't exist will be excluded from the results.",
+          "tags": [
+            "Feature"
+          ],
+          "x-ms-examples": {
+            "Features_AccountGet": {
+              "$ref": "./examples/Features_AccountGet.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/listkeys": {
+        "post": {
+          "description": "List the authorization keys associated with this account.",
+          "operationId": "Accounts_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Lists the keys asynchronous.",
+          "tags": [
+            "Account"
+          ],
+          "x-ms-examples": {
+            "Accounts_ListKeys": {
+              "$ref": "./examples/Accounts_ListKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/privateEndpointConnections": {
+        "get": {
+          "description": "Get private endpoint connections for account",
+          "operationId": "PrivateEndpointConnections_ListByAccount",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            },
+            {
+              "description": "The skip token.",
+              "in": "query",
+              "name": "$skipToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets private endpoint connections.",
+          "tags": [
+            "PrivateEndpointConnection"
+          ],
+          "x-ms-examples": {
+            "PrivateEndpointConnections_ListByAccount": {
+              "$ref": "./examples/PrivateEndpointConnections_ListByAccount.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/privateEndpointConnections/{privateEndpointConnectionName}": {
+        "delete": {
+          "description": "Delete a private endpoint connection",
+          "operationId": "PrivateEndpointConnections_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "Name of the private endpoint connection.",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "202": {
+              "description": "Accepted"
+            },
+            "204": {
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Deletes private endpoint connection.",
+          "tags": [
+            "PrivateEndpointConnection"
+          ],
+          "x-ms-examples": {
+            "PrivateEndpointConnections_Delete": {
+              "$ref": "./examples/PrivateEndpointConnections_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "get": {
+          "description": "Get a private endpoint connection",
+          "operationId": "PrivateEndpointConnections_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "Name of the private endpoint connection.",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets private endpoint connection information.",
+          "tags": [
+            "PrivateEndpointConnection"
+          ],
+          "x-ms-examples": {
+            "PrivateEndpointConnections_Get": {
+              "$ref": "./examples/PrivateEndpointConnections_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a private endpoint connection",
+          "operationId": "PrivateEndpointConnections_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "Name of the private endpoint connection.",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateEndpointConnection"
+                }
+              }
+            },
+            "description": "The request.",
+            "required": true,
+            "x-originalParamName": "request"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Approves/Rejects private endpoint connection request.",
+          "tags": [
+            "PrivateEndpointConnection"
+          ],
+          "x-ms-examples": {
+            "PrivateEndpointConnections_CreateOrUpdate": {
+              "$ref": "./examples/PrivateEndpointConnections_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/privateLinkResources": {
+        "get": {
+          "description": "Gets a list of privately linkable resources for an account",
+          "operationId": "PrivateLinkResources_ListByAccount",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateLinkResourceList"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets a list of privately linkable resources for an account.",
+          "tags": [
+            "PrivateLinkResource"
+          ],
+          "x-ms-examples": {
+            "PrivateLinkResources_ListByAccount": {
+              "$ref": "./examples/PrivateLinkResources_ListByAccount.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Purview/accounts/{accountName}/privateLinkResources/{groupId}": {
+        "get": {
+          "description": "Gets a privately linkable resources for an account with given group identifier",
+          "operationId": "PrivateLinkResources_GetByGroupId",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/subscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/resourceGroupName"
+            },
+            {
+              "$ref": "#/components/parameters/accountName"
+            },
+            {
+              "description": "The group identifier.",
+              "in": "path",
+              "name": "groupId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/api-version"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateLinkResource"
+                  }
+                }
+              },
+              "description": "Success"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponseModel"
+                  }
+                }
+              },
+              "description": "An error response received from the provider."
+            }
+          },
+          "summary": "Gets a privately linkable resources for an account with given group identifier.",
+          "tags": [
+            "PrivateLinkResource"
+          ],
+          "x-ms-examples": {
+            "PrivateLinkResources_GetByGroupId": {
+              "$ref": "./examples/PrivateLinkResources_GetByGroupId.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

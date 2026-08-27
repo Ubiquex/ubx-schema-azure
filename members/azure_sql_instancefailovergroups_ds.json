@@ -1,0 +1,995 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_instancefailovergroups",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "InstanceFailoverGroup": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "An instance failover group.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/InstanceFailoverGroupProperties"
+            }
+          },
+          "type": "object"
+        },
+        "InstanceFailoverGroupListResult": {
+          "description": "The response of a InstanceFailoverGroup list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The InstanceFailoverGroup items on this page",
+              "items": {
+                "$ref": "#/components/schemas/InstanceFailoverGroup"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "InstanceFailoverGroupProperties": {
+          "description": "Properties of a instance failover group.",
+          "properties": {
+            "managedInstancePairs": {
+              "description": "List of managed instance pairs in the failover group.",
+              "items": {
+                "$ref": "#/components/schemas/ManagedInstancePairInfo"
+              },
+              "type": "array"
+            },
+            "partnerRegions": {
+              "description": "Partner region information for the failover group.",
+              "items": {
+                "$ref": "#/components/schemas/PartnerRegionInfo"
+              },
+              "type": "array",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "readOnlyEndpoint": {
+              "$ref": "#/components/schemas/InstanceFailoverGroupReadOnlyEndpoint"
+            },
+            "readWriteEndpoint": {
+              "$ref": "#/components/schemas/InstanceFailoverGroupReadWriteEndpoint"
+            },
+            "replicationRole": {
+              "$ref": "#/components/schemas/InstanceFailoverGroupReplicationRole"
+            },
+            "replicationState": {
+              "description": "Replication state of the failover group instance.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "secondaryType": {
+              "$ref": "#/components/schemas/SecondaryInstanceType"
+            }
+          },
+          "required": [
+            "readWriteEndpoint",
+            "partnerRegions",
+            "managedInstancePairs"
+          ],
+          "type": "object"
+        },
+        "InstanceFailoverGroupReadOnlyEndpoint": {
+          "description": "Read-only endpoint of the failover group instance.",
+          "properties": {
+            "failoverPolicy": {
+              "$ref": "#/components/schemas/ReadOnlyEndpointFailoverPolicy"
+            }
+          },
+          "type": "object"
+        },
+        "InstanceFailoverGroupReadWriteEndpoint": {
+          "description": "Read-write endpoint of the failover group instance.",
+          "properties": {
+            "failoverPolicy": {
+              "$ref": "#/components/schemas/ReadWriteEndpointFailoverPolicy"
+            },
+            "failoverWithDataLossGracePeriodMinutes": {
+              "description": "Grace period before failover with data loss is attempted for the read-write endpoint. If failoverPolicy is Automatic then failoverWithDataLossGracePeriodMinutes is required.",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "failoverPolicy"
+          ],
+          "type": "object"
+        },
+        "InstanceFailoverGroupReplicationRole": {
+          "description": "Local replication role of the failover group instance.",
+          "enum": [
+            "Primary",
+            "Secondary"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "InstanceFailoverGroupReplicationRole",
+            "values": [
+              {
+                "description": "Primary",
+                "name": "Primary",
+                "value": "Primary"
+              },
+              {
+                "description": "Secondary",
+                "name": "Secondary",
+                "value": "Secondary"
+              }
+            ]
+          }
+        },
+        "ManagedInstancePairInfo": {
+          "description": "Pairs of Managed Instances in the failover group.",
+          "properties": {
+            "partnerManagedInstanceId": {
+              "description": "Id of Partner Managed Instance in pair.",
+              "type": "string"
+            },
+            "primaryManagedInstanceId": {
+              "description": "Id of Primary Managed Instance in pair.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PartnerRegionInfo": {
+          "description": "Partner region information for the failover group.",
+          "properties": {
+            "location": {
+              "description": "Geo location of the partner managed instances.",
+              "type": "string"
+            },
+            "replicationRole": {
+              "$ref": "#/components/schemas/InstanceFailoverGroupReplicationRole"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "ReadOnlyEndpointFailoverPolicy": {
+          "description": "Failover policy of the read-only endpoint for the failover group.",
+          "enum": [
+            "Disabled",
+            "Enabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReadOnlyEndpointFailoverPolicy",
+            "values": [
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "description": "Enabled",
+                "name": "Enabled",
+                "value": "Enabled"
+              }
+            ]
+          }
+        },
+        "ReadWriteEndpointFailoverPolicy": {
+          "description": "Failover policy of the read-write endpoint for the failover group. If failoverPolicy is Automatic then failoverWithDataLossGracePeriodMinutes is required.",
+          "enum": [
+            "Manual",
+            "Automatic"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ReadWriteEndpointFailoverPolicy",
+            "values": [
+              {
+                "description": "Manual",
+                "name": "Manual",
+                "value": "Manual"
+              },
+              {
+                "description": "Automatic",
+                "name": "Automatic",
+                "value": "Automatic"
+              }
+            ]
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SecondaryInstanceType": {
+          "description": "Type of the geo-secondary instance. Set 'Standby' if the instance is used as a DR option only.",
+          "enum": [
+            "Geo",
+            "Standby"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SecondaryInstanceType",
+            "values": [
+              {
+                "description": "Geo",
+                "name": "Geo",
+                "value": "Geo"
+              },
+              {
+                "description": "Standby",
+                "name": "Standby",
+                "value": "Standby"
+              }
+            ]
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/locations/{locationName}/instanceFailoverGroups": {
+        "get": {
+          "description": "Lists the failover groups in a location.",
+          "operationId": "InstanceFailoverGroups_ListByLocation",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroupListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "List failover group": {
+              "$ref": "./examples/InstanceFailoverGroupList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/locations/{locationName}/instanceFailoverGroups/{failoverGroupName}": {
+        "delete": {
+          "description": "Deletes a failover group.",
+          "operationId": "InstanceFailoverGroups_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the failover group.",
+              "in": "path",
+              "name": "failoverGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "Delete failover group": {
+              "$ref": "./examples/InstanceFailoverGroupDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a failover group.",
+          "operationId": "InstanceFailoverGroups_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the failover group.",
+              "in": "path",
+              "name": "failoverGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroup"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "Get failover group": {
+              "$ref": "./examples/InstanceFailoverGroupGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a failover group.",
+          "operationId": "InstanceFailoverGroups_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the failover group.",
+              "in": "path",
+              "name": "failoverGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceFailoverGroup"
+                }
+              }
+            },
+            "description": "The failover group parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroup"
+                  }
+                }
+              },
+              "description": "Resource 'InstanceFailoverGroup' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroup"
+                  }
+                }
+              },
+              "description": "Resource 'InstanceFailoverGroup' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "Create failover group": {
+              "$ref": "./examples/InstanceFailoverGroupCreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/InstanceFailoverGroup",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/locations/{locationName}/instanceFailoverGroups/{failoverGroupName}/failover": {
+        "post": {
+          "description": "Fails over from the current primary managed instance to this managed instance.",
+          "operationId": "InstanceFailoverGroups_Failover",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the failover group.",
+              "in": "path",
+              "name": "failoverGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroup"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "Planned failover of a failover group": {
+              "$ref": "./examples/InstanceFailoverGroupFailover.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/InstanceFailoverGroup",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/locations/{locationName}/instanceFailoverGroups/{failoverGroupName}/forceFailoverAllowDataLoss": {
+        "post": {
+          "description": "Fails over from the current primary managed instance to this managed instance. This operation might result in data loss.",
+          "operationId": "InstanceFailoverGroups_ForceFailoverAllowDataLoss",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the failover group.",
+              "in": "path",
+              "name": "failoverGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InstanceFailoverGroup"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "InstanceFailoverGroups"
+          ],
+          "x-ms-examples": {
+            "Forced failover of a failover group allowing data loss": {
+              "$ref": "./examples/InstanceFailoverGroupForceFailoverAllowDataLoss.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/InstanceFailoverGroup",
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "InstanceFailoverGroups"
+      }
+    ]
+  }
+}

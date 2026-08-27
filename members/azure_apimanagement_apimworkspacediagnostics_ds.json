@@ -1,0 +1,1553 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_apimanagement_apimworkspacediagnostics",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiIdParameter": {
+          "description": "API identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "apiId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "DiagnosticIdParameter": {
+          "description": "Diagnostic identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "diagnosticId",
+          "pattern": "^[^*#\u0026+:\u003c\u003e?]+$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchOptionalParameter": {
+          "description": "ETag of the Entity. Not required when creating an entity, but required when updating an entity.",
+          "in": "header",
+          "name": "If-Match",
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchRequiredParameter": {
+          "description": "ETag of the Entity. ETag should match the current entity state from the header response of the GET request or it should be * for unconditional update.",
+          "in": "header",
+          "name": "If-Match",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ServiceNameParameter": {
+          "description": "The name of the API Management service.",
+          "in": "path",
+          "maxLength": 50,
+          "minLength": 1,
+          "name": "serviceName",
+          "pattern": "^[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SkipQueryParameter": {
+          "description": "Number of records to skip.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 0,
+          "name": "$skip",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "TopQueryParameter": {
+          "description": "Number of records to return.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 1,
+          "name": "$top",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "WorkspaceIdParameter": {
+          "description": "Workspace identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "workspaceId",
+          "pattern": "^[^*#\u0026+:\u003c\u003e?]+$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "BodyDiagnosticSettings": {
+          "description": "Body logging settings.",
+          "properties": {
+            "bytes": {
+              "description": "Number of request body bytes to log.",
+              "format": "int32",
+              "maximum": 8192,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "DataMasking": {
+          "properties": {
+            "headers": {
+              "description": "Masking settings for headers",
+              "items": {
+                "$ref": "#/components/schemas/DataMaskingEntity"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "queryParams": {
+              "description": "Masking settings for Url query parameters",
+              "items": {
+                "$ref": "#/components/schemas/DataMaskingEntity"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "DataMaskingEntity": {
+          "properties": {
+            "mode": {
+              "description": "Data masking mode.",
+              "enum": [
+                "Mask",
+                "Hide"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "DataMaskingMode",
+                "values": [
+                  {
+                    "description": "Mask the value of an entity.",
+                    "value": "Mask"
+                  },
+                  {
+                    "description": "Hide the presence of an entity.",
+                    "value": "Hide"
+                  }
+                ]
+              }
+            },
+            "value": {
+              "description": "The name of an entity to mask (e.g. a name of a header or a query parameter).",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticCollection": {
+          "description": "Paged Diagnostic list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/DiagnosticContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Diagnostic details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DiagnosticContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticContractProperties": {
+          "description": "Diagnostic Entity Properties",
+          "properties": {
+            "alwaysLog": {
+              "description": "Specifies for what type of messages sampling settings should not apply.",
+              "enum": [
+                "allErrors"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "AlwaysLog",
+                "values": [
+                  {
+                    "description": "Always log all erroneous request regardless of sampling settings.",
+                    "value": "allErrors"
+                  }
+                ]
+              }
+            },
+            "backend": {
+              "$ref": "#/components/schemas/PipelineDiagnosticSettings"
+            },
+            "frontend": {
+              "$ref": "#/components/schemas/PipelineDiagnosticSettings"
+            },
+            "httpCorrelationProtocol": {
+              "description": "Sets correlation protocol to use for Application Insights diagnostics.",
+              "enum": [
+                "None",
+                "Legacy",
+                "W3C"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "HttpCorrelationProtocol",
+                "values": [
+                  {
+                    "description": "Do not read and inject correlation headers.",
+                    "value": "None"
+                  },
+                  {
+                    "description": "Inject Request-Id and Request-Context headers with request correlation data. See https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.DiagnosticSource/src/HttpCorrelationProtocol.md.",
+                    "value": "Legacy"
+                  },
+                  {
+                    "description": "Inject Trace Context headers. See https://w3c.github.io/trace-context.",
+                    "value": "W3C"
+                  }
+                ]
+              }
+            },
+            "logClientIp": {
+              "description": "Log the ClientIP. Default is false.",
+              "type": "boolean"
+            },
+            "loggerId": {
+              "description": "Resource Id of a target logger.",
+              "type": "string"
+            },
+            "metrics": {
+              "description": "Emit custom metrics via emit-metric policy. Applicable only to Application Insights diagnostic settings.",
+              "type": "boolean"
+            },
+            "operationNameFormat": {
+              "description": "The format of the Operation Name for Application Insights telemetries. Default is Name.",
+              "enum": [
+                "Name",
+                "Url"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "OperationNameFormat",
+                "values": [
+                  {
+                    "description": "API_NAME;rev=API_REVISION - OPERATION_NAME",
+                    "value": "Name"
+                  },
+                  {
+                    "description": "HTTP_VERB URL",
+                    "value": "Url"
+                  }
+                ]
+              }
+            },
+            "sampling": {
+              "$ref": "#/components/schemas/SamplingSettings"
+            },
+            "verbosity": {
+              "description": "The verbosity level applied to traces emitted by trace policies.",
+              "enum": [
+                "verbose",
+                "information",
+                "error"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Verbosity",
+                "values": [
+                  {
+                    "description": "All the traces emitted by trace policies will be sent to the logger attached to this diagnostic instance.",
+                    "value": "verbose"
+                  },
+                  {
+                    "description": "Traces with 'severity' set to 'information' and 'error' will be sent to the logger attached to this diagnostic instance.",
+                    "value": "information"
+                  },
+                  {
+                    "description": "Only traces with 'severity' set to 'error' will be sent to the logger attached to this diagnostic instance.",
+                    "value": "error"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "loggerId"
+          ],
+          "type": "object"
+        },
+        "DiagnosticContractUpdateProperties": {
+          "description": "Diagnostic Entity Properties",
+          "properties": {
+            "alwaysLog": {
+              "description": "Specifies for what type of messages sampling settings should not apply.",
+              "enum": [
+                "allErrors"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "AlwaysLog",
+                "values": [
+                  {
+                    "description": "Always log all erroneous request regardless of sampling settings.",
+                    "value": "allErrors"
+                  }
+                ]
+              }
+            },
+            "backend": {
+              "$ref": "#/components/schemas/PipelineDiagnosticSettings"
+            },
+            "frontend": {
+              "$ref": "#/components/schemas/PipelineDiagnosticSettings"
+            },
+            "httpCorrelationProtocol": {
+              "description": "Sets correlation protocol to use for Application Insights diagnostics.",
+              "enum": [
+                "None",
+                "Legacy",
+                "W3C"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "HttpCorrelationProtocol",
+                "values": [
+                  {
+                    "description": "Do not read and inject correlation headers.",
+                    "value": "None"
+                  },
+                  {
+                    "description": "Inject Request-Id and Request-Context headers with request correlation data. See https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.DiagnosticSource/src/HttpCorrelationProtocol.md.",
+                    "value": "Legacy"
+                  },
+                  {
+                    "description": "Inject Trace Context headers. See https://w3c.github.io/trace-context.",
+                    "value": "W3C"
+                  }
+                ]
+              }
+            },
+            "logClientIp": {
+              "description": "Log the ClientIP. Default is false.",
+              "type": "boolean"
+            },
+            "loggerId": {
+              "description": "Resource Id of a target logger.",
+              "type": "string"
+            },
+            "metrics": {
+              "description": "Emit custom metrics via emit-metric policy. Applicable only to Application Insights diagnostic settings.",
+              "type": "boolean"
+            },
+            "operationNameFormat": {
+              "description": "The format of the Operation Name for Application Insights telemetries. Default is Name.",
+              "enum": [
+                "Name",
+                "Url"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "OperationNameFormat",
+                "values": [
+                  {
+                    "description": "API_NAME;rev=API_REVISION - OPERATION_NAME",
+                    "value": "Name"
+                  },
+                  {
+                    "description": "HTTP_VERB URL",
+                    "value": "Url"
+                  }
+                ]
+              }
+            },
+            "sampling": {
+              "$ref": "#/components/schemas/SamplingSettings"
+            },
+            "verbosity": {
+              "description": "The verbosity level applied to traces emitted by trace policies.",
+              "enum": [
+                "verbose",
+                "information",
+                "error"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Verbosity",
+                "values": [
+                  {
+                    "description": "All the traces emitted by trace policies will be sent to the logger attached to this diagnostic instance.",
+                    "value": "verbose"
+                  },
+                  {
+                    "description": "Traces with 'severity' set to 'information' and 'error' will be sent to the logger attached to this diagnostic instance.",
+                    "value": "information"
+                  },
+                  {
+                    "description": "Only traces with 'severity' set to 'error' will be sent to the logger attached to this diagnostic instance.",
+                    "value": "error"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Diagnostic details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DiagnosticContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "DiagnosticUpdateContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Diagnostic details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/DiagnosticContractUpdateProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "HttpMessageDiagnostic": {
+          "description": "Http message diagnostic settings.",
+          "properties": {
+            "body": {
+              "$ref": "#/components/schemas/BodyDiagnosticSettings"
+            },
+            "dataMasking": {
+              "$ref": "#/components/schemas/DataMasking"
+            },
+            "headers": {
+              "description": "Array of HTTP Headers to log.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PipelineDiagnosticSettings": {
+          "description": "Diagnostic settings for incoming/outgoing HTTP messages to the Gateway.",
+          "properties": {
+            "request": {
+              "$ref": "#/components/schemas/HttpMessageDiagnostic"
+            },
+            "response": {
+              "$ref": "#/components/schemas/HttpMessageDiagnostic"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SamplingSettings": {
+          "description": "Sampling settings for Diagnostic.",
+          "properties": {
+            "percentage": {
+              "description": "Rate of sampling for fixed-rate sampling.",
+              "format": "double",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            "samplingType": {
+              "description": "Sampling type.",
+              "enum": [
+                "fixed"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "SamplingType",
+                "values": [
+                  {
+                    "description": "Fixed-rate sampling.",
+                    "value": "fixed"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these REST APIs for performing operations on Diagnostic entity associated with your Azure API Management deployment. Diagnostics are used to log requests/responses in the API Management proxy.",
+      "title": "ApiManagementClient",
+      "version": "2024-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/workspaces/{workspaceId}/apis/{apiId}/diagnostics": {
+        "get": {
+          "description": "Lists all diagnostics of an API.",
+          "operationId": "WorkspaceApiDiagnostic_ListByWorkspace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticCollection"
+                  }
+                }
+              },
+              "description": "Paged Result response of diagnostics for an API."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListWorkspaceApiDiagnostics": {
+              "$ref": "./examples/ApiManagementListWorkspaceApiDiagnostics.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/DiagnosticContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/workspaces/{workspaceId}/apis/{apiId}/diagnostics/{diagnosticId}": {
+        "delete": {
+          "description": "Deletes the specified Diagnostic from an API.",
+          "operationId": "WorkspaceApiDiagnostic_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Diagnostic successfully removed"
+            },
+            "204": {
+              "description": "Diagnostic successfully removed by previous request or does not exist"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteWorkspaceApiDiagnostic": {
+              "$ref": "./examples/ApiManagementDeleteWorkspaceApiDiagnostic.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the details of the Diagnostic for an API specified by its identifier.",
+          "operationId": "WorkspaceApiDiagnostic_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Diagnostic entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetWorkspaceApiDiagnostic": {
+              "$ref": "./examples/ApiManagementGetWorkspaceApiDiagnostic.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Gets the entity state (Etag) version of the Diagnostic for an API specified by its identifier.",
+          "operationId": "WorkspaceApiDiagnostic_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operation completed successfully.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadWorkspaceApiDiagnostic": {
+              "$ref": "./examples/ApiManagementHeadWorkspaceApiDiagnostic.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the details of the Diagnostic for an API specified by its identifier.",
+          "operationId": "WorkspaceApiDiagnostic_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticUpdateContract"
+                }
+              }
+            },
+            "description": "Diagnostic Update parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic was successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementUpdateWorkspaceApiDiagnostic": {
+              "$ref": "./examples/ApiManagementUpdateWorkspaceApiDiagnostic.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a new Diagnostic for an API or updates an existing one.",
+          "operationId": "WorkspaceApiDiagnostic_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticContract_2"
+                }
+              }
+            },
+            "description": "Create parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic was successfully updated.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic was successfully created.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "ApiDiagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateWorkspaceApiDiagnostic": {
+              "$ref": "./examples/ApiManagementCreateWorkspaceApiDiagnostic.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/workspaces/{workspaceId}/diagnostics": {
+        "get": {
+          "description": "Lists all diagnostics in the specified workspace.",
+          "operationId": "WorkspaceDiagnostic_ListByWorkspace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "description": "|     Field     |     Usage     |     Supported operators     |     Supported functions     |\u003c/br\u003e|-------------|-------------|-------------|-------------|\u003c/br\u003e| name | filter | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |\u003c/br\u003e",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticCollection"
+                  }
+                }
+              },
+              "description": "Paged Result response of diagnostics."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListWorkspaceDiagnostics": {
+              "$ref": "./examples/ApiManagementListWorkspaceDiagnostics.json"
+            }
+          },
+          "x-ms-odata": "./definitions.json#/definitions/DiagnosticContract",
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/workspaces/{workspaceId}/diagnostics/{diagnosticId}": {
+        "delete": {
+          "description": "Deletes the specified Diagnostic.",
+          "operationId": "WorkspaceDiagnostic_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The Diagnostic was successfully deleted."
+            },
+            "204": {
+              "description": "The Diagnostic was successfully deleted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteWorkspaceDiagnostic": {
+              "$ref": "./examples/ApiManagementDeleteWorkspaceDiagnostic.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the details of the Diagnostic specified by its identifier.",
+          "operationId": "WorkspaceDiagnostic_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Diagnostic entity.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetWorkspaceDiagnostic": {
+              "$ref": "./examples/ApiManagementGetWorkspaceDiagnostic.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Gets the entity state (Etag) version of the Diagnostic specified by its identifier.",
+          "operationId": "WorkspaceDiagnostic_GetEntityTag",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Gets the entity tag of the diagnostic",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadWorkspaceDiagnostic": {
+              "$ref": "./examples/ApiManagementHeadWorkspaceDiagnostic.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates the details of the Diagnostic specified by its identifier.",
+          "operationId": "WorkspaceDiagnostic_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchRequiredParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticUpdateContract"
+                }
+              }
+            },
+            "description": "Diagnostic Update parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic successfully updated",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementUpdateWorkspaceDiagnostic": {
+              "$ref": "./examples/ApiManagementUpdateWorkspaceDiagnostic.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a new Diagnostic or updates an existing one.",
+          "operationId": "WorkspaceDiagnostic_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/DiagnosticIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticContract_2"
+                }
+              }
+            },
+            "description": "Create parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic successfully updated",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiagnosticContract_2"
+                  }
+                }
+              },
+              "description": "Diagnostic was successfully created.",
+              "headers": {
+                "ETag": {
+                  "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Diagnostic"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateWorkspaceDiagnostic": {
+              "$ref": "./examples/ApiManagementCreateWorkspaceDiagnostic.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

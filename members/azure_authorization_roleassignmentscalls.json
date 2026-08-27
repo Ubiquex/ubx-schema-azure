@@ -1,0 +1,1155 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_authorization_roleassignmentscalls",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "RoleAssignment": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Role Assignments",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RoleAssignmentProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RoleAssignmentCreateParameters": {
+          "description": "Role assignment create parameters.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RoleAssignmentProperties"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "RoleAssignmentListResult": {
+          "description": "Role assignment list operation result.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The RoleAssignment items on this page",
+              "items": {
+                "$ref": "#/components/schemas/RoleAssignment"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "RoleAssignmentProperties": {
+          "description": "Role assignment properties.",
+          "properties": {
+            "condition": {
+              "description": "The conditions on the role assignment. This limits the resources it can be assigned to. e.g.: @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:ContainerName] StringEqualsIgnoreCase 'foo_storage_container'",
+              "type": "string"
+            },
+            "conditionVersion": {
+              "description": "Version of the condition. Currently the only accepted value is '2.0'",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "Id of the user who created the assignment",
+              "readOnly": true,
+              "type": "string"
+            },
+            "createdOn": {
+              "description": "Time it was created",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "delegatedManagedIdentityResourceId": {
+              "description": "Id of the delegated managed identity resource",
+              "type": "string"
+            },
+            "description": {
+              "description": "Description of role assignment",
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID.",
+              "type": "string"
+            },
+            "principalType": {
+              "default": "User",
+              "description": "The principal type of the assigned principal ID.",
+              "enum": [
+                "User",
+                "Group",
+                "ServicePrincipal",
+                "ForeignGroup",
+                "Device",
+                "AgentUser",
+                "AgentServicePrincipal"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "PrincipalType",
+                "values": [
+                  {
+                    "description": "User",
+                    "name": "User",
+                    "value": "User"
+                  },
+                  {
+                    "description": "Group",
+                    "name": "Group",
+                    "value": "Group"
+                  },
+                  {
+                    "description": "ServicePrincipal",
+                    "name": "ServicePrincipal",
+                    "value": "ServicePrincipal"
+                  },
+                  {
+                    "description": "ForeignGroup",
+                    "name": "ForeignGroup",
+                    "value": "ForeignGroup"
+                  },
+                  {
+                    "description": "Device",
+                    "name": "Device",
+                    "value": "Device"
+                  },
+                  {
+                    "description": "Agent identity derived from a user.",
+                    "name": "AgentUser",
+                    "value": "AgentUser"
+                  },
+                  {
+                    "description": "Agent identity derived from a service principal.",
+                    "name": "AgentServicePrincipal",
+                    "value": "AgentServicePrincipal"
+                  }
+                ]
+              }
+            },
+            "roleDefinitionId": {
+              "description": "The role definition ID.",
+              "type": "string"
+            },
+            "scope": {
+              "description": "The role assignment scope.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "updatedBy": {
+              "description": "Id of the user who updated the assignment",
+              "readOnly": true,
+              "type": "string"
+            },
+            "updatedOn": {
+              "description": "Time it was updated",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "required": [
+            "roleDefinitionId",
+            "principalId"
+          ],
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Role based access control provides you a way to apply granular level policy administration down to individual resources or resource groups. These operations enable you to manage role assignments. A role assignment grants access to Azure Active Directory users.",
+      "title": "AuthorizationManagementClient",
+      "version": "2022-04-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments": {
+        "get": {
+          "description": "List all role assignments that apply to a subscription.",
+          "operationId": "RoleAssignments_ListForSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "The filter to apply on the operation. Use $filter=atScope() to return all role assignments at or above the scope. Use $filter=principalId eq {id} to return all role assignments at, above or below the scope for the specified principal.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignmentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "List role assignments for subscription": {
+              "$ref": "./examples/RoleAssignments_ListForSubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Authorization/roleAssignments": {
+        "get": {
+          "description": "List all role assignments that apply to a resource group.",
+          "operationId": "RoleAssignments_ListForResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The filter to apply on the operation. Use $filter=atScope() to return all role assignments at or above the scope. Use $filter=principalId eq {id} to return all role assignments at, above or below the scope for the specified principal.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignmentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "List role assignments for resource group": {
+              "$ref": "./examples/RoleAssignments_ListForResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}/providers/Microsoft.Authorization/roleAssignments": {
+        "get": {
+          "description": "List all role assignments that apply to a resource.",
+          "operationId": "RoleAssignments_ListForResource",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The ID of the target subscription.",
+              "in": "path",
+              "name": "subscriptionId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the resource group. The name is case insensitive.",
+              "in": "path",
+              "name": "resourceGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The namespace of the resource provider.",
+              "in": "path",
+              "name": "resourceProviderNamespace",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The resource type of the resource.",
+              "in": "path",
+              "name": "resourceType",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the resource to get role assignments for.",
+              "in": "path",
+              "name": "resourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The filter to apply on the operation. Use $filter=atScope() to return all role assignments at or above the scope. Use $filter=principalId eq {id} to return all role assignments at, above or below the scope for the specified principal.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignmentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "List role assignments for a resource": {
+              "$ref": "./examples/RoleAssignments_ListForResource.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/{roleAssignmentId}": {
+        "delete": {
+          "description": "Delete a role assignment by ID.",
+          "operationId": "RoleAssignments_DeleteById",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified ID of the role assignment including scope, resource name, and resource type. Format: /{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}. Example: /subscriptions/\u003cSUB_ID\u003e/resourcegroups/\u003cRESOURCE_GROUP\u003e/providers/Microsoft.Authorization/roleAssignments/\u003cROLE_ASSIGNMENT_NAME\u003e",
+              "in": "path",
+              "name": "roleAssignmentId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Delete role assignment by ID": {
+              "$ref": "./examples/RoleAssignments_DeleteById.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a role assignment by ID.",
+          "operationId": "RoleAssignments_GetById",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified ID of the role assignment including scope, resource name, and resource type. Format: /{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}. Example: /subscriptions/\u003cSUB_ID\u003e/resourcegroups/\u003cRESOURCE_GROUP\u003e/providers/Microsoft.Authorization/roleAssignments/\u003cROLE_ASSIGNMENT_NAME\u003e",
+              "in": "path",
+              "name": "roleAssignmentId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Get role assignment by ID": {
+              "$ref": "./examples/RoleAssignments_GetById.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a role assignment by ID.",
+          "operationId": "RoleAssignments_CreateById",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified ID of the role assignment including scope, resource name, and resource type. Format: /{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}. Example: /subscriptions/\u003cSUB_ID\u003e/resourcegroups/\u003cRESOURCE_GROUP\u003e/providers/Microsoft.Authorization/roleAssignments/\u003cROLE_ASSIGNMENT_NAME\u003e",
+              "in": "path",
+              "name": "roleAssignmentId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleAssignmentCreateParameters"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Resource 'RoleAssignment' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Resource 'RoleAssignment' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Create or update role assignment by ID": {
+              "$ref": "./examples/RoleAssignments_CreateById.json"
+            }
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Authorization/roleAssignments": {
+        "get": {
+          "description": "List all role assignments that apply to a scope.",
+          "operationId": "RoleAssignments_ListForScope",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified Azure Resource manager identifier of the resource.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The filter to apply on the operation. Use $filter=atScope() to return all role assignments at or above the scope. Use $filter=principalId eq {id} to return all role assignments at, above or below the scope for the specified principal.",
+              "in": "query",
+              "name": "$filter",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The skipToken to apply on the operation. Use $skipToken={skiptoken} to return paged role assignments following the skipToken passed. Only supported on provider level calls.",
+              "in": "query",
+              "name": "$skipToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignmentListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "List role assignments for scope": {
+              "$ref": "./examples/RoleAssignments_ListForScope.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/{scope}/providers/Microsoft.Authorization/roleAssignments/{roleAssignmentName}": {
+        "delete": {
+          "description": "Delete a role assignment by scope and name.",
+          "operationId": "RoleAssignments_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified Azure Resource manager identifier of the resource.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the role assignment. It can be any valid GUID.",
+              "in": "path",
+              "name": "roleAssignmentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Delete role assignment": {
+              "$ref": "./examples/RoleAssignments_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get a role assignment by scope and name.",
+          "operationId": "RoleAssignments_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified Azure Resource manager identifier of the resource.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "Tenant ID for cross-tenant request",
+              "in": "query",
+              "name": "tenantId",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the role assignment. It can be any valid GUID.",
+              "in": "path",
+              "name": "roleAssignmentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Get role assignment by scope and name": {
+              "$ref": "./examples/RoleAssignments_Get.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update a role assignment by scope and name.",
+          "operationId": "RoleAssignments_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The fully qualified Azure Resource manager identifier of the resource.",
+              "in": "path",
+              "name": "scope",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            },
+            {
+              "description": "The name of the role assignment. It can be any valid GUID.",
+              "in": "path",
+              "name": "roleAssignmentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "x-ms-skip-url-encoding": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleAssignmentCreateParameters"
+                }
+              }
+            },
+            "description": "Parameters for the role assignment.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Resource 'RoleAssignment' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RoleAssignment"
+                  }
+                }
+              },
+              "description": "Resource 'RoleAssignment' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RoleAssignments"
+          ],
+          "x-ms-examples": {
+            "Create role assignment for resource": {
+              "$ref": "./examples/RoleAssignments_CreateForResource.json"
+            },
+            "Create role assignment for resource group": {
+              "$ref": "./examples/RoleAssignments_CreateForResourceGroup.json"
+            },
+            "Create role assignment for subscription": {
+              "$ref": "./examples/RoleAssignments_CreateForSubscription.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "RoleAssignments"
+      }
+    ]
+  }
+}

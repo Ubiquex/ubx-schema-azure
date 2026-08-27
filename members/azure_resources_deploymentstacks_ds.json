@@ -1,0 +1,4560 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_resources_deploymentstacks",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError": {
+          "description": "Flag to bypass service errors that indicate the stack resource list is not correctly synchronized.",
+          "in": "query",
+          "name": "bypassStackOutOfSyncError",
+          "schema": {
+            "type": "boolean"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups": {
+          "description": "Flag to indicate delete rather than detach for unmanaged management groups.",
+          "in": "query",
+          "name": "unmanageAction.ManagementGroups",
+          "schema": {
+            "enum": [
+              "delete",
+              "detach"
+            ],
+            "type": "string"
+          },
+          "x-ms-client-name": "unmanageActionManagementGroups",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionManagementGroupMode",
+            "values": [
+              {
+                "description": "Delete the management groups from Azure.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the management groups in Azure.",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups": {
+          "description": "Flag to indicate delete rather than detach for unmanaged resource groups.",
+          "in": "query",
+          "name": "unmanageAction.ResourceGroups",
+          "schema": {
+            "enum": [
+              "delete",
+              "detach"
+            ],
+            "type": "string"
+          },
+          "x-ms-client-name": "unmanageActionResourceGroups",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionResourceGroupMode",
+            "values": [
+              {
+                "description": "Delete the resource groups from Azure.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the resource groups in Azure.",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ActionOnUnmanageDeleteParameters.unmanageActionResources": {
+          "description": "Flag to indicate delete rather than detach for unmanaged resources.",
+          "in": "query",
+          "name": "unmanageAction.Resources",
+          "schema": {
+            "enum": [
+              "delete",
+              "detach"
+            ],
+            "type": "string"
+          },
+          "x-ms-client-name": "unmanageActionResources",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionResourceMode",
+            "values": [
+              {
+                "description": "Delete the resources from Azure",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the resources in Azure",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport": {
+          "description": "Some resources do not support deletion.  This flag will denote how the stack should handle those resources.",
+          "in": "query",
+          "name": "unmanageAction.ResourcesWithoutDeleteSupport",
+          "schema": {
+            "enum": [
+              "detach",
+              "fail"
+            ],
+            "type": "string"
+          },
+          "x-ms-client-name": "unmanageActionResourcesWithoutDeleteSupport",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourcesWithoutDeleteSupportAction",
+            "values": [
+              {
+                "description": "Detach the specified resources from the deployment stack and continue.",
+                "name": "Detach",
+                "value": "detach"
+              },
+              {
+                "description": "Fail the deployment stack if resources cannot be deleted.",
+                "name": "Fail",
+                "value": "fail"
+              }
+            ]
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ActionOnUnmanage": {
+          "description": "Defines the behavior of resources that are no longer managed after the stack is updated or deleted.",
+          "properties": {
+            "managementGroups": {
+              "$ref": "#/components/schemas/UnmanageActionManagementGroupMode"
+            },
+            "resourceGroups": {
+              "$ref": "#/components/schemas/UnmanageActionResourceGroupMode"
+            },
+            "resources": {
+              "$ref": "#/components/schemas/UnmanageActionResourceMode"
+            },
+            "resourcesWithoutDeleteSupport": {
+              "$ref": "#/components/schemas/ResourcesWithoutDeleteSupportAction"
+            }
+          },
+          "required": [
+            "resources"
+          ],
+          "type": "object"
+        },
+        "DenySettings": {
+          "description": "Defines how resources deployed by the Deployment stack are locked.",
+          "properties": {
+            "applyToChildScopes": {
+              "description": "DenySettings will be applied to child resource scopes of every managed resource with a deny assignment.",
+              "type": "boolean"
+            },
+            "excludedActions": {
+              "description": "List of role-based management operations that are excluded from the denySettings. Up to 200 actions are permitted. If the denySetting mode is set to 'denyWriteAndDelete', then the following actions are automatically appended to 'excludedActions': '*\\/read' and 'Microsoft.Authorization/locks/delete'. If the denySetting mode is set to 'denyDelete', then the following actions are automatically appended to 'excludedActions': 'Microsoft.Authorization/locks/delete'. Duplicate actions will be removed.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "excludedPrincipals": {
+              "description": "List of AAD principal IDs excluded from the lock. Up to 5 principals are permitted.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "mode": {
+              "$ref": "#/components/schemas/DenySettingsMode"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        "DenySettingsMode": {
+          "description": "denySettings Mode that defines denied actions.",
+          "enum": [
+            "denyDelete",
+            "denyWriteAndDelete",
+            "none"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DenySettingsMode",
+            "values": [
+              {
+                "description": "Authorized users are able to read and modify the resources, but cannot delete.",
+                "name": "DenyDelete",
+                "value": "denyDelete"
+              },
+              {
+                "description": "Authorized users can read from a resource, but cannot modify or delete it.",
+                "name": "DenyWriteAndDelete",
+                "value": "denyWriteAndDelete"
+              },
+              {
+                "description": "No denyAssignments have been applied.",
+                "name": "None",
+                "value": "none"
+              }
+            ]
+          }
+        },
+        "DenyStatusMode": {
+          "description": "denyAssignment settings applied to the resource.",
+          "enum": [
+            "denyDelete",
+            "notSupported",
+            "inapplicable",
+            "denyWriteAndDelete",
+            "removedBySystem",
+            "none",
+            "unknown"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DenyStatusMode",
+            "values": [
+              {
+                "description": "Authorized users are able to read and modify the resources, but cannot delete.",
+                "name": "DenyDelete",
+                "value": "denyDelete"
+              },
+              {
+                "description": "Resource type does not support denyAssignments.",
+                "name": "NotSupported",
+                "value": "notSupported"
+              },
+              {
+                "description": "denyAssignments are not supported on resources outside the scope of the deployment stack.",
+                "name": "Inapplicable",
+                "value": "inapplicable"
+              },
+              {
+                "description": "Authorized users can only read from a resource, but cannot modify or delete it.",
+                "name": "DenyWriteAndDelete",
+                "value": "denyWriteAndDelete"
+              },
+              {
+                "description": "Deny assignment has been removed by Azure due to a resource management change (management group move, etc.)",
+                "name": "RemovedBySystem",
+                "value": "removedBySystem"
+              },
+              {
+                "description": "No denyAssignments have been applied.",
+                "name": "None",
+                "value": "none"
+              },
+              {
+                "description": "The denyAssignment status is unknown.",
+                "name": "Unknown",
+                "value": "unknown"
+              }
+            ]
+          }
+        },
+        "DeploymentExtension": {
+          "description": "Details about the usage of a deployment extension.",
+          "properties": {
+            "config": {
+              "$ref": "#/components/schemas/DeploymentExtensionConfig"
+            },
+            "configId": {
+              "description": "The configuration ID of the extension usage. It uniquely identifies a target the extension deploys to.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The extension name.",
+              "type": "string"
+            },
+            "version": {
+              "description": "The extension version.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "version"
+          ],
+          "type": "object"
+        },
+        "DeploymentExtensionConfig": {
+          "additionalProperties": {
+            "$ref": "#/components/schemas/DeploymentExtensionConfigItem"
+          },
+          "description": "The configuration of a deployment extension. The keys of this object should align with the extension config schema.",
+          "type": "object"
+        },
+        "DeploymentExtensionConfigItem": {
+          "description": "The value or how to get a value for an extension config property.",
+          "properties": {
+            "keyVaultReference": {
+              "$ref": "#/components/schemas/KeyVaultParameterReference"
+            },
+            "type": {
+              "description": "The type of the value.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "The value of the config item. The type is determined by the extension config schema."
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentExternalInput": {
+          "description": "Deployment external input for parameterization.",
+          "properties": {
+            "value": {
+              "description": "External input value."
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "DeploymentExternalInputDefinition": {
+          "description": "Deployment external input definition for parameterization.",
+          "properties": {
+            "config": {
+              "description": "Configuration for the external input."
+            },
+            "kind": {
+              "description": "The kind of external input.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "DeploymentParameter": {
+          "description": "Deployment parameter for the template.",
+          "properties": {
+            "expression": {
+              "description": "Input expression to the parameter.",
+              "type": "string",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "reference": {
+              "$ref": "#/components/schemas/KeyVaultParameterReference"
+            },
+            "type": {
+              "description": "Type of the value.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Input value to the parameter."
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStack": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Deployment stack object.",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives. Required for subscription and management group scoped stacks. The location is inherited from the resource group for resource group scoped stacks.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/DeploymentStackProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStackListResult": {
+          "description": "The response of a DeploymentStack list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The DeploymentStack items on this page",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentStack"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "DeploymentStackProperties": {
+          "description": "Deployment stack properties.",
+          "properties": {
+            "actionOnUnmanage": {
+              "$ref": "#/components/schemas/ActionOnUnmanage"
+            },
+            "bypassStackOutOfSyncError": {
+              "description": "Flag to bypass service errors that indicate the stack resource list is not correctly synchronized.",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "correlationId": {
+              "description": "The correlation id of the last Deployment stack upsert or delete operation. It is in GUID format and is used for tracing.",
+              "example": "01234567-89ab-cdef-0000-000000000000",
+              "readOnly": true,
+              "type": "string"
+            },
+            "debugSetting": {
+              "$ref": "#/components/schemas/DeploymentStacksDebugSetting"
+            },
+            "deletedResources": {
+              "description": "An array of resources that were deleted during the most recent Deployment stack update. Deleted means that the resource was removed from the template and relevant deletion operations were specified.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceReference"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "denySettings": {
+              "$ref": "#/components/schemas/DenySettings"
+            },
+            "deploymentExtensions": {
+              "description": "The extensions used during deployment. Contains extension data for all extensible resources managed by the stack.",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentExtension"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "deploymentId": {
+              "description": "The resourceId of the deployment resource created by the deployment stack.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "deploymentScope": {
+              "description": "The scope at which the initial deployment should be created. If a scope is not specified, it will default to the scope of the deployment stack. Valid scopes are: management group (format: '/providers/Microsoft.Management/managementGroups/{managementGroupId}'), subscription (format: '/subscriptions/{subscriptionId}'), resource group (format: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "type": "string"
+            },
+            "description": {
+              "description": "Deployment stack description. Max length of 4096 characters.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "detachedResources": {
+              "description": "An array of resources that were detached during the most recent Deployment stack update. Detached means that the resource was removed from the template, but no relevant deletion operations were specified. So, the resource still exists while no longer being associated with the stack.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceReference"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "duration": {
+              "description": "The duration of the last successful Deployment stack update.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail_2"
+            },
+            "extensionConfigs": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExtensionConfig"
+              },
+              "description": "The deployment extension configs. Keys of this object are extension aliases as defined in the deployment template.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "externalInputDefinitions": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExternalInputDefinition"
+              },
+              "description": "External input definitions, used by external tooling to define expected external input values.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "externalInputs": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExternalInput"
+              },
+              "description": "External input values, used by external tooling for parameter evaluation.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "failedResources": {
+              "description": "An array of resources that failed to reach goal state during the most recent update. Each resourceId is accompanied by an error message.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceReferenceExtended"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "outputs": {
+              "additionalProperties": {},
+              "description": "The outputs of the deployment resource created by the deployment stack.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "parameters": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentParameter"
+              },
+              "description": "Name and value pairs that define the deployment parameters for the template. Use this element when providing the parameter values directly in the request, rather than linking to an existing parameter file. Use either the parametersLink property or the parameters property, but not both.",
+              "type": "object"
+            },
+            "parametersLink": {
+              "$ref": "#/components/schemas/DeploymentStacksParametersLink"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/DeploymentStackProvisioningState"
+            },
+            "resources": {
+              "description": "An array of resources currently managed by the deployment stack.",
+              "items": {
+                "$ref": "#/components/schemas/ManagedResourceReference"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "template": {
+              "additionalProperties": {},
+              "description": "The template content. You use this element when you want to pass the template syntax directly in the request rather than link to an existing template. It can be a JObject or well-formed JSON string. Use either the templateLink property or the template property, but not both.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "templateLink": {
+              "$ref": "#/components/schemas/DeploymentStacksTemplateLink"
+            },
+            "validationLevel": {
+              "$ref": "#/components/schemas/ValidationLevel"
+            }
+          },
+          "required": [
+            "actionOnUnmanage",
+            "denySettings"
+          ],
+          "type": "object"
+        },
+        "DeploymentStackProvisioningState": {
+          "description": "State of the deployment stack.",
+          "enum": [
+            "creating",
+            "validating",
+            "waiting",
+            "deploying",
+            "canceling",
+            "updatingDenyAssignments",
+            "deletingResources",
+            "succeeded",
+            "failed",
+            "canceled",
+            "deleting",
+            "initializing",
+            "running"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStackProvisioningState",
+            "values": [
+              {
+                "description": "The deployment stack is currently being created",
+                "name": "Creating",
+                "value": "creating"
+              },
+              {
+                "description": "The deployment stack is currently being validated",
+                "name": "Validating",
+                "value": "validating"
+              },
+              {
+                "description": "The deployment stack is currently waiting",
+                "name": "Waiting",
+                "value": "waiting"
+              },
+              {
+                "description": "The deployment stack is currently deploying",
+                "name": "Deploying",
+                "value": "deploying"
+              },
+              {
+                "description": "The deployment stack is being cancelled",
+                "name": "Canceling",
+                "value": "canceling"
+              },
+              {
+                "description": "The deployment stack is updating deny assignments",
+                "name": "UpdatingDenyAssignments",
+                "value": "updatingDenyAssignments"
+              },
+              {
+                "description": "The deployment stack is deleting resources",
+                "name": "DeletingResources",
+                "value": "deletingResources"
+              },
+              {
+                "description": "The deployment stack completed successfully",
+                "name": "Succeeded",
+                "value": "succeeded"
+              },
+              {
+                "description": "The deployment stack has failed",
+                "name": "Failed",
+                "value": "failed"
+              },
+              {
+                "description": "The deployment stack has been cancelled",
+                "name": "Canceled",
+                "value": "canceled"
+              },
+              {
+                "description": "The deployment stack is being deleted",
+                "name": "Deleting",
+                "value": "deleting"
+              },
+              {
+                "description": "The deployment stack is currently being initialized",
+                "name": "Initializing",
+                "value": "initializing"
+              },
+              {
+                "description": "The deployment stack is currently performing an operation",
+                "name": "Running",
+                "value": "running"
+              }
+            ]
+          }
+        },
+        "DeploymentStackTemplateDefinition": {
+          "description": "Export Template specific properties of the Deployment stack.",
+          "properties": {
+            "template": {
+              "additionalProperties": {},
+              "description": "The template content. Use this element to pass the template syntax directly in the request rather than link to an existing template. It can be a JObject or well-formed JSON string. Use either the templateLink property or the template property, but not both.",
+              "type": "object"
+            },
+            "templateLink": {
+              "$ref": "#/components/schemas/DeploymentStacksTemplateLink"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStackValidateProperties": {
+          "description": "The Deployment stack validation result details.",
+          "properties": {
+            "actionOnUnmanage": {
+              "$ref": "#/components/schemas/ActionOnUnmanage"
+            },
+            "correlationId": {
+              "description": "The correlation id of the Deployment stack validate operation. It is in GUID format and is used for tracing.",
+              "type": "string"
+            },
+            "denySettings": {
+              "$ref": "#/components/schemas/DenySettings"
+            },
+            "deploymentExtensions": {
+              "description": "The deployment extensions.",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentExtension"
+              },
+              "type": "array"
+            },
+            "deploymentScope": {
+              "description": "The Deployment stack deployment scope.",
+              "type": "string"
+            },
+            "description": {
+              "description": "The Deployment stack validation description.",
+              "type": "string"
+            },
+            "parameters": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentParameter"
+              },
+              "description": "Deployment parameters.",
+              "type": "object"
+            },
+            "templateLink": {
+              "$ref": "#/components/schemas/DeploymentStacksTemplateLink"
+            },
+            "validatedResources": {
+              "description": "The array of resources that were validated.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceReference"
+              },
+              "type": "array"
+            },
+            "validationLevel": {
+              "$ref": "#/components/schemas/ValidationLevel"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStackValidateResult": {
+          "description": "The Deployment stack validation result.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail_2"
+            },
+            "id": {
+              "description": "String Id used to locate any resource on Azure.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of this resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/DeploymentStackValidateProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData_2"
+            },
+            "type": {
+              "description": "Type of this resource.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStacksDebugSetting": {
+          "description": "The debug setting.",
+          "properties": {
+            "detailLevel": {
+              "description": "Specifies the type of information to log for debugging. The permitted values are none, requestContent, responseContent, or both requestContent and responseContent separated by a comma. The default is none. When setting this value, carefully consider the type of information that is being passed in during deployment. By logging information about the request or response, sensitive data that is retrieved through the deployment operations could potentially be exposed.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStacksDiagnostic": {
+          "description": "The error additional info",
+          "properties": {
+            "additionalInfo": {
+              "description": "Additional error information.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo_2"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/components/schemas/DeploymentStacksDiagnosticLevel"
+            },
+            "message": {
+              "description": "The error message.",
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "level",
+            "code",
+            "message"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksDiagnosticLevel": {
+          "description": "Denotes the additional response level.",
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStacksDiagnosticLevel",
+            "values": [
+              {
+                "description": "Informational message.",
+                "name": "Info",
+                "value": "info"
+              },
+              {
+                "description": "Warning message.",
+                "name": "Warning",
+                "value": "warning"
+              },
+              {
+                "description": "Error message.",
+                "name": "Error",
+                "value": "error"
+              }
+            ]
+          }
+        },
+        "DeploymentStacksManagementStatus": {
+          "description": "The management status of the deployment stack resource.",
+          "enum": [
+            "managed",
+            "unmanaged",
+            "unknown"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStacksManagementStatus",
+            "values": [
+              {
+                "description": "The resource is managed by the deployment stack.",
+                "name": "Managed",
+                "value": "managed"
+              },
+              {
+                "description": "The resource is not managed by the deployment stack.",
+                "name": "Unmanaged",
+                "value": "unmanaged"
+              },
+              {
+                "description": "The management state of the resource could not be determined.",
+                "name": "Unknown",
+                "value": "unknown"
+              }
+            ]
+          }
+        },
+        "DeploymentStacksParametersLink": {
+          "description": "Entity representing the reference to the deployment parameters.",
+          "properties": {
+            "contentVersion": {
+              "description": "If included, must match the ContentVersion in the template.",
+              "type": "string"
+            },
+            "uri": {
+              "description": "The URI of the parameters file.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "uri"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksTemplateLink": {
+          "description": "Entity representing the reference to the template.",
+          "properties": {
+            "contentVersion": {
+              "description": "If included, must match the ContentVersion in the template.",
+              "type": "string"
+            },
+            "id": {
+              "description": "The resourceId of a Template Spec. Use either the id or uri property, but not both.",
+              "type": "string"
+            },
+            "queryString": {
+              "description": "The query string (for example, a SAS token) to be used with the templateLink URI.",
+              "type": "string"
+            },
+            "relativePath": {
+              "description": "The relativePath property can be used to deploy a linked template at a location relative to the parent. If the parent template was linked with a TemplateSpec, this will reference an artifact in the TemplateSpec.  If the parent was linked with a URI, the child deployment will be a combination of the parent and relativePath URIs.",
+              "type": "string"
+            },
+            "uri": {
+              "description": "The URI of the template to deploy. Use either the uri or id property, but not both.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfChange": {
+          "description": "Changes predicted to the deployment stack as a result of the what-if operation.",
+          "properties": {
+            "denySettingsChange": {
+              "description": "Predicted changes to the deployment stack deny settings.",
+              "properties": {
+                "after": {
+                  "$ref": "#/components/schemas/DenySettings"
+                },
+                "before": {
+                  "$ref": "#/components/schemas/DenySettings"
+                },
+                "delta": {
+                  "description": "The predicted changes to the properties.\"",
+                  "items": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfPropertyChange"
+                  },
+                  "type": "array",
+                  "x-ms-identifiers": [
+                    "path"
+                  ]
+                }
+              },
+              "type": "object",
+              "x-ms-identifiers": []
+            },
+            "deploymentScopeChange": {
+              "description": "Predicted changes to the deployment scope for the deployment stack.",
+              "properties": {
+                "after": {
+                  "description": "The predicted value after the deployment is executed.",
+                  "type": "string"
+                },
+                "before": {
+                  "description": "The predicted value before the deployment is executed.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "resourceChanges": {
+              "description": "List of resource changes predicted by What-If operation.",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentStacksWhatIfResourceChange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "identifiers",
+                "resourceId"
+              ]
+            }
+          },
+          "required": [
+            "resourceChanges",
+            "denySettingsChange"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfChangeCertainty": {
+          "description": "Denotes the confidence level of the predicted change.",
+          "enum": [
+            "definite",
+            "potential"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStacksWhatIfChangeCertainty",
+            "values": [
+              {
+                "description": "The change is definite.",
+                "name": "Definite",
+                "value": "definite"
+              },
+              {
+                "description": "The change may or may not happen, based on deployment-time conditions.",
+                "name": "Potential",
+                "value": "potential"
+              }
+            ]
+          }
+        },
+        "DeploymentStacksWhatIfChangeType": {
+          "description": "Type of change that will be made to the resource when the deployment is executed.",
+          "enum": [
+            "create",
+            "delete",
+            "detach",
+            "modify",
+            "noChange",
+            "unsupported"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStacksWhatIfChangeType",
+            "values": [
+              {
+                "description": "The resource does not exist in the current state but is present in the desired state. The resource will be created when the deployment is executed.",
+                "name": "Create",
+                "value": "create"
+              },
+              {
+                "description": "The resource exists in the current state and is missing from the desired state. The resource will be deleted from Azure after the deployment is executed.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "The resource exists in the current state and is missing from the desired state. The resource will be removed from the deployment stack, but will remain in Azure, after the deployment is executed.",
+                "name": "Detach",
+                "value": "detach"
+              },
+              {
+                "description": "The resource exists in the current state and the desired state and will be redeployed when the deployment is executed. The properties of the resource will change.",
+                "name": "Modify",
+                "value": "modify"
+              },
+              {
+                "description": "The resource exists in the current state and the desired state and will be redeployed when the deployment is executed. The properties of the resource will not change.",
+                "name": "NoChange",
+                "value": "noChange"
+              },
+              {
+                "description": "The resource is not supported by What-If.",
+                "name": "Unsupported",
+                "value": "unsupported"
+              }
+            ]
+          }
+        },
+        "DeploymentStacksWhatIfPropertyChange": {
+          "description": "The predicted change to the resource property.",
+          "properties": {
+            "after": {
+              "description": "The predicted value after the deployment is executed."
+            },
+            "before": {
+              "description": "The predicted value before the deployment is executed."
+            },
+            "changeType": {
+              "$ref": "#/components/schemas/DeploymentStacksWhatIfPropertyChangeType"
+            },
+            "children": {
+              "description": "Nested property changes.",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentStacksWhatIfPropertyChange"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "path"
+              ]
+            },
+            "path": {
+              "description": "Type of change that will be made to the resource when the deployment is executed.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "changeType"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfPropertyChangeType": {
+          "description": "The type of property change.",
+          "enum": [
+            "array",
+            "create",
+            "delete",
+            "modify",
+            "noEffect"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DeploymentStacksWhatIfPropertyChangeType",
+            "values": [
+              {
+                "description": "The property is an array and contains nested changes.",
+                "name": "Array",
+                "value": "array"
+              },
+              {
+                "description": "The property does not exist in the current state but is present in the desired state. The property will be created when the deployment is executed.",
+                "name": "Create",
+                "value": "create"
+              },
+              {
+                "description": "The property exists in the current state and is missing from the desired state. It will be deleted when the deployment is executed.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "The property exists in both current and desired state and is different. The value of the property will change when the deployment is executed.",
+                "name": "Modify",
+                "value": "modify"
+              },
+              {
+                "description": "The property will not be set or updated.",
+                "name": "NoEffect",
+                "value": "noEffect"
+              }
+            ]
+          }
+        },
+        "DeploymentStacksWhatIfResourceChange": {
+          "description": "Information about a single resource change predicted by What-If operation.",
+          "properties": {
+            "apiVersion": {
+              "description": "The API version the resource was deployed with",
+              "readOnly": true,
+              "type": "string"
+            },
+            "changeCertainty": {
+              "$ref": "#/components/schemas/DeploymentStacksWhatIfChangeCertainty"
+            },
+            "changeType": {
+              "$ref": "#/components/schemas/DeploymentStacksWhatIfChangeType"
+            },
+            "denyStatusChange": {
+              "description": "The predicted changes to the deployment stack deny status of the resource.",
+              "properties": {
+                "after": {
+                  "$ref": "#/components/schemas/DenyStatusMode"
+                },
+                "before": {
+                  "$ref": "#/components/schemas/DenyStatusMode"
+                }
+              },
+              "type": "object"
+            },
+            "deploymentId": {
+              "description": "The resource id of the Deployment responsible for this change.",
+              "type": "string"
+            },
+            "extension": {
+              "$ref": "#/components/schemas/DeploymentExtension"
+            },
+            "id": {
+              "description": "The ARM Resource ID of a resource managed by the deployment stack.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identifiers": {
+              "additionalProperties": {},
+              "description": "The extensible resource identifiers.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "managementStatusChange": {
+              "description": "The predicted changes to the deployment stack management status of the resource.",
+              "properties": {
+                "after": {
+                  "$ref": "#/components/schemas/DeploymentStacksManagementStatus"
+                },
+                "before": {
+                  "$ref": "#/components/schemas/DeploymentStacksManagementStatus"
+                }
+              },
+              "type": "object"
+            },
+            "resourceConfigurationChanges": {
+              "description": "The predicted changes to the resource configuration.",
+              "properties": {
+                "after": {
+                  "additionalProperties": {},
+                  "description": "The predicted value after the deployment is executed.",
+                  "type": "object"
+                },
+                "before": {
+                  "additionalProperties": {},
+                  "description": "The predicted value before the deployment is executed.",
+                  "type": "object"
+                },
+                "delta": {
+                  "description": "The predicted changes to the properties.\"",
+                  "items": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfPropertyChange"
+                  },
+                  "type": "array",
+                  "x-ms-identifiers": [
+                    "path"
+                  ]
+                }
+              },
+              "type": "object",
+              "x-ms-identifiers": []
+            },
+            "symbolicName": {
+              "description": "The symbolic name of the resource being changed.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The resource type.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "unsupportedReason": {
+              "description": "The explanation about why the resource is unsupported by What-If.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "changeType",
+            "changeCertainty"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfResult": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Deployment stack object.",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives. Required for subscription and management group scoped stacks. The location is inherited from the resource group for resource group scoped stacks.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "properties": {
+              "$ref": "#/components/schemas/DeploymentStacksWhatIfResultProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfResultListResult": {
+          "description": "The response of a DeploymentStacksWhatIfResult list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The DeploymentStacksWhatIfResult items on this page",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "DeploymentStacksWhatIfResultProperties": {
+          "description": "DeploymentStack WhatIfResult Properties",
+          "properties": {
+            "actionOnUnmanage": {
+              "$ref": "#/components/schemas/ActionOnUnmanage"
+            },
+            "changes": {
+              "$ref": "#/components/schemas/DeploymentStacksWhatIfChange"
+            },
+            "correlationId": {
+              "description": "The correlation id of the last Deployment stack upsert or delete operation. It is in GUID format and is used for tracing.",
+              "example": "01234567-89ab-cdef-0000-000000000000",
+              "readOnly": true,
+              "type": "string"
+            },
+            "debugSetting": {
+              "$ref": "#/components/schemas/DeploymentStacksDebugSetting"
+            },
+            "denySettings": {
+              "$ref": "#/components/schemas/DenySettings"
+            },
+            "deploymentScope": {
+              "description": "The scope at which the initial deployment should be created. If a scope is not specified, it will default to the scope of the deployment stack. Valid scopes are: management group (format: '/providers/Microsoft.Management/managementGroups/{managementGroupId}'), subscription (format: '/subscriptions/{subscriptionId}'), resource group (format: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+              "type": "string"
+            },
+            "deploymentStackLastModified": {
+              "description": "The timestamp for when the deployment stack was last modified. This can be used to determine if the what-if data is still current.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "deploymentStackResourceId": {
+              "description": "The deployment stack id to use as the basis for comparison.",
+              "type": "string"
+            },
+            "description": {
+              "description": "Deployment stack description. Max length of 4096 characters.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "diagnostics": {
+              "description": "List of resource diagnostics detected by What-If operation.",
+              "items": {
+                "$ref": "#/components/schemas/DeploymentStacksDiagnostic"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail_2"
+            },
+            "extensionConfigs": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExtensionConfig"
+              },
+              "description": "The deployment extension configs. Keys of this object are extension aliases as defined in the deployment template.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "externalInputDefinitions": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExternalInputDefinition"
+              },
+              "description": "External input definitions, used by external tooling to define expected external input values.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "externalInputs": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentExternalInput"
+              },
+              "description": "External input values, used by external tooling for parameter evaluation.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "parameters": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/DeploymentParameter"
+              },
+              "description": "Name and value pairs that define the deployment parameters for the template. Use this element when providing the parameter values directly in the request, rather than linking to an existing parameter file. Use either the parametersLink property or the parameters property, but not both.",
+              "type": "object"
+            },
+            "parametersLink": {
+              "$ref": "#/components/schemas/DeploymentStacksParametersLink"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/DeploymentStackProvisioningState"
+            },
+            "retentionInterval": {
+              "description": "The interval to persist the deployment stack what-if result in ISO 8601 format.",
+              "format": "duration",
+              "type": "string"
+            },
+            "template": {
+              "additionalProperties": {},
+              "description": "The template content. You use this element when you want to pass the template syntax directly in the request rather than link to an existing template. It can be a JObject or well-formed JSON string. Use either the templateLink property or the template property, but not both.",
+              "type": "object",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ]
+            },
+            "templateLink": {
+              "$ref": "#/components/schemas/DeploymentStacksTemplateLink"
+            },
+            "validationLevel": {
+              "$ref": "#/components/schemas/ValidationLevel"
+            }
+          },
+          "required": [
+            "actionOnUnmanage",
+            "denySettings",
+            "deploymentStackResourceId",
+            "retentionInterval"
+          ],
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo_2": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail_2": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "KeyVaultParameterReference": {
+          "description": "Azure Key Vault parameter reference.",
+          "properties": {
+            "keyVault": {
+              "$ref": "#/components/schemas/KeyVaultReference"
+            },
+            "secretName": {
+              "description": "Azure Key Vault secret name.",
+              "type": "string"
+            },
+            "secretVersion": {
+              "description": "Azure Key Vault secret version.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "keyVault",
+            "secretName"
+          ],
+          "type": "object"
+        },
+        "KeyVaultReference": {
+          "description": "Azure Key Vault reference.",
+          "properties": {
+            "id": {
+              "description": "Azure Key Vault resourceId.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "type": "object"
+        },
+        "ManagedResourceReference": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ResourceReference"
+            }
+          ],
+          "description": "The managed resource model.",
+          "properties": {
+            "denyStatus": {
+              "default": "none",
+              "description": "denyAssignment settings applied to the resource.",
+              "enum": [
+                "denyDelete",
+                "notSupported",
+                "inapplicable",
+                "denyWriteAndDelete",
+                "removedBySystem",
+                "none",
+                "unknown"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "DenyStatusMode",
+                "values": [
+                  {
+                    "description": "Authorized users are able to read and modify the resources, but cannot delete.",
+                    "name": "DenyDelete",
+                    "value": "denyDelete"
+                  },
+                  {
+                    "description": "Resource type does not support denyAssignments.",
+                    "name": "NotSupported",
+                    "value": "notSupported"
+                  },
+                  {
+                    "description": "denyAssignments are not supported on resources outside the scope of the deployment stack.",
+                    "name": "Inapplicable",
+                    "value": "inapplicable"
+                  },
+                  {
+                    "description": "Authorized users can only read from a resource, but cannot modify or delete it.",
+                    "name": "DenyWriteAndDelete",
+                    "value": "denyWriteAndDelete"
+                  },
+                  {
+                    "description": "Deny assignment has been removed by Azure due to a resource management change (management group move, etc.)",
+                    "name": "RemovedBySystem",
+                    "value": "removedBySystem"
+                  },
+                  {
+                    "description": "No denyAssignments have been applied.",
+                    "name": "None",
+                    "value": "none"
+                  },
+                  {
+                    "description": "The denyAssignment status is unknown.",
+                    "name": "Unknown",
+                    "value": "unknown"
+                  }
+                ]
+              }
+            },
+            "status": {
+              "$ref": "#/components/schemas/ResourceStatusMode"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceReference": {
+          "description": "The resourceId model.",
+          "properties": {
+            "apiVersion": {
+              "description": "The API version the resource was deployed with",
+              "readOnly": true,
+              "type": "string"
+            },
+            "extension": {
+              "$ref": "#/components/schemas/DeploymentExtension"
+            },
+            "id": {
+              "description": "The ARM Resource ID of a resource managed by the deployment stack.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identifiers": {
+              "additionalProperties": {},
+              "description": "The extensible resource identifiers.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The resource type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ResourceReferenceExtended": {
+          "description": "The resourceId extended model. This is used to document failed resources with a resourceId and a corresponding error.",
+          "properties": {
+            "apiVersion": {
+              "description": "The API version the resource was deployed with",
+              "readOnly": true,
+              "type": "string"
+            },
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail_2"
+            },
+            "extension": {
+              "$ref": "#/components/schemas/DeploymentExtension"
+            },
+            "id": {
+              "description": "The ARM Resource ID of a resource managed by the deployment stack.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identifiers": {
+              "additionalProperties": {},
+              "description": "The extensible resource identifiers.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The resource type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ResourceStatusMode": {
+          "description": "Current management state of the resource in the deployment stack.",
+          "enum": [
+            "managed",
+            "removeDenyFailed",
+            "deleteFailed"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceStatusMode",
+            "values": [
+              {
+                "description": "This resource is managed by the deployment stack.",
+                "name": "Managed",
+                "value": "managed"
+              },
+              {
+                "description": "Unable to remove the deny assignment on resource.",
+                "name": "RemoveDenyFailed",
+                "value": "removeDenyFailed"
+              },
+              {
+                "description": "Unable to delete the resource from Azure. The delete will be retried on the next stack deployment, or can be deleted manually.",
+                "name": "DeleteFailed",
+                "value": "deleteFailed"
+              }
+            ]
+          }
+        },
+        "ResourcesWithoutDeleteSupportAction": {
+          "description": "Specifies an action for resources that do not support deletion.",
+          "enum": [
+            "detach",
+            "fail"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourcesWithoutDeleteSupportAction",
+            "values": [
+              {
+                "description": "Detach the specified resources from the deployment stack and continue.",
+                "name": "Detach",
+                "value": "detach"
+              },
+              {
+                "description": "Fail the deployment stack if resources cannot be deleted.",
+                "name": "Fail",
+                "value": "fail"
+              }
+            ]
+          }
+        },
+        "UnmanageActionManagementGroupMode": {
+          "description": "Specifies an action for a newly unmanaged resource.",
+          "enum": [
+            "delete",
+            "detach"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionManagementGroupMode",
+            "values": [
+              {
+                "description": "Delete the management groups from Azure.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the management groups in Azure.",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          }
+        },
+        "UnmanageActionResourceGroupMode": {
+          "description": "Specifies an action for a newly unmanaged resource group.",
+          "enum": [
+            "delete",
+            "detach"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionResourceGroupMode",
+            "values": [
+              {
+                "description": "Delete the resource groups from Azure.",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the resource groups in Azure.",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          }
+        },
+        "UnmanageActionResourceMode": {
+          "description": "Specifies an action for a newly unmanaged resource.",
+          "enum": [
+            "delete",
+            "detach"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnmanageActionResourceMode",
+            "values": [
+              {
+                "description": "Delete the resources from Azure",
+                "name": "Delete",
+                "value": "delete"
+              },
+              {
+                "description": "Keep the resources in Azure",
+                "name": "Detach",
+                "value": "detach"
+              }
+            ]
+          }
+        },
+        "ValidationLevel": {
+          "description": "The level of validation performed on the deployment.",
+          "enum": [
+            "Template",
+            "Provider",
+            "ProviderNoRbac"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ValidationLevel",
+            "values": [
+              {
+                "description": "Static analysis of the template is performed.",
+                "name": "Template",
+                "value": "Template"
+              },
+              {
+                "description": "Static analysis of the template is performed and resource declarations are sent to resource providers for semantic validation. Validates that the caller has RBAC write permissions on each resource.",
+                "name": "Provider",
+                "value": "Provider"
+              },
+              {
+                "description": "Static analysis of the template is performed and resource declarations are sent to resource providers for semantic validation. Skips validating that the caller has RBAC write permissions on each resource.",
+                "name": "ProviderNoRbac",
+                "value": "ProviderNoRbac"
+              }
+            ]
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "systemData_2": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The APIs listed in this specification can be used to manage Deployment stack resources through the Azure Resource Manager.",
+      "title": "DeploymentStacksClient",
+      "version": "2025-07-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacks": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacks_ListAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "List management group Deployment stacks": {
+              "$ref": "./examples/DeploymentStackManagementGroupList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacks_DeleteAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Delete a management group Deployment stack": {
+              "$ref": "./examples/DeploymentStackManagementGroupDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacks_GetAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Get a management group Deployment stack": {
+              "$ref": "./examples/DeploymentStackManagementGroupGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_CreateOrUpdateAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Create or update a management group Deployment stack": {
+              "$ref": "./examples/DeploymentStackManagementGroupCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/exportTemplate": {
+        "post": {
+          "description": "Exports the template used to create the Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_ExportTemplateAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackTemplateDefinition"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Export the Deployment template for a management group Deployment stack": {
+              "$ref": "./examples/DeploymentStackManagementGroupExportTemplate.json"
+            }
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/validate": {
+        "post": {
+          "description": "Runs preflight validation on the Deployment stack template at the specified scope to verify its acceptance to Azure Resource Manager.",
+          "operationId": "DeploymentStacks_ValidateStackAtManagementGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Resource validation failed."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Validate a management group Deployment stack": {
+              "$ref": "./examples/DeploymentStackManagementGroupValidate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtManagementGroup_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResultListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "List the available Deployment stack what-if results at management group scope": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsManagementGroupList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacksWhatIfResultsAtManagementGroup_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Delete a management group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsManagementGroupDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacksWhatIfResultsAtManagementGroup_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Get a management group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsManagementGroupGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtManagementGroup_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Create or update a management group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsManagementGroupCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/providers/Microsoft.Management/managementGroups/{managementGroupId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}/whatIf": {
+        "post": {
+          "description": "Returns property-level changes that will be made by the deployment if executed.",
+          "operationId": "DeploymentStacksWhatIfResultsAtManagementGroup_WhatIf",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "description": "The management group ID.",
+              "in": "path",
+              "name": "managementGroupId",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtManagementGroup"
+          ],
+          "x-ms-examples": {
+            "Get a detailed management group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsManagementGroupWhatIf.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacks": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacks_ListAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "List subscription Deployment stacks": {
+              "$ref": "./examples/DeploymentStackSubscriptionList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacks_DeleteAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Delete a subscription Deployment stack": {
+              "$ref": "./examples/DeploymentStackSubscriptionDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacks_GetAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Get a subscription Deployment stack": {
+              "$ref": "./examples/DeploymentStackSubscriptionGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_CreateOrUpdateAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Create or update a subscription Deployment stack": {
+              "$ref": "./examples/DeploymentStackSubscriptionCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/exportTemplate": {
+        "post": {
+          "description": "Exports the template used to create the Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_ExportTemplateAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackTemplateDefinition"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Export the Deployment template for a subscription Deployment stack": {
+              "$ref": "./examples/DeploymentStackSubscriptionExportTemplate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/validate": {
+        "post": {
+          "description": "Runs preflight validation on the Deployment stack template at the specified scope to verify its acceptance to Azure Resource Manager.",
+          "operationId": "DeploymentStacks_ValidateStackAtSubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Resource validation failed."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Validate a subscription Deployment stack": {
+              "$ref": "./examples/DeploymentStackSubscriptionValidate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtSubscription_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResultListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtSubscription"
+          ],
+          "x-ms-examples": {
+            "List the available Deployment stack what-if results at subscription scope": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsSubscriptionList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacksWhatIfResultsAtSubscription_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Delete a subscription Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsSubscriptionDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacksWhatIfResultsAtSubscription_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Get a subscription Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsSubscriptionGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtSubscription_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Create or update a subscription-scoped Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsSubscriptionCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}/whatIf": {
+        "post": {
+          "description": "Returns property-level changes that will be made by the deployment if executed.",
+          "operationId": "DeploymentStacksWhatIfResultsAtSubscription_WhatIf",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtSubscription"
+          ],
+          "x-ms-examples": {
+            "Get a detailed subscription Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsSubscriptionWhatIf.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacks": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacks_ListAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "List resource group Deployment stacks": {
+              "$ref": "./examples/DeploymentStackResourceGroupList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacks_DeleteAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Delete a resource group Deployment stack": {
+              "$ref": "./examples/DeploymentStackResourceGroupDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacks_GetAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Get a resource group Deployment stack": {
+              "$ref": "./examples/DeploymentStackResourceGroupGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_CreateOrUpdateAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStack"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStack' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Create or update a resource group Deployment stack": {
+              "$ref": "./examples/DeploymentStackResourceGroupCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/exportTemplate": {
+        "post": {
+          "description": "Exports the template used to create the Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacks_ExportTemplateAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackTemplateDefinition"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Export the Deployment template for a resource group Deployment stack": {
+              "$ref": "./examples/DeploymentStackExportTemplate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacks/{deploymentStackName}/validate": {
+        "post": {
+          "description": "Runs preflight validation on the Deployment stack template at the specified scope to verify its acceptance to Azure Resource Manager.",
+          "operationId": "DeploymentStacks_ValidateStackAtResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack.",
+              "in": "path",
+              "name": "deploymentStackName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStack"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "required": true,
+            "x-originalParamName": "deploymentStack"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStackValidateResult"
+                  }
+                }
+              },
+              "description": "Resource validation failed."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Validate a resource group Deployment stack": {
+              "$ref": "./examples/DeploymentStackResourceGroupValidate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacksWhatIfResults": {
+        "get": {
+          "description": "Lists Deployment stacks at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtResourceGroup_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResultListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "List the available Deployment stack what-if results at resource group scope": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsResourceGroupList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}": {
+        "delete": {
+          "description": "Deletes a Deployment stack by name at the specified scope. When operation completes, status code 200 returned without content.",
+          "operationId": "DeploymentStacksWhatIfResultsAtResourceGroup_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResources"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourceGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionManagementGroups"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.unmanageActionResourcesWithoutDeleteSupport"
+            },
+            {
+              "$ref": "#/components/parameters/ActionOnUnmanageDeleteParameters.bypassStackOutOfSyncError"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Delete a resource group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsResourceGroupDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets the Deployment stack with the given name.",
+          "operationId": "DeploymentStacksWhatIfResultsAtResourceGroup_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Get a resource group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsResourceGroupGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a Deployment stack at the specified scope.",
+          "operationId": "DeploymentStacksWhatIfResultsAtResourceGroup_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Resource 'DeploymentStacksWhatIfResult' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Create or update a resource group scoped Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsResourceGroupCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Resources/deploymentStacksWhatIfResults/{deploymentStacksWhatIfResultName}/whatIf": {
+        "post": {
+          "description": "Returns property-level changes that will be made by the deployment if executed.",
+          "operationId": "DeploymentStacksWhatIfResultsAtResourceGroup_WhatIf",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the deployment stack what-if result.",
+              "in": "path",
+              "name": "deploymentStacksWhatIfResultName",
+              "required": true,
+              "schema": {
+                "maxLength": 90,
+                "minLength": 1,
+                "pattern": "^[-\\w\\._\\(\\)]+$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeploymentStacksWhatIfResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "DeploymentStacksWhatIfResultsAtResourceGroup"
+          ],
+          "x-ms-examples": {
+            "Get a detailed resource group Deployment stack what-if result": {
+              "$ref": "./examples/DeploymentStackWhatIfResultsResourceGroupWhatIf.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "DeploymentStacksAtResourceGroup"
+      },
+      {
+        "name": "DeploymentStacksAtSubscription"
+      },
+      {
+        "name": "DeploymentStacksAtManagementGroup"
+      },
+      {
+        "name": "DeploymentStacksWhatIfResultsAtResourceGroup"
+      },
+      {
+        "name": "DeploymentStacksWhatIfResultsAtSubscription"
+      },
+      {
+        "name": "DeploymentStacksWhatIfResultsAtManagementGroup"
+      }
+    ]
+  }
+}

@@ -1,0 +1,2887 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_devopsinfrastructure",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "LocationParameter": {
+          "description": "The name of the Azure region.",
+          "in": "path",
+          "minLength": 1,
+          "name": "location",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AgentProfile": {
+          "description": "The agent profile of the machines in the pool.",
+          "discriminator": {
+            "propertyName": "kind"
+          },
+          "properties": {
+            "kind": {
+              "description": "Discriminator property for AgentProfile.",
+              "type": "string"
+            },
+            "resourcePredictions": {
+              "$ref": "#/components/schemas/ResourcePredictions"
+            },
+            "resourcePredictionsProfile": {
+              "$ref": "#/components/schemas/ResourcePredictionsProfile"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "AutomaticResourcePredictionsProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ResourcePredictionsProfile"
+            }
+          ],
+          "description": "The stand-by agent scheme is determined based on historical demand.",
+          "properties": {
+            "predictionPreference": {
+              "$ref": "#/components/schemas/PredictionPreference"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Automatic"
+        },
+        "AvailabilityStatus": {
+          "description": "AvailabilityStatus of a name.",
+          "enum": [
+            "Available",
+            "Unavailable"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AvailabilityStatus",
+            "values": [
+              {
+                "description": "The name is available.",
+                "name": "Available",
+                "value": "Available"
+              },
+              {
+                "description": "The name is unavailable",
+                "name": "Unavailable",
+                "value": "Unavailable"
+              }
+            ]
+          }
+        },
+        "Azure.Core.azureLocation": {
+          "description": "Represents an Azure geography region where supported resource providers live.",
+          "type": "string"
+        },
+        "AzureDevOpsOrganizationProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/OrganizationProfile"
+            }
+          ],
+          "description": "Azure DevOps organization profile",
+          "properties": {
+            "alias": {
+              "description": "An alias to reference the Azure DevOps pool name.",
+              "type": "string"
+            },
+            "description": {
+              "description": "An extra description to add to the Azure DevOps pool.",
+              "type": "string"
+            },
+            "organizations": {
+              "description": "The list of Azure DevOps organizations the pool should be present in.",
+              "items": {
+                "$ref": "#/components/schemas/Organization"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "permissionProfile": {
+              "$ref": "#/components/schemas/AzureDevOpsPermissionProfile"
+            },
+            "updateDescription": {
+              "description": "Determines whether the service updates the Azure DevOps pool description.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "organizations"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "AzureDevOps"
+        },
+        "AzureDevOpsPermissionProfile": {
+          "description": "Defines the type of Azure DevOps pool permission.",
+          "properties": {
+            "groups": {
+              "description": "Group email addresses",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "$ref": "#/components/schemas/AzureDevOpsPermissionType"
+            },
+            "users": {
+              "description": "User email addresses",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "AzureDevOpsPermissionType": {
+          "description": "Determines who has admin permissions to the Azure DevOps pool.",
+          "enum": [
+            "Inherit",
+            "CreatorOnly",
+            "SpecificAccounts"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AzureDevOpsPermissionType",
+            "values": [
+              {
+                "description": "Pool will inherit permissions from the project or organization.",
+                "name": "Inherit",
+                "value": "Inherit"
+              },
+              {
+                "description": "Only the pool creator will be an admin of the pool.",
+                "name": "CreatorOnly",
+                "value": "CreatorOnly"
+              },
+              {
+                "description": "Only the specified accounts will be admins of the pool.",
+                "name": "SpecificAccounts",
+                "value": "SpecificAccounts"
+              }
+            ]
+          }
+        },
+        "CachingType": {
+          "description": "The type of caching in a data disk.",
+          "enum": [
+            "None",
+            "ReadOnly",
+            "ReadWrite"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CachingType",
+            "values": [
+              {
+                "description": "Don't use host caching.",
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "description": "For workloads that only do read operations.",
+                "name": "ReadOnly",
+                "value": "ReadOnly"
+              },
+              {
+                "description": "For workloads that do a balance of read and write operations.",
+                "name": "ReadWrite",
+                "value": "ReadWrite"
+              }
+            ]
+          }
+        },
+        "CertificateStoreNameOption": {
+          "description": "The certificate store name type",
+          "enum": [
+            "My",
+            "Root"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CertificateStoreNameOption",
+            "values": [
+              {
+                "description": "The X.509 certificate store for personal certificates.",
+                "name": "My",
+                "value": "My"
+              },
+              {
+                "description": "The X.509 certificate store for trusted root certificate authorities (CAs).",
+                "name": "Root",
+                "value": "Root"
+              }
+            ]
+          }
+        },
+        "CheckNameAvailability": {
+          "description": "The parameters used to check the availability of a resource.",
+          "properties": {
+            "name": {
+              "description": "The name of the resource.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/DevOpsInfrastructureResourceType"
+            }
+          },
+          "required": [
+            "name",
+            "type"
+          ],
+          "type": "object"
+        },
+        "CheckNameAvailabilityReason": {
+          "description": "The reason code explaining why the name is unavailable. Will be null if the name is available.",
+          "enum": [
+            "Invalid",
+            "AlreadyExists"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "CheckNameAvailabilityReason",
+            "values": [
+              {
+                "description": "The name is invalid.",
+                "name": "Invalid",
+                "value": "Invalid"
+              },
+              {
+                "description": "The name already exists.",
+                "name": "AlreadyExists",
+                "value": "AlreadyExists"
+              }
+            ]
+          }
+        },
+        "CheckNameAvailabilityResult": {
+          "description": "The CheckNameAvailability operation response.",
+          "properties": {
+            "available": {
+              "$ref": "#/components/schemas/AvailabilityStatus"
+            },
+            "message": {
+              "description": "A message explaining why the name is unavailable. Will be null if the name is available.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name whose availability was checked.",
+              "type": "string"
+            },
+            "reason": {
+              "$ref": "#/components/schemas/CheckNameAvailabilityReason"
+            }
+          },
+          "required": [
+            "available",
+            "message",
+            "name",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "DataDisk": {
+          "description": "The data disk of the VMSS.",
+          "properties": {
+            "caching": {
+              "$ref": "#/components/schemas/CachingType"
+            },
+            "diskSizeGiB": {
+              "description": "The initial disk size in gigabytes.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "driveLetter": {
+              "description": "The drive letter for the empty data disk. If not specified, it will be the first available letter.",
+              "type": "string"
+            },
+            "storageAccountType": {
+              "$ref": "#/components/schemas/StorageAccountType"
+            }
+          },
+          "type": "object"
+        },
+        "DeleteResourcesDetails": {
+          "description": "Request body for deleting many resources by their IDs.",
+          "properties": {
+            "resourceIds": {
+              "description": "List of resource IDs to delete.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "resourceIds"
+          ],
+          "type": "object"
+        },
+        "DevOpsAzureSku": {
+          "description": "The Azure SKU of the machines in the pool.",
+          "properties": {
+            "linuxNvmePath": {
+              "description": "The mount path for the NVMe striped volume on Linux (e.g., '/mnt/azure_nvme_temp'). Defaults to '/mnt/azure_nvme_temp' when not specified.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The Azure SKU name of the machines in the pool.",
+              "type": "string"
+            },
+            "vmSizes": {
+              "description": "Specifies VM sizes for instance-mix allocation.",
+              "items": {
+                "$ref": "#/components/schemas/VmSize"
+              },
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            },
+            "windowsNvmeDrive": {
+              "description": "The drive letter for the NVMe striped volume on Windows (e.g., 'N'). Defaults to 'N' when not specified.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "DevOpsInfrastructureResourceType": {
+          "description": "The type of resource.",
+          "enum": [
+            "Microsoft.DevOpsInfrastructure/pools"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DevOpsInfrastructureResourceType",
+            "values": [
+              {
+                "description": "DevOpsInfrastructure pool resource.",
+                "name": "Microsoft.DevOpsInfrastructure/pools",
+                "value": "Microsoft.DevOpsInfrastructure/pools"
+              }
+            ]
+          }
+        },
+        "EphemeralType": {
+          "description": "The type of Ephemeral option the pool will use on underlying VMs when loading this image.",
+          "enum": [
+            "Automatic",
+            "CacheDisk",
+            "ResourceDisk"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "EphemeralType",
+            "values": [
+              {
+                "description": "Ephemeral is handled by Managed DevOps Pools service.",
+                "name": "Automatic",
+                "value": "Automatic"
+              },
+              {
+                "description": "CacheDisk ephemeral only, requires that the SKU has a cache that is large enough for the image.",
+                "name": "CacheDisk",
+                "value": "CacheDisk"
+              },
+              {
+                "description": "ResourceDisk ephemeral only, requires only that the SKU supports it.",
+                "name": "ResourceDisk",
+                "value": "ResourceDisk"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "FabricProfile": {
+          "description": "Defines the type of fabric the agent will run on.",
+          "discriminator": {
+            "propertyName": "kind"
+          },
+          "properties": {
+            "kind": {
+              "description": "Discriminator property for FabricProfile.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "GitHubOrganization": {
+          "description": "Defines a GitHub organization",
+          "properties": {
+            "repositories": {
+              "description": "Optional list of repositories in which the pool should be created.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "url": {
+              "description": "The GitHub organization URL in which the pool should be created.",
+              "format": "uri",
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "type": "object"
+        },
+        "GitHubOrganizationProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/OrganizationProfile"
+            }
+          ],
+          "description": "GitHub organization profile",
+          "properties": {
+            "organizations": {
+              "description": "The list of GitHub organizations/repositories the pool should be present in.",
+              "items": {
+                "$ref": "#/components/schemas/GitHubOrganization"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "required": [
+            "organizations"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "GitHub"
+        },
+        "ImageVersion": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "An image version object",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ImageVersionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ImageVersionListResult": {
+          "description": "The response of a ImageVersion list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ImageVersion items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ImageVersion"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ImageVersionProperties": {
+          "description": "Details of the ImageVersionProperties.",
+          "properties": {
+            "version": {
+              "description": "Version of the image.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "version"
+          ],
+          "type": "object"
+        },
+        "LogonType": {
+          "description": "Determines how the service should be run.",
+          "enum": [
+            "Service",
+            "Interactive"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "LogonType",
+            "values": [
+              {
+                "description": "Run as a service.",
+                "name": "Service",
+                "value": "Service"
+              },
+              {
+                "description": "Run in interactive mode.",
+                "name": "Interactive",
+                "value": "Interactive"
+              }
+            ]
+          }
+        },
+        "ManagedServiceIdentity": {
+          "description": "Managed service identity (system assigned and/or user assigned identities)",
+          "properties": {
+            "principalId": {
+              "description": "The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ManagedServiceIdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserAssignedIdentity",
+                "x-nullable": true
+              },
+              "description": "The set of user assigned identities associated with the resource. The userAssignedIdentities dictionary keys will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}. The dictionary values can be empty objects ({}) in requests.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "ManagedServiceIdentityType": {
+          "description": "Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ManagedServiceIdentityType"
+          }
+        },
+        "ManualResourcePredictionsProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ResourcePredictionsProfile"
+            }
+          ],
+          "description": "Customer provides the stand-by agent scheme.",
+          "type": "object",
+          "x-ms-discriminator-value": "Manual"
+        },
+        "NetworkProfile": {
+          "description": "The network profile of the machines in the pool.",
+          "properties": {
+            "ipAddresses": {
+              "description": "Read only. The list of static public IP addresses for outgoing connections assigned to the pool.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "staticIpAddressCount": {
+              "description": "The number of static public IP addresses for outgoing connections assigned to the pool.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "subnetId": {
+              "description": "The subnet id on which to put all machines created in the pool.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Organization": {
+          "description": "Defines an Azure DevOps organization.",
+          "properties": {
+            "alias": {
+              "description": "An alias to reference the Azure DevOps pool name.",
+              "type": "string"
+            },
+            "openAccess": {
+              "description": "Determines if the pool should have open access to all projects in this organization.",
+              "type": "boolean"
+            },
+            "parallelism": {
+              "description": "How many machines can be created at maximum in this organization out of the maximumConcurrency of the pool.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "projects": {
+              "description": "Optional list of projects in which the pool should be created.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "url": {
+              "description": "The Azure DevOps organization URL in which the pool should be created.",
+              "format": "uri",
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "type": "object"
+        },
+        "OrganizationProfile": {
+          "description": "Defines the organization in which the pool will be used.",
+          "discriminator": {
+            "propertyName": "kind"
+          },
+          "properties": {
+            "kind": {
+              "description": "Discriminator property for OrganizationProfile.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "OsDiskStorageAccountType": {
+          "description": "The storage account type of the OS disk.",
+          "enum": [
+            "Standard",
+            "Premium",
+            "StandardSSD"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "OsDiskStorageAccountType",
+            "values": [
+              {
+                "description": "Standard OS disk type.",
+                "name": "Standard",
+                "value": "Standard"
+              },
+              {
+                "description": "Premium OS disk type.",
+                "name": "Premium",
+                "value": "Premium"
+              },
+              {
+                "description": "Standard SSD OS disk type.",
+                "name": "StandardSSD",
+                "value": "StandardSSD"
+              }
+            ]
+          }
+        },
+        "OsProfile": {
+          "description": "The OS profile of the machines in the pool.",
+          "properties": {
+            "logonType": {
+              "$ref": "#/components/schemas/LogonType"
+            },
+            "secretsManagementSettings": {
+              "$ref": "#/components/schemas/SecretsManagementSettings"
+            }
+          },
+          "type": "object"
+        },
+        "PagedQuota": {
+          "description": "Paged collection of Quota items",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Quota items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Quota"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "Pool": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Concrete tracked resource types can be created by aliasing this type using a specific property type.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PoolProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PoolImage": {
+          "description": "The VM image of the machines in the pool.",
+          "properties": {
+            "aliases": {
+              "description": "List of aliases to reference the image by.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "buffer": {
+              "default": "*",
+              "description": "The percentage of the buffer to be allocated to this image.",
+              "type": "string"
+            },
+            "ephemeralType": {
+              "$ref": "#/components/schemas/EphemeralType"
+            },
+            "isEphemeral": {
+              "description": "Read only. Determines if the image is ephemeral.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "provisioningScriptEntryPoint": {
+              "description": "The provisioning script entry point for this image.",
+              "type": "string"
+            },
+            "provisioningScriptManagedIdentityClientId": {
+              "description": "The managed identity client ID used to access provisioning script content for this image.",
+              "type": "string"
+            },
+            "provisioningScriptShouldRestart": {
+              "description": "Determines whether the machine should be restarted after provisioning script execution for this image.",
+              "type": "boolean"
+            },
+            "provisioningScriptStorageAccountResourceId": {
+              "description": "The ARM resource ID of the storage account hosting provisioning scripts for this image.",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-arm-id-details": {
+                "allowedResources": [
+                  {
+                    "type": "Microsoft.Storage/storageAccounts"
+                  }
+                ]
+              }
+            },
+            "resourceId": {
+              "description": "The resource id of the image.",
+              "type": "string"
+            },
+            "wellKnownImageName": {
+              "description": "The image to use from a well-known set of images made available to customers.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PoolListResult": {
+          "description": "The response of a Pool list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Pool items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Pool"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PoolProperties": {
+          "description": "Pool properties",
+          "properties": {
+            "agentProfile": {
+              "$ref": "#/components/schemas/AgentProfile"
+            },
+            "devCenterProjectResourceId": {
+              "description": "The resource id of the DevCenter Project the pool belongs to.",
+              "type": "string"
+            },
+            "fabricProfile": {
+              "$ref": "#/components/schemas/FabricProfile"
+            },
+            "maximumConcurrency": {
+              "description": "Defines how many resources can there be created at any given time.",
+              "format": "int32",
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "organizationProfile": {
+              "$ref": "#/components/schemas/OrganizationProfile"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "runtimeConfiguration": {
+              "$ref": "#/components/schemas/RuntimeConfiguration"
+            }
+          },
+          "required": [
+            "maximumConcurrency",
+            "organizationProfile",
+            "agentProfile",
+            "fabricProfile"
+          ],
+          "type": "object"
+        },
+        "PoolUpdate": {
+          "description": "The type used for update operations of the Pool.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ManagedServiceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PoolUpdateProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "PoolUpdateProperties": {
+          "description": "The updatable properties of the Pool.",
+          "properties": {
+            "agentProfile": {
+              "$ref": "#/components/schemas/AgentProfile"
+            },
+            "devCenterProjectResourceId": {
+              "description": "The resource id of the DevCenter Project the pool belongs to.",
+              "type": "string"
+            },
+            "fabricProfile": {
+              "$ref": "#/components/schemas/FabricProfile"
+            },
+            "maximumConcurrency": {
+              "description": "Defines how many resources can there be created at any given time.",
+              "format": "int32",
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "organizationProfile": {
+              "$ref": "#/components/schemas/OrganizationProfile"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "runtimeConfiguration": {
+              "$ref": "#/components/schemas/RuntimeConfiguration"
+            }
+          },
+          "type": "object"
+        },
+        "PredictionPreference": {
+          "description": "Determines the balance between cost and performance.",
+          "enum": [
+            "Balanced",
+            "MostCostEffective",
+            "MoreCostEffective",
+            "MorePerformance",
+            "BestPerformance"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PredictionPreference",
+            "values": [
+              {
+                "description": "Balance between cost and performance.",
+                "name": "Balanced",
+                "value": "Balanced"
+              },
+              {
+                "description": "Optimizes for cost over performance.",
+                "name": "MostCostEffective",
+                "value": "MostCostEffective"
+              },
+              {
+                "description": "Halfway through cost and balanced.",
+                "name": "MoreCostEffective",
+                "value": "MoreCostEffective"
+              },
+              {
+                "description": "Halfway through balanced and performance.",
+                "name": "MorePerformance",
+                "value": "MorePerformance"
+              },
+              {
+                "description": "Optimizes for performance over cost.",
+                "name": "BestPerformance",
+                "value": "BestPerformance"
+              }
+            ]
+          }
+        },
+        "ProvisioningState": {
+          "description": "The status of the current operation.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Provisioning",
+            "Updating",
+            "Deleting",
+            "Accepted"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Represents a succeeded operation.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Represents a failed operation.",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Represents a canceled operation.",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Represents a pending operation.",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "Represents a pending operation.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Represents an operation under deletion.",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Represents an accepted operation.",
+                "name": "Accepted",
+                "value": "Accepted"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Quota": {
+          "description": "Describes Resource Quota",
+          "properties": {
+            "currentValue": {
+              "description": "The current usage of the resource.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "id": {
+              "description": "Fully qualified ARM resource id",
+              "format": "arm-id",
+              "type": "string"
+            },
+            "limit": {
+              "description": "The maximum permitted usage of the resource.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "name": {
+              "$ref": "#/components/schemas/QuotaName"
+            },
+            "unit": {
+              "description": "The unit of usage measurement.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "unit",
+            "currentValue",
+            "limit"
+          ],
+          "type": "object"
+        },
+        "QuotaName": {
+          "description": "The Quota Names",
+          "properties": {
+            "localizedValue": {
+              "description": "The localized name of the resource.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The name of the resource.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceDetailsObject": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A ResourceDetailsObject",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ResourceDetailsObjectProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ResourceDetailsObjectListResult": {
+          "description": "The response of a ResourceDetailsObject list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ResourceDetailsObject items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ResourceDetailsObject"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ResourceDetailsObjectProperties": {
+          "description": "Details of the ResourceDetailsObject.",
+          "properties": {
+            "image": {
+              "description": "The image name of the resource.",
+              "type": "string"
+            },
+            "imageVersion": {
+              "description": "The version of the image running on the resource.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/ResourceStatus"
+            }
+          },
+          "required": [
+            "status",
+            "image",
+            "imageVersion"
+          ],
+          "type": "object"
+        },
+        "ResourcePredictions": {
+          "description": "Defines pool buffer.",
+          "type": "object"
+        },
+        "ResourcePredictionsProfile": {
+          "description": "Determines how the stand-by scheme should be provided.",
+          "discriminator": {
+            "propertyName": "kind"
+          },
+          "properties": {
+            "kind": {
+              "$ref": "#/components/schemas/ResourcePredictionsProfileType"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        "ResourcePredictionsProfileType": {
+          "description": "Determines how the stand-by scheme should be provided.",
+          "enum": [
+            "Manual",
+            "Automatic"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourcePredictionsProfileType",
+            "values": [
+              {
+                "description": "Customer provides the stand-by agent scheme.",
+                "name": "Manual",
+                "value": "Manual"
+              },
+              {
+                "description": "The stand-by agent scheme is determined based on historical demand.",
+                "name": "Automatic",
+                "value": "Automatic"
+              }
+            ]
+          }
+        },
+        "ResourceSku": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A ResourceSku",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ResourceSkuProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ResourceSkuCapabilities": {
+          "description": "Describes The SKU capabilities object.",
+          "properties": {
+            "name": {
+              "description": "The name of the SKU capability.",
+              "type": "string"
+            },
+            "value": {
+              "description": "The value of the SKU capability.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "value"
+          ],
+          "type": "object"
+        },
+        "ResourceSkuListResult": {
+          "description": "The response of a ResourceSku list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The ResourceSku items on this page",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSku"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ResourceSkuLocationInfo": {
+          "description": "Describes an available Compute SKU Location Information.",
+          "properties": {
+            "location": {
+              "$ref": "#/components/schemas/Azure.Core.azureLocation"
+            },
+            "zoneDetails": {
+              "description": "Gets details of capabilities available to a SKU in specific zones.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSkuZoneDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "zones": {
+              "description": "List of availability zones where the SKU is supported.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "location",
+            "zones",
+            "zoneDetails"
+          ],
+          "type": "object"
+        },
+        "ResourceSkuProperties": {
+          "description": "Properties of a ResourceSku",
+          "properties": {
+            "capabilities": {
+              "description": "Name value pairs to describe the capability.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSkuCapabilities"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "family": {
+              "description": "The family of the SKU.",
+              "type": "string"
+            },
+            "locationInfo": {
+              "description": "A list of locations and availability zones in those locations where the SKU is available",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSkuLocationInfo"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "locations": {
+              "description": "The set of locations that the SKU is available.",
+              "items": {
+                "$ref": "#/components/schemas/Azure.Core.azureLocation"
+              },
+              "type": "array"
+            },
+            "resourceType": {
+              "description": "The type of resource the SKU applies to.",
+              "type": "string"
+            },
+            "restrictions": {
+              "description": "The restrictions of the SKU.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSkuRestrictions"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "size": {
+              "description": "The size of the SKU.",
+              "type": "string"
+            },
+            "tier": {
+              "description": "The tier of virtual machines in a scale set",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourceType",
+            "tier",
+            "size",
+            "family",
+            "locations",
+            "locationInfo",
+            "capabilities",
+            "restrictions"
+          ],
+          "type": "object"
+        },
+        "ResourceSkuRestrictionInfo": {
+          "description": "Describes an available Compute SKU Restriction Information.",
+          "properties": {
+            "locations": {
+              "description": "Locations where the SKU is restricted",
+              "items": {
+                "$ref": "#/components/schemas/Azure.Core.azureLocation"
+              },
+              "type": "array"
+            },
+            "zones": {
+              "description": "List of availability zones where the SKU is restricted.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "ResourceSkuRestrictions": {
+          "description": "The restrictions of the SKU.",
+          "properties": {
+            "reasonCode": {
+              "$ref": "#/components/schemas/ResourceSkuRestrictionsReasonCode"
+            },
+            "restrictionInfo": {
+              "$ref": "#/components/schemas/ResourceSkuRestrictionInfo"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ResourceSkuRestrictionsType"
+            },
+            "values": {
+              "description": "The value of restrictions. If the restriction type is set to location. This would be different locations where the SKU is restricted.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "values",
+            "restrictionInfo"
+          ],
+          "type": "object"
+        },
+        "ResourceSkuRestrictionsReasonCode": {
+          "description": "Describes the reason for SKU restriction.",
+          "enum": [
+            "QuotaId",
+            "NotAvailableForSubscription"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceSkuRestrictionsReasonCode",
+            "values": [
+              {
+                "description": "The restriction is due to exceeding a quota limitation.",
+                "name": "QuotaId",
+                "value": "QuotaId"
+              },
+              {
+                "description": "The restriction is not available for this subscription.",
+                "name": "NotAvailableForSubscription",
+                "value": "NotAvailableForSubscription"
+              }
+            ]
+          }
+        },
+        "ResourceSkuRestrictionsType": {
+          "description": "Describes the kind of SKU restrictions that can exist",
+          "enum": [
+            "Location",
+            "Zone"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceSkuRestrictionsType",
+            "values": [
+              {
+                "description": "SKU restricted by location.",
+                "name": "Location",
+                "value": "Location"
+              },
+              {
+                "description": "SKU restricted by availability zone.",
+                "name": "Zone",
+                "value": "Zone"
+              }
+            ]
+          }
+        },
+        "ResourceSkuZoneDetails": {
+          "description": "Describes The zonal capabilities of a SKU.",
+          "properties": {
+            "capabilities": {
+              "description": "A list of capabilities that are available for the SKU in the specified list of zones.",
+              "items": {
+                "$ref": "#/components/schemas/ResourceSkuCapabilities"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "name": {
+              "description": "Gets the set of zones that the SKU is available in with the specified capabilities.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "name",
+            "capabilities"
+          ],
+          "type": "object"
+        },
+        "ResourceStatus": {
+          "description": "The status of the machine resource.",
+          "enum": [
+            "Ready",
+            "NotReady",
+            "Allocated",
+            "PendingReturn",
+            "Returned",
+            "Leased",
+            "Provisioning",
+            "Updating",
+            "Starting",
+            "PendingReimage",
+            "Reimaging"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceStatus",
+            "values": [
+              {
+                "description": "Represents a machine resource that is ready.",
+                "name": "Ready",
+                "value": "Ready"
+              },
+              {
+                "description": "Represents a machine resource that is not ready.",
+                "name": "NotReady",
+                "value": "NotReady"
+              },
+              {
+                "description": "Represents a machine resource that is allocated.",
+                "name": "Allocated",
+                "value": "Allocated"
+              },
+              {
+                "description": "Represents a machine resource that is pending return.",
+                "name": "PendingReturn",
+                "value": "PendingReturn"
+              },
+              {
+                "description": "Represents a machine resource that is returned.",
+                "name": "Returned",
+                "value": "Returned"
+              },
+              {
+                "description": "Represents a machine resource that is leased.",
+                "name": "Leased",
+                "value": "Leased"
+              },
+              {
+                "description": "Represents a machine resource that is provisioning.",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "Represents a machine resource that is updating.",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Represents a machine resource that is starting.",
+                "name": "Starting",
+                "value": "Starting"
+              },
+              {
+                "description": "Represents a machine resource that is pending reimage.",
+                "name": "PendingReimage",
+                "value": "PendingReimage"
+              },
+              {
+                "description": "Represents a machine resource that is reimaging.",
+                "name": "Reimaging",
+                "value": "Reimaging"
+              }
+            ]
+          }
+        },
+        "RuntimeConfiguration": {
+          "description": "The runtime configuration of the pool.",
+          "properties": {
+            "workFolder": {
+              "description": "The target work folder of the task agent on the machine.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SecretsManagementSettings": {
+          "description": "The secret management settings of the machines in the pool.",
+          "properties": {
+            "certificateStoreLocation": {
+              "description": "Where to store certificates on the machine.",
+              "type": "string"
+            },
+            "certificateStoreName": {
+              "$ref": "#/components/schemas/CertificateStoreNameOption"
+            },
+            "keyExportable": {
+              "description": "Defines if the key of the certificates should be exportable.",
+              "type": "boolean"
+            },
+            "observedCertificates": {
+              "description": "The list of certificates to install on all machines in the pool.",
+              "items": {
+                "format": "uri",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "observedCertificates",
+            "keyExportable"
+          ],
+          "type": "object"
+        },
+        "Stateful": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/AgentProfile"
+            }
+          ],
+          "description": "Stateful profile meaning that the machines will be returned to the pool after running a job.",
+          "properties": {
+            "gracePeriodTimeSpan": {
+              "description": "How long should the machine be kept around after it ran a workload when there are no stand-by agents. The maximum is one week.",
+              "type": "string"
+            },
+            "maxAgentLifetime": {
+              "description": "How long should stateful machines be kept around. The maximum is one week.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Stateful"
+        },
+        "StatelessAgentProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/AgentProfile"
+            }
+          ],
+          "description": "Stateless profile meaning that the machines will be cleaned up after running a job.",
+          "type": "object",
+          "x-ms-discriminator-value": "Stateless"
+        },
+        "StorageAccountType": {
+          "description": "StorageAccountType enums",
+          "enum": [
+            "Standard_LRS",
+            "Premium_LRS",
+            "StandardSSD_LRS",
+            "Premium_ZRS",
+            "StandardSSD_ZRS"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "StorageAccountType",
+            "values": [
+              {
+                "description": "The data disk should use standard locally redundant storage.",
+                "name": "StandardLRS",
+                "value": "Standard_LRS"
+              },
+              {
+                "description": "The data disk should use premium locally redundant storage.",
+                "name": "PremiumLRS",
+                "value": "Premium_LRS"
+              },
+              {
+                "description": "The data disk should use standard SSD locally redundant storage.",
+                "name": "StandardSSDLRS",
+                "value": "StandardSSD_LRS"
+              },
+              {
+                "description": "The data disk should use premium SSD zonal redundant storage.",
+                "name": "PremiumZRS",
+                "value": "Premium_ZRS"
+              },
+              {
+                "description": "The data disk should use standard SSD zonal redundant storage.",
+                "name": "StandardSSDZRS",
+                "value": "StandardSSD_ZRS"
+              }
+            ]
+          }
+        },
+        "StorageProfile": {
+          "description": "The storage profile of the VMSS.",
+          "properties": {
+            "dataDisks": {
+              "description": "A list of empty data disks to attach.",
+              "items": {
+                "$ref": "#/components/schemas/DataDisk"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "osDiskStorageAccountType": {
+              "$ref": "#/components/schemas/OsDiskStorageAccountType"
+            }
+          },
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserAssignedIdentity": {
+          "description": "User assigned identity properties",
+          "properties": {
+            "clientId": {
+              "description": "The client ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            },
+            "principalId": {
+              "description": "The principal ID of the assigned identity.",
+              "format": "uuid",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "VmSize": {
+          "description": "Specifies the VM Size.",
+          "properties": {
+            "name": {
+              "description": "Specifies the name of the VM Size.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "VmssFabricProfile": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/FabricProfile"
+            }
+          ],
+          "description": "The agents will run on Virtual Machine Scale Sets.",
+          "properties": {
+            "images": {
+              "description": "The VM images of the machines in the pool.",
+              "items": {
+                "$ref": "#/components/schemas/PoolImage"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "networkProfile": {
+              "$ref": "#/components/schemas/NetworkProfile"
+            },
+            "osProfile": {
+              "$ref": "#/components/schemas/OsProfile"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/DevOpsAzureSku"
+            },
+            "storageProfile": {
+              "$ref": "#/components/schemas/StorageProfile"
+            }
+          },
+          "required": [
+            "sku",
+            "images"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "Vmss"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "title": "Managed DevOps Infrastructure",
+      "version": "2026-06-02",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.DevOpsInfrastructure/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "Operations_List": {
+              "$ref": "./examples/ListOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevOpsInfrastructure/checkNameAvailability": {
+        "post": {
+          "description": "Checks that the pool name is valid and is not already in use.",
+          "operationId": "Pools_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailability"
+                }
+              }
+            },
+            "description": "The CheckAvailability request",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_CheckNameAvailability": {
+              "$ref": "./examples/Pools_CheckNameAvailability.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevOpsInfrastructure/locations/{locationName}/skus": {
+        "get": {
+          "description": "List ResourceSku resources by subscription ID",
+          "operationId": "Sku_ListByLocation",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "Name of the location.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResourceSkuListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Sku"
+          ],
+          "x-ms-examples": {
+            "Sku_ListByLocation": {
+              "$ref": "./examples/Sku_ListByLocation.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevOpsInfrastructure/locations/{location}/usages": {
+        "get": {
+          "description": "List Quota resources by subscription ID",
+          "operationId": "SubscriptionUsages_Usages",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PagedQuota"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SubscriptionUsages"
+          ],
+          "x-ms-examples": {
+            "SubscriptionUsages_Usages": {
+              "$ref": "./examples/SubscriptionUsages_Usages.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.DevOpsInfrastructure/pools": {
+        "get": {
+          "description": "List Pool resources by subscription ID",
+          "operationId": "Pools_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PoolListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_ListBySubscription": {
+              "$ref": "./examples/ListPoolsBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevOpsInfrastructure/images/{imageName}/versions": {
+        "get": {
+          "description": "List ImageVersion resources by Image",
+          "operationId": "ImageVersions_ListByImage",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the image.",
+              "in": "path",
+              "name": "imageName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ImageVersionListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ImageVersions"
+          ],
+          "x-ms-examples": {
+            "ImageVersions_ListByImage": {
+              "$ref": "./examples/ImageVersions_ListByImage.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevOpsInfrastructure/pools": {
+        "get": {
+          "description": "List Pool resources by resource group",
+          "operationId": "Pools_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PoolListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_ListByResourceGroup": {
+              "$ref": "./examples/ListPoolsBySubscriptionAndResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevOpsInfrastructure/pools/{poolName}": {
+        "delete": {
+          "description": "Delete a Pool",
+          "operationId": "Pools_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Delete": {
+              "$ref": "./examples/DeletePool.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a Pool",
+          "operationId": "Pools_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Get": {
+              "$ref": "./examples/GetPool.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update a Pool",
+          "operationId": "Pools_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolUpdate"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_Update": {
+              "$ref": "./examples/UpdatePool.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Create a Pool",
+          "operationId": "Pools_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pool"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "Resource 'Pool' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pool"
+                  }
+                }
+              },
+              "description": "Resource 'Pool' create operation succeeded",
+              "headers": {
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_CreateOrUpdate": {
+              "$ref": "./examples/CreateOrUpdatePool.json"
+            },
+            "Pools_CreateOrUpdate_InstanceMix": {
+              "$ref": "./examples/CreateOrUpdatePool_InstanceMix.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DevOpsInfrastructure/pools/{poolName}/resources": {
+        "get": {
+          "description": "List ResourceDetailsObject resources by Pool",
+          "operationId": "ResourceDetails_ListByPool",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ResourceDetailsObjectListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "ResourceDetails"
+          ],
+          "x-ms-examples": {
+            "ResourceDetails_ListByPool": {
+              "$ref": "./examples/ResourceDetails_ListByPool.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        },
+        "post": {
+          "description": "A synchronous resource action.",
+          "operationId": "Pools_DeleteResources",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "Name of the pool. It needs to be globally unique.",
+              "in": "path",
+              "name": "poolName",
+              "required": true,
+              "schema": {
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-.]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResourcesDetails"
+                }
+              }
+            },
+            "description": "The content of the action request",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Pools"
+          ],
+          "x-ms-examples": {
+            "Pools_DeleteResources": {
+              "$ref": "./examples/Pools_DeleteResources.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "Pools"
+      },
+      {
+        "name": "ResourceDetails"
+      },
+      {
+        "name": "Sku"
+      },
+      {
+        "name": "SubscriptionUsages"
+      },
+      {
+        "name": "ImageVersions"
+      }
+    ]
+  }
+}

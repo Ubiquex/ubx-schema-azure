@@ -1,0 +1,1347 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_fluidrelay",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "FluidRelayContainerName": {
+          "description": "The Fluid Relay container resource name.",
+          "in": "path",
+          "name": "fluidRelayContainerName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "FluidRelayServerName": {
+          "description": "The Fluid Relay server resource name.",
+          "in": "path",
+          "name": "fluidRelayServerName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroup": {
+          "description": "The resource group containing the resource.",
+          "in": "path",
+          "name": "resourceGroup",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionId": {
+          "description": "The subscription id (GUID) for this resource.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "CustomerManagedKeyEncryptionProperties": {
+          "description": "All Customer-managed key encryption properties for the resource.",
+          "properties": {
+            "keyEncryptionKeyIdentity": {
+              "description": "All identity configuration for Customer-managed key settings defining which identity should be used to auth to Key Vault.",
+              "properties": {
+                "identityType": {
+                  "description": "Values can be SystemAssigned or UserAssigned",
+                  "enum": [
+                    "SystemAssigned",
+                    "UserAssigned"
+                  ],
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": false,
+                    "name": "CmkIdentityType"
+                  }
+                },
+                "userAssignedIdentityResourceId": {
+                  "description": "user assigned identity to use for accessing key encryption key Url. Ex: /subscriptions/fa5fc227-a624-475e-b696-cdd604c735bc/resourceGroups/\u003cresource group\u003e/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myId. Mutually exclusive with identityType systemAssignedIdentity.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "keyEncryptionKeyUrl": {
+              "description": "key encryption key Url, with or without a version. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78 or https://contosovault.vault.azure.net/keys/contosokek. Key auto rotation is enabled by providing a key uri without version. Otherwise, customer is responsible for rotating the key. The keyEncryptionKeyIdentity(either SystemAssigned or UserAssigned) should have permission to access this key url.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "EncryptionProperties": {
+          "description": "All encryption configuration for a resource.",
+          "properties": {
+            "customerManagedKeyEncryption": {
+              "$ref": "#/components/schemas/CustomerManagedKeyEncryptionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "FluidRelayContainer": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A FluidRelay Container.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/FluidRelayContainerProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayContainerList": {
+          "description": "Paged response",
+          "properties": {
+            "nextLink": {
+              "description": "A link to the next page of results, if any.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "A sequence of FluidRelay containers.",
+              "items": {
+                "$ref": "#/components/schemas/FluidRelayContainer"
+              },
+              "type": "array",
+              "x-adl-name": "FluidRelayContainer[]"
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayContainerProperties": {
+          "description": "The properties of a Fluid Relay Container resource.",
+          "properties": {
+            "creationTime": {
+              "description": "The creation time of this resource",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "frsContainerId": {
+              "description": "The frsContainerId for this container",
+              "readOnly": true,
+              "type": "string"
+            },
+            "frsTenantId": {
+              "description": "The Fluid tenantId for this container",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastAccessTime": {
+              "description": "Last time when user access this resource",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "description": "Provision states for FluidRelay RP",
+              "enum": [
+                "Succeeded",
+                "Failed",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "title": "ProvisioningState",
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ProvisioningState"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayEndpoints": {
+          "description": "The Fluid Relay endpoints for this server",
+          "properties": {
+            "ordererEndpoints": {
+              "description": "The Fluid Relay Orderer endpoints.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "serviceEndpoints": {
+              "description": "The Fluid Relay service endpoints.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "storageEndpoints": {
+              "description": "The Fluid Relay storage endpoints.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayServer": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A FluidRelay Server.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/FluidRelayServerProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayServerKeys": {
+          "description": "The set of available keys for this server.",
+          "properties": {
+            "key1": {
+              "description": "The primary key for this server",
+              "format": "password",
+              "readOnly": true,
+              "type": "string"
+            },
+            "key2": {
+              "description": "The secondary key for this server",
+              "format": "password",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayServerList": {
+          "description": "Paged response",
+          "properties": {
+            "nextLink": {
+              "description": "A link to the next page of results, if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "A sequence of FluidRelay servers.",
+              "items": {
+                "$ref": "#/components/schemas/FluidRelayServer"
+              },
+              "type": "array",
+              "x-adl-name": "FluidRelayServer[]"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "x-adl-name": "Page\u003cFluidRelayServer\u003e"
+        },
+        "FluidRelayServerProperties": {
+          "description": "The properties of a Fluid Relay Service resource.",
+          "properties": {
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionProperties"
+            },
+            "fluidRelayEndpoints": {
+              "$ref": "#/components/schemas/FluidRelayEndpoints"
+            },
+            "frsTenantId": {
+              "description": "The Fluid tenantId for this server",
+              "readOnly": true,
+              "type": "string"
+            },
+            "provisioningState": {
+              "description": "Provision states for FluidRelay RP",
+              "enum": [
+                "Succeeded",
+                "Failed",
+                "Canceled"
+              ],
+              "title": "ProvisioningState",
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ProvisioningState"
+              }
+            },
+            "storagesku": {
+              "description": "Sku of the storage associated with the resource",
+              "enum": [
+                "standard",
+                "basic"
+              ],
+              "title": "StorageSKU",
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "StorageSKU"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayServerUpdate": {
+          "description": "The updatable properties of a Fluid Relay server",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/FluidRelayServerUpdateProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "FluidRelayServerUpdateProperties": {
+          "description": "The properties that can be provided when updating FluidRelayServer resource",
+          "properties": {
+            "encryption": {
+              "$ref": "#/components/schemas/EncryptionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "Identity": {
+          "description": "Identity for the resource.",
+          "properties": {
+            "principalId": {
+              "description": "The principal ID of resource identity.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tenantId": {
+              "description": "The tenant ID of resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The identity type.",
+              "enum": [
+                "SystemAssigned",
+                "UserAssigned",
+                "SystemAssigned, UserAssigned",
+                "None"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "ResourceIdentityType"
+              }
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "properties": {
+                  "clientId": {
+                    "description": "The client id of user assigned identity.",
+                    "readOnly": true,
+                    "type": "string"
+                  },
+                  "principalId": {
+                    "description": "The principal id of user assigned identity.",
+                    "readOnly": true,
+                    "type": "string"
+                  }
+                },
+                "type": "object",
+                "x-ms-client-name": "userAssignedIdentitiesValue"
+              },
+              "description": "The list of user identities associated with the resource.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplay": {
+          "description": "The object that represents the operation.",
+          "properties": {
+            "description": {
+              "description": "Description of the operation, e.g., 'Write confluent'.",
+              "type": "string"
+            },
+            "operation": {
+              "description": "Operation type, e.g., read, write, delete, etc.",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Service provider: Microsoft.FluidRelay",
+              "type": "string"
+            },
+            "resource": {
+              "description": "Type on which the operation is performed, e.g., 'servers'.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "Result of GET request to list FluidRelay operations.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results if there are any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of FluidRelay operations supported by the Microsoft.FluidRelay provider.",
+              "items": {
+                "$ref": "#/components/schemas/OperationResult"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "OperationResult": {
+          "description": "A FluidRelay REST API operation.",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Operation name: {provider}/{resource}/{operation}",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "RegenerateKeyRequest": {
+          "description": "Specifies which key should be generated.",
+          "properties": {
+            "keyName": {
+              "description": "The key to regenerate.",
+              "enum": [
+                "key1",
+                "key2"
+              ],
+              "type": "string",
+              "x-adl-name": "key1 | key2",
+              "x-ms-enum": {
+                "modelAsString": false,
+                "name": "KeyName"
+              }
+            }
+          },
+          "required": [
+            "keyName"
+          ],
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "title": "Azure Fluid Relay",
+      "version": "2022-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.FluidRelay/operations": {
+        "get": {
+          "operationId": "FluidRelayOperations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Operation completed synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "List all operations provided by Microsoft.FluidRelay.",
+          "tags": [
+            "FluidRelayOperations"
+          ],
+          "x-ms-examples": {
+            "List Fluid Relay server operations": {
+              "$ref": "./examples/FluidRelayServerOperations.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.FluidRelay/fluidRelayServers": {
+        "get": {
+          "operationId": "FluidRelayServers_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServerList"
+                  }
+                }
+              },
+              "description": "Paged response"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "List all Fluid Relay servers in a subscription.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "List all Fluid Relay servers in a subscription": {
+              "$ref": "./examples/FluidRelayServers_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers": {
+        "get": {
+          "operationId": "FluidRelayServers_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServerList"
+                  }
+                }
+              },
+              "description": "Paged response"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "List all Fluid Relay servers in a resource group.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "List all Fluid Relay servers in a resource group": {
+              "$ref": "./examples/FluidRelayServers_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}": {
+        "delete": {
+          "operationId": "FluidRelayServers_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Request completed Synchronously."
+            },
+            "204": {
+              "description": "Request completed Synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Delete a Fluid Relay server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Delete a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayServers_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "operationId": "FluidRelayServers_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServer"
+                  }
+                }
+              },
+              "description": "Request completed synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Get a Fluid Relay server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Get Fluid Relay server details": {
+              "$ref": "./examples/FluidRelayServers_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "operationId": "FluidRelayServers_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FluidRelayServerUpdate"
+                }
+              }
+            },
+            "description": "The details of the Fluid Relay server resource included in update calls.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServer"
+                  }
+                }
+              },
+              "description": "Request Completed Synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Update a Fluid Relay server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Update a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayServers_Update.json"
+            }
+          }
+        },
+        "put": {
+          "operationId": "FluidRelayServers_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FluidRelayServer"
+                }
+              }
+            },
+            "description": "The details of the Fluid Relay server resource.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServer"
+                  }
+                }
+              },
+              "description": "Request completed synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Create or Update a Fluid Relay server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Create a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayServers_CreateOrUpdate.json"
+            },
+            "Create a Fluid Relay server with AMI": {
+              "$ref": "./examples/FluidRelayServers_CreateWithAmi.json"
+            },
+            "Create a Fluid Relay server with CMK": {
+              "$ref": "./examples/FluidRelayServers_CreateWithCmk.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}/fluidRelayContainers": {
+        "get": {
+          "operationId": "FluidRelayContainers_ListByFluidRelayServers",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayContainerList"
+                  }
+                }
+              },
+              "description": "Paged response"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "List all Fluid Relay containers which are children of a given Fluid Relay server.",
+          "tags": [
+            "FluidRelayContainers"
+          ],
+          "x-ms-examples": {
+            "List all Fluid Relay containers in a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayContainers_ListByFluidRelayServer.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}/fluidRelayContainers/{fluidRelayContainerName}": {
+        "delete": {
+          "operationId": "FluidRelayContainers_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayContainerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Request completed Synchronously."
+            },
+            "204": {
+              "description": "Request completed Synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Delete a Fluid Relay container.",
+          "tags": [
+            "FluidRelayContainers"
+          ],
+          "x-ms-examples": {
+            "Delete a Fluid Relay container": {
+              "$ref": "./examples/FluidRelayContainers_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "operationId": "FluidRelayContainers_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayContainerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayContainer"
+                  }
+                }
+              },
+              "description": "Request completed synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Get a Fluid Relay container.",
+          "tags": [
+            "FluidRelayContainers"
+          ],
+          "x-ms-examples": {
+            "Get Fluid Relay container details": {
+              "$ref": "./examples/FluidRelayContainers_Get.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}/listKeys": {
+        "post": {
+          "operationId": "FluidRelayServers_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServerKeys"
+                  }
+                }
+              },
+              "description": "Request Completed Synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Get primary and secondary key for this server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Get keys for a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayServers_ListKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.FluidRelay/fluidRelayServers/{fluidRelayServerName}/regenerateKey": {
+        "post": {
+          "operationId": "FluidRelayServers_RegenerateKey",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionId"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroup"
+            },
+            {
+              "$ref": "#/components/parameters/FluidRelayServerName"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegenerateKeyRequest"
+                }
+              }
+            },
+            "description": "The details of which keys to generate.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FluidRelayServerKeys"
+                  }
+                }
+              },
+              "description": "Request Completed Synchronously."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error in operation."
+            }
+          },
+          "summary": "Regenerate the primary or secondary key for this server.",
+          "tags": [
+            "FluidRelayServers"
+          ],
+          "x-ms-examples": {
+            "Regenerate keys for a Fluid Relay server": {
+              "$ref": "./examples/FluidRelayServers_RegenerateKeys.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

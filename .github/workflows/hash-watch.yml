@@ -1,0 +1,1671 @@
+name: hash-watch
+
+# Azure's own real published identity is a GROUP of 604 members -- 302
+# real, distinct Azure Resource Manager resource providers (one per real
+# Swagger 2.0 spec, e.g. azure_network_virtualnetwork,
+# azure_sql_databases), each fetched once and built into BOTH a
+# resource-mode member and a data-source-mode member from that one
+# fetch (UBI-182's own resource/data-source collapse, the same
+# mechanism kubernetes/datadog/github/google already use).
+#
+# UBI-193 Part 1: Azure's own real specs split themselves across shared
+# files by real relative path (../../../../../../common-types/
+# resource-management/v5/types.json#/definitions/ProxyResource) --
+# ubx-provider-dynamic's own internal/openapi.Bundle rewrites every one
+# of those into a real, local, network-free component before the
+# snapshot is ever frozen (reference bundling, not value inlining --
+# see its own doc comment for the real, live-confirmed reason: Azure's
+# own ref graph is genuinely cyclic, not just deep). This is the FIRST
+# real group in this org published only after that fix landed --
+# generation would have refused outright before it existed.
+#
+# --generate-snapshot-group regenerates every real member from its own
+# real config entry below and assembles them into one real, versioned
+# group container (internal/snapshot's own AssembleGroup: the highest
+# real change level across every member, never hand-picked).
+# --prev-snapshot points at THIS checkout's own root, so a content
+# change that doesn't affect any member's own translated schema
+# produces NoChange and no PR.
+#
+# Never auto-merges, matching every other repo in this org.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday, 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out ubx-schema-azure
+        uses: actions/checkout@v4
+
+      - name: Check out ubx-provider-dynamic (to build it from source)
+        run: |
+          set -euo pipefail
+          git clone --depth=1 \
+            "https://github.com/Ubiquex/ubx-provider-dynamic.git" \
+            "${{ runner.temp }}/ubx-provider-dynamic-src"
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ runner.temp }}/ubx-provider-dynamic-src/go.mod
+
+      - name: Build ubx-provider-dynamic
+        run: |
+          set -euo pipefail
+          go build -C "${{ runner.temp }}/ubx-provider-dynamic-src" \
+            -o "${{ runner.temp }}/ubx-provider-dynamic" \
+            ./cmd/ubx-provider-dynamic
+
+      - name: Read the committed group version before regenerating
+        id: before
+        run: |
+          set -euo pipefail
+          current="$(python3 -c "import json; print(json.load(open('manifest.json'))['version'])")"
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "Committed manifest.json is at version $current"
+
+      - name: Regenerate all real members and assemble the group
+        id: gen
+        run: |
+          set -euo pipefail
+          mkdir -p "${{ runner.temp }}/gen/.ubx"
+          cat > "${{ runner.temp }}/gen/.ubx/config" <<'EOF'
+          [dynamic_providers.azure]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/compute/resource-manager/Microsoft.Compute/Compute/stable/2026-04-01/ComputeRP.json"
+          base_url = "https://management.azure.com"
+          [dynamic_providers.azure.auth]
+          type = "oauth2_client_credentials"
+          [dynamic_providers.azure.auth.params]
+          token_url = "https://login.microsoftonline.com/AZURE_TENANT_ID/oauth2/v2.0/token"
+          client_id_env = "AZURE_CLIENT_ID"
+          client_secret_env = "AZURE_CLIENT_SECRET"
+          scopes = ["https://management.azure.com/.default"]
+
+          [dynamic_providers.azure_advisor]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/advisor/resource-manager/Microsoft.Advisor/Advisor/stable/2025-01-01/advisor.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_analysisservices]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/analysisservices/resource-manager/Microsoft.AnalysisServices/AnalysisServices/stable/2017-08-01/analysisservices.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apigateway]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apigateway.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimapis]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimapis.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimapiversionsets]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimapiversionsets.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimauthorizationproviders]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimauthorizationproviders.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimauthorizationservers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimauthorizationservers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimbackends]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimbackends.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimcaches]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimcaches.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimcertificates]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimcertificates.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimcontenttypes]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimcontenttypes.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimdeployment]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimdeployment.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimdiagnostics]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimdiagnostics.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimdocumentations]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimdocumentations.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimemailtemplates]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimemailtemplates.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimgatewayconfigconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimgatewayConfigConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimgateways]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimgateways.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimgroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimgroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimidentityprovider]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimidentityprovider.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimloggers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimloggers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimnamedvalues]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimnamedvalues.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimnotifications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimnotifications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimopenidconnectproviders]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimopenidconnectproviders.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimpolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimpolicyfragments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimpolicyfragments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimpolicyrestrictions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimpolicyrestrictions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimportalconfigs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimportalconfigs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimportalrevisions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimportalrevisions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimprivatelink]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimprivatelink.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimproducts]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimproducts.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimschema]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimschema.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimsubscriptions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimsubscriptions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimtags]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimtags.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimtenant]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimtenant.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimusers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimusers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimworkspacebackends]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimworkspacebackends.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimworkspacecertificates]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimworkspacecertificates.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimworkspacediagnostics]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimworkspacediagnostics.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimworkspaceloggers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimworkspaceloggers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_apimanagement_apimworkspaces]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/apimanagement/resource-manager/Microsoft.ApiManagement/ApiManagement/stable/2024-05-01/apimworkspaces.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_app_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/app/resource-manager/Microsoft.App/ContainerApps/stable/2026-01-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_app_sreagent]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/app/resource-manager/Microsoft.App/SreAgent/stable/2026-01-01/sreagent.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_appconfiguration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/appconfiguration/resource-manager/Microsoft.AppConfiguration/AppConfiguration/stable/2024-06-01/appconfiguration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_applicationinsights_apikeys]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/applicationinsights/resource-manager/Microsoft.Insights/ApplicationInsights/stable/2015-05-01/componentApiKeys_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_applicationinsights_components]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/applicationinsights/resource-manager/Microsoft.Insights/ApplicationInsights/stable/2015-05-01/components_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_applicationinsights_proactivedetection]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/applicationinsights/resource-manager/Microsoft.Insights/ApplicationInsights/stable/2015-05-01/componentProactiveDetection_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_applicationinsights_webtests]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/applicationinsights/resource-manager/Microsoft.Insights/ApplicationInsights/stable/2015-05-01/webTests_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_applicationinsights_workbooks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/applicationinsights/resource-manager/Microsoft.Insights/ApplicationInsights/stable/2023-06-01/workbooks_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_appplatform]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/appplatform/resource-manager/Microsoft.AppPlatform/stable/2023-12-01/appplatform.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_attestation]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/attestation/resource-manager/Microsoft.Attestation/Attestation/stable/2021-06-01/attestation.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_authorization_roleassignmentscalls]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/authorization/resource-manager/Microsoft.Authorization/Authorization/stable/2022-04-01/authorization-RoleAssignmentsCalls.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_authorization_roledefinitionscalls]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/authorization/resource-manager/Microsoft.Authorization/Authorization/stable/2022-04-01/authorization-RoleDefinitionsCalls.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_authorization_roleassignmentschedulerequest]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/authorization/resource-manager/Microsoft.Authorization/Authorization/stable/2020-10-01/RoleAssignmentScheduleRequest.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_authorization_roleeligibilityschedulerequest]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/authorization/resource-manager/Microsoft.Authorization/Authorization/stable/2020-10-01/RoleEligibilityScheduleRequest.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_automanage]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/automanage/resource-manager/Microsoft.Automanage/stable/2022-05-04/automanage.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_automation_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/automation/resource-manager/Microsoft.Automation/stable/2024-10-23/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_kusto]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azure-kusto/resource-manager/Microsoft.Kusto/Kusto/stable/2025-02-14/kusto.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azureactivedirectory_privateendpointconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azureactivedirectory/resource-manager/Microsoft.Aadiam/AzureActiveDirectory/stable/2020-03-01/privateEndpointConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azureactivedirectory_privatelinkforazuread]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azureactivedirectory/resource-manager/Microsoft.Aadiam/AzureActiveDirectory/stable/2020-03-01/privateLinkForAzureAD.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_galleryimages]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/galleryImages.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_hci]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCI/stable/2026-04-30/hci.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_logicalnetworks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/logicalNetworks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_marketplacegalleryimages]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/marketplaceGalleryImages.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_networkinterfaces]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/networkInterfaces.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_storagecontainers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/storageContainers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_azurestackhci_virtualharddisks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/azurestackhci/resource-manager/Microsoft.AzureStackHCI/StackHCIVM/stable/2024-01-01/virtualHardDisks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_batch_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/resource-manager/Microsoft.Batch/Batch/stable/2025-06-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_billing_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/billing/resource-manager/Microsoft.Billing/Billing/stable/2024-04-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_botservice]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/botservice/resource-manager/Microsoft.BotService/BotService/stable/2022-09-15/botservice.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_cdn_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cdn/resource-manager/Microsoft.Cdn/Cdn/stable/2026-07-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_chaos_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/chaos/resource-manager/Microsoft.Chaos/Chaos/stable/2025-01-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_codesigning_codesigningaccount]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/codesigning/resource-manager/Microsoft.CodeSigning/CodeSigning/stable/2025-10-13/codeSigningAccount.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_cognitiveservices]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/resource-manager/Microsoft.CognitiveServices/stable/2026-07-01/cognitiveservices.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_communication_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/communication/resource-manager/Microsoft.Communication/stable/2026-03-18/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_compute_containerservice]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/compute/resource-manager/Microsoft.ContainerService/ContainerService/stable/2017-01-31/containerService.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_confidentialledger_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/confidentialledger/resource-manager/Microsoft.ConfidentialLedger/ConfidentialLedger/stable/2026-02-23/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_consumption_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/consumption/resource-manager/Microsoft.Consumption/Consumption/stable/2026-06-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_containerservice_fleets]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/containerservice/resource-manager/Microsoft.ContainerService/fleet/stable/2026-06-01/fleets.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_containerservice_managedclusters]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/stable/2026-05-01/managedClusters.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_cosmos_db_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cosmos-db/resource-manager/Microsoft.DocumentDB/DocumentDB/stable/2026-03-15/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_cost_management_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cost-management/resource-manager/Microsoft.CostManagement/CostManagement/stable/2026-06-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_cpim_externalidentities]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cpim/resource-manager/Microsoft.AzureActiveDirectory/ExternalIdentities/stable/2021-04-01/externalIdentities.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_dashboard_grafana]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/dashboard/resource-manager/Microsoft.Dashboard/Dashboard/stable/2025-08-01/grafana.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_databox]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/databox/resource-manager/Microsoft.DataBox/DataBox/stable/2025-07-01/databox.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_databricks_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/databricks/resource-manager/Microsoft.Databricks/Databricks/stable/2026-01-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_datadog]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/datadog/resource-manager/Microsoft.Datadog/Datadog/stable/2025-06-11/datadog.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_datafactory_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/datafactory/resource-manager/Microsoft.DataFactory/DataFactory/stable/2018-06-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_datamigration_sqlmigration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/datamigration/resource-manager/Microsoft.DataMigration/DataMigration/stable/2025-06-30/sqlmigration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_dataprotection]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/dataprotection/resource-manager/Microsoft.DataProtection/DataProtection/stable/2026-06-01/dataprotection.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_devcenter]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/devcenter/resource-manager/Microsoft.DevCenter/DevCenter/stable/2025-02-01/devcenter.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_devcenter_vdi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/devcenter/resource-manager/Microsoft.DevCenter/DevCenter/stable/2025-02-01/vdi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_devopsinfrastructure]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/devopsinfrastructure/resource-manager/Microsoft.DevOpsInfrastructure/DevOpsInfrastructure/stable/2026-06-02/devopsinfrastructure.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_devtestlabs_dtl]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/devtestlabs/resource-manager/Microsoft.DevTestLab/DevTestLabs/stable/2018-09-15/DTL.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_digitaltwins]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/digitaltwins/resource-manager/Microsoft.DigitalTwins/DigitalTwins/stable/2023-01-31/digitaltwins.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_dns]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/dns/resource-manager/Microsoft.Network/Dns/stable/2018-05-01/dns.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_domainservices]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/domainservices/resource-manager/Microsoft.AAD/DomainServices/stable/2022-12-01/domainservices.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_domainservices_oucontainer]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/domainservices/resource-manager/Microsoft.AAD/DomainServices/stable/2022-12-01/oucontainer.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_dynatrace]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/dynatrace/resource-manager/Dynatrace.Observability/DynatraceObservability/stable/2024-04-24/dynatrace.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_elastic]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/elastic/resource-manager/Microsoft.Elastic/Elastic/stable/2025-06-01/elastic.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_eventgrid]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/eventgrid/resource-manager/Microsoft.EventGrid/EventGrid/stable/2025-02-15/EventGrid.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_eventhub_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/eventhub/resource-manager/Microsoft.EventHub/Eventhub/stable/2026-01-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_extendedlocation_customlocations]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/extendedlocation/resource-manager/Microsoft.ExtendedLocation/CustomLocations/stable/2021-08-15/customlocations.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_fabric]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/fabric/resource-manager/Microsoft.Fabric/Fabric/stable/2023-11-01/fabric.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_fluidrelay]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/fluidrelay/resource-manager/Microsoft.FluidRelay/FluidRelay/stable/2022-06-01/fluidrelay.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_graphservicesprod]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/graphservicesprod/resource-manager/Microsoft.GraphServices/GraphServices/stable/2023-04-13/graphservicesprod.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hardwaresecuritymodules_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hardwaresecuritymodules/resource-manager/Microsoft.HardwareSecurityModules/HardwareSecurityModules/stable/2025-03-31/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hdinsight_applications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hdinsight/resource-manager/Microsoft.HDInsight/HDInsight/stable/2021-06-01/applications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hdinsight_cluster]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hdinsight/resource-manager/Microsoft.HDInsight/HDInsight/stable/2021-06-01/cluster.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hdinsight_privateendpointconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hdinsight/resource-manager/Microsoft.HDInsight/HDInsight/stable/2021-06-01/privateEndpointConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_healthbot]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/healthbot/resource-manager/Microsoft.HealthBot/HealthBot/stable/2025-11-01/healthbot.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_healthcareapis_healthcare_apis]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/healthcareapis/resource-manager/Microsoft.HealthcareApis/HealthcareApis/stable/2024-03-31/healthcare-apis.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_help]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/help/resource-manager/Microsoft.Help/Help/stable/2023-06-01/help.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hybridcompute_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hybridcompute/resource-manager/Microsoft.HybridCompute/HybridCompute/stable/2026-07-15/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_hybridkubernetes_connectedclusters]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/hybridkubernetes/resource-manager/Microsoft.Kubernetes/HybridKubernetes/stable/2026-05-01/connectedClusters.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_iotcentral]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/iotcentral/resource-manager/Microsoft.IoTCentral/IoTCentral/stable/2021-06-01/iotcentral.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_iothub]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/iothub/resource-manager/Microsoft.Devices/IoTHub/stable/2023-06-30/iothub.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_keyvault_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/keyvault/resource-manager/Microsoft.KeyVault/KeyVault/stable/2026-02-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_kubernetesconfiguration_extensions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/kubernetesconfiguration/resource-manager/Microsoft.KubernetesConfiguration/stable/2023-05-01/extensions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_kubernetesconfiguration_fluxconfiguration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/kubernetesconfiguration/resource-manager/Microsoft.KubernetesConfiguration/stable/2023-05-01/fluxconfiguration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_kubernetesconfiguration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/kubernetesconfiguration/resource-manager/Microsoft.KubernetesConfiguration/stable/2023-05-01/kubernetesconfiguration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_liftrqumulo_qumulo_storage]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/liftrqumulo/resource-manager/Qumulo.Storage/QumuloStorage/stable/2026-04-16/Qumulo.Storage.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_loadtestservice]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/loadtestservice/resource-manager/Microsoft.LoadTestService/loadtesting/stable/2022-12-01/loadtestservice.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_loadtestservice_playwright]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/loadtestservice/resource-manager/Microsoft.LoadTestService/playwright/stable/2025-09-01/playwright.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_logic]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/logic/resource-manager/Microsoft.Logic/Logic/stable/2019-05-01/logic.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_machinelearningservices_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/machinelearningservices/resource-manager/Microsoft.MachineLearningServices/stable/2026-07-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_maintenance]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maintenance/resource-manager/Microsoft.Maintenance/Maintenance/stable/2023-04-01/Maintenance.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_managedservices]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/managedservices/resource-manager/Microsoft.ManagedServices/ManagedServices/stable/2022-10-01/managedservices.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_management]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/management/resource-manager/Microsoft.Management/ManagementGroups/stable/2023-04-01/management.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_management_servicegroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/management/resource-manager/Microsoft.Management/ServiceGroups/stable/2026-08-01/serviceGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_maps_management]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/maps/resource-manager/Microsoft.Maps/Maps/stable/2023-06-01/maps-management.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_marketplace]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/marketplace/resource-manager/Microsoft.Marketplace/Marketplace/stable/2025-01-01/Marketplace.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_mongocluster]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/mongocluster/resource-manager/Microsoft.DocumentDB/MongoCluster/stable/2026-06-01/mongoCluster.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_monitor_scheduledqueryrule_api]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/monitor/resource-manager/Microsoft.Insights/Insights/stable/2026-03-01/scheduledQueryRule_API.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_msi_managedidentity]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/msi/resource-manager/Microsoft.ManagedIdentity/ManagedIdentity/stable/2024-11-30/ManagedIdentity.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_mysql_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/mysql/resource-manager/Microsoft.DBforMySQL/FlexibleServers/stable/2024-12-30/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_netapp]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/netapp/resource-manager/Microsoft.NetApp/NetApp/stable/2026-06-01/netapp.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_applicationgateway]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/applicationGateway.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_expressroute]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/expressRoute.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_firewall]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/firewall.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_firewallpolicy]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/firewallPolicy.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_firstpartyservicetag]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/firstPartyServiceTag.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_interconnectgroup]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/interconnectGroup.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_loadbalancer]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/loadBalancer.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_networkgateway]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/networkGateway.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_networkmanager]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/networkManager.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_networksecurityperimeter]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/networkSecurityPerimeter.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_networkwatcher]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/networkWatcher.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_servicegateway]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/serviceGateway.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_virtualnetwork]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/virtualNetwork.json"
+          base_url = "https://management.azure.com"
+          describe_exclude = [
+            "azure_network_virtualnetwork_private_link_service",
+            "azure_network_virtualnetwork_network_profile",
+            "azure_network_virtualnetwork_network_security_group",
+            "azure_network_virtualnetwork_private_endpoint",
+            "azure_network_virtualnetwork_private_endpoint_connection",
+            "azure_network_virtualnetwork_virtual_network",
+            "azure_network_virtualnetwork_subnet",
+            "azure_network_virtualnetwork_route_table",
+            "azure_network_virtualnetwork_public_ipaddress",
+            "azure_network_virtualnetwork_dscp_configuration",
+            "azure_network_virtualnetwork_network_interface",
+            "azure_network_virtualnetwork_network_interface_tap_configuration",
+          ]
+
+          [dynamic_providers.azure_network_virtualnetworkappliance]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/virtualNetworkAppliance.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_network_virtualwan]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/network/resource-manager/Microsoft.Network/Network/stable/2025-09-01/virtualWan.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_newrelic]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/newrelic/resource-manager/NewRelic.Observability/stable/2026-06-01/NewRelic.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_nginx_swagger]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/nginx/resource-manager/Nginx.NginxPlus/NginxPlus/stable/2025-11-01/swagger.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_notificationhubs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/notificationhubs/resource-manager/Microsoft.NotificationHubs/NotificationHubs/stable/2023-09-01/notificationhubs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_operationalinsights_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/operationalinsights/resource-manager/Microsoft.OperationalInsights/OperationalInsights/stable/2026-03-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_oracle_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/oracle/resource-manager/Oracle.Database/OracleDatabase/stable/2025-09-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_paloaltonetworks_cloudngfw]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/paloaltonetworks/resource-manager/PaloAltoNetworks.Cloudngfw/Cloudngfw/stable/2025-10-08/PaloAltoNetworks.Cloudngfw.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_portal]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/portal/resource-manager/Microsoft.Portal/stable/2026-04-01/portal.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_portal_tenantconfiguration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/portal/resource-manager/Microsoft.Portal/stable/2026-04-01/tenantConfiguration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_postgresql_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/postgresql/resource-manager/Microsoft.DBforPostgreSQL/stable/2025-08-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_powerbidedicated_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/powerbidedicated/resource-manager/Microsoft.PowerBIdedicated/PowerBIDedicated/stable/2021-01-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_privatedns]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/privatedns/resource-manager/Microsoft.Network/PrivateDns/stable/2024-06-01/privatedns.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_purview]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/purview/resource-manager/Microsoft.Purview/Purview/stable/2021-12-01/purview.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_recoveryservicesbackup_bms]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/recoveryservicesbackup/resource-manager/Microsoft.RecoveryServices/RecoveryServicesBackup/stable/2026-07-01/bms.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_recoveryservicessiterecovery_service]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/recoveryservicessiterecovery/resource-manager/Microsoft.RecoveryServices/SiteRecovery/stable/2026-07-01/service.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_redhatopenshift]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/redhatopenshift/resource-manager/Microsoft.RedHatOpenShift/OpenShiftClusters/stable/2025-07-25/redhatopenshift.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_redisenterprise]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/redisenterprise/resource-manager/Microsoft.Cache/RedisEnterprise/stable/2025-07-01/redisenterprise.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_relay]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/relay/resource-manager/Microsoft.Relay/Relay/stable/2026-01-01/relay.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_reservations]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/reservations/resource-manager/Microsoft.Capacity/Reservations/stable/2022-11-01/reservations.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resourceconnector_appliances]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resourceconnector/resource-manager/Microsoft.ResourceConnector/ResourceConnector/stable/2022-10-27/appliances.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_databoundaries]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/databoundaries/stable/2024-08-01/dataBoundaries.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_deployments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/deployments/stable/2025-04-01/deployments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_deploymentscripts]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/deploymentScripts/stable/2023-08-01/deploymentScripts.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_deploymentstacks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/deploymentStacks/stable/2025-07-01/deploymentStacks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_features]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Features/features/stable/2021-07-01/features.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_links]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/links/stable/2016-09-01/links.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_locks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Authorization/locks/stable/2020-05-01/locks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_managedapplications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Solutions/managedapplications/stable/2019-07-01/managedapplications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Authorization/policy/stable/2026-07-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_privatelinks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Authorization/privatelinks/stable/2020-05-01/privateLinks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/resources/stable/2025-04-01/resources.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_subscriptionfeatureregistration]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Features/features/stable/2021-07-01/SubscriptionFeatureRegistration.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_resources_templatespecs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/resources/resource-manager/Microsoft.Resources/templateSpecs/stable/2022-02-01/templateSpecs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_scvmm]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/scvmm/resource-manager/Microsoft.ScVmm/ScVmm/stable/2025-03-13/scvmm.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_search]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/search/resource-manager/Microsoft.Search/Search/stable/2025-05-01/search.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_security_datascanners]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/security/resource-manager/Microsoft.Security/Security/stable/2026-08-01/datascanners.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_securityinsights_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/securityinsights/resource-manager/Microsoft.SecurityInsights/SecurityInsights/stable/2025-09-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_servicebus]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/servicebus/resource-manager/Microsoft.ServiceBus/ServiceBus/stable/2026-01-01/servicebus.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_servicefabric_application]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/servicefabric/resource-manager/Microsoft.ServiceFabric/ServiceFabric/stable/2021-06-01/application.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_servicefabric_cluster]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/servicefabric/resource-manager/Microsoft.ServiceFabric/ServiceFabric/stable/2021-06-01/cluster.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_servicenetworking_trafficcontroller]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/servicenetworking/resource-manager/Microsoft.ServiceNetworking/ServiceNetworking/stable/2025-01-01/TrafficController.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_signalr]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/signalr/resource-manager/Microsoft.SignalRService/SignalRService/stable/2024-03-01/signalr.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_solutions_managedapplications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/solutions/resource-manager/Microsoft.Solutions/stable/2021-07-01/managedapplications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_backupshorttermretentionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/backupShortTermRetentionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_blobauditing]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/blobAuditing.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databaseadvancedthreatprotectionsettings]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseAdvancedThreatProtectionSettings.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databases]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databases.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasesecurityalertpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseSecurityAlertPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasesqlvulnerabilityassessmentbaselines]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseSqlVulnerabilityAssessmentBaselines.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasesqlvulnerabilityassessmentrulebaselines]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseSqlVulnerabilityAssessmentRuleBaselines.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasevulnerabilityassessmentrulebaselines]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseVulnerabilityAssessmentRuleBaselines.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasevulnerabilityassessments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseVulnerabilityAssessments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_databasevulnerabilityassessmentscans]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/databaseVulnerabilityAssessmentScans.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_datamaskingpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/dataMaskingPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_deletedservers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/deletedServers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_distributedavailabilitygroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/distributedAvailabilityGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_elasticpools]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/elasticPools.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_encryptionprotectors]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/encryptionProtectors.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_failovergroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/failoverGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_firewallrules]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/firewallRules.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_geobackuppolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/geoBackupPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_instancefailovergroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/instanceFailoverGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_instancepools]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/instancePools.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_ipv6firewallrules]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/iPv6FirewallRules.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobagents]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobAgents.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobcredentials]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobCredentials.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobexecutions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobExecutions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobprivateendpoints]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobPrivateEndpoints.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobsteps]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobSteps.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_jobtargetgroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/jobTargetGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_ledgerdigestuploads]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/ledgerDigestUploads.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_longtermretentionbackups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/longTermRetentionBackups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_longtermretentionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/longTermRetentionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedbackupshorttermretentionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedBackupShortTermRetentionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabaseadvancedthreatprotectionsettings]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseAdvancedThreatProtectionSettings.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabases]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabases.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasesecurityalertpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseSecurityAlertPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasesensitivitylabels]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseSensitivityLabels.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasetransparentdataencryption]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseTransparentDataEncryption.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasevulnerabilityassessmentrulebaselines]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseVulnerabilityAssessmentRuleBaselines.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasevulnerabilityassessments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseVulnerabilityAssessments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_manageddatabasevulnerabilityassessmentscans]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedDatabaseVulnerabilityAssessmentScans.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstanceadministrators]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceAdministrators.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstanceadvancedthreatprotectionsettings]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceAdvancedThreatProtectionSettings.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstanceazureadonlyauthentications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceAzureAdOnlyAuthentications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstancedtcs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceDtcs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstanceencryptionprotectors]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceEncryptionProtectors.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstancekeys]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceKeys.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstancelongtermretentionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceLongTermRetentionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstanceprivateendpointconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstancePrivateEndpointConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstances]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstances.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedinstancevulnerabilityassessments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedInstanceVulnerabilityAssessments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedledgerdigestuploads]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedLedgerDigestUploads.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedrestorabledroppeddatabasebackupshorttermretentionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedRestorableDroppedDatabaseBackupShortTermRetentionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedserverdnsaliases]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedServerDnsAliases.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_managedserversecurityalertpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/managedServerSecurityAlertPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_networksecurityperimeterconfigurations]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/networkSecurityPerimeterConfigurations.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_outboundfirewallrules]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/outboundFirewallRules.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_privateendpointconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/privateEndpointConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_replicationlinks]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/replicationLinks.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_restorepoints]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/restorePoints.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_sensitivitylabels]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/sensitivityLabels.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serveradvancedthreatprotectionsettings]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverAdvancedThreatProtectionSettings.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverazureadadministrators]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverAzureAdAdministrators.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverazureadonlyauthentications]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverAzureAdOnlyAuthentications.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverconfigurationoptions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverConfigurationOptions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverconnectionpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverConnectionPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverdevopsaudit]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverDevOpsAudit.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverdnsaliases]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverDnsAliases.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serverkeys]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverKeys.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_servers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/servers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_serversecurityalertpolicies]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverSecurityAlertPolicies.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_servertrustcertificates]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverTrustCertificates.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_servertrustgroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverTrustGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_servervulnerabilityassessments]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/serverVulnerabilityAssessments.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_sqlvulnerabilityassessmentbaseline]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/sqlVulnerabilityAssessmentBaseline.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_sqlvulnerabilityassessmentrulebaseline]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/sqlVulnerabilityAssessmentRuleBaseline.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_sqlvulnerabilityassessmentssettings]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/sqlVulnerabilityAssessmentsSettings.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_startstopmanagedinstanceschedules]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/startStopManagedInstanceSchedules.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_syncagents]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/syncAgents.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_syncgroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/syncGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_syncmembers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/syncMembers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_transparentdataencryptions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/transparentDataEncryptions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_virtualclusters]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/virtualClusters.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_virtualnetworkrules]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/virtualNetworkRules.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_workloadclassifiers]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/workloadClassifiers.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_sql_workloadgroups]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/sql/resource-manager/Microsoft.Sql/SQL/stable/2025-01-01/workloadGroups.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_storage_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/storage/resource-manager/Microsoft.Storage/stable/2026-04-01/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_streamanalytics_clusters]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/streamanalytics/resource-manager/Microsoft.StreamAnalytics/StreamAnalytics/stable/2020-03-01/clusters.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_streamanalytics_inputs]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/streamanalytics/resource-manager/Microsoft.StreamAnalytics/StreamAnalytics/stable/2020-03-01/inputs.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_streamanalytics_privateendpoints]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/streamanalytics/resource-manager/Microsoft.StreamAnalytics/StreamAnalytics/stable/2020-03-01/privateEndpoints.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_streamanalytics_transformations]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/streamanalytics/resource-manager/Microsoft.StreamAnalytics/StreamAnalytics/stable/2020-03-01/transformations.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_subscription_subscriptions]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/subscription/resource-manager/Microsoft.Subscription/Subscription/stable/2021-10-01/subscriptions.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_azureadonlyauthentication]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/azureADOnlyAuthentication.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_bigdatapool]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/bigDataPool.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_firewallrule]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/firewallRule.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_integrationruntime]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/integrationRuntime.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_keys]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/keys.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_privateendpointconnections]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/privateEndpointConnections.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_privatelinkhub]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/privatelinkhub.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_sqlpool]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/sqlPool.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_sqlserver]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/sqlServer.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_synapse_workspace]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/workspace.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_trafficmanager]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/trafficmanager/resource-manager/Microsoft.Network/TrafficManager/stable/2022-04-01/trafficmanager.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_vi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/vi/resource-manager/Microsoft.VideoIndexer/VideoIndexer/stable/2025-04-01/vi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_vmware]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/vmware/resource-manager/Microsoft.AVS/AVS/stable/2025-09-01/vmware.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_web_openapi]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/web/resource-manager/Microsoft.Web/AppService/stable/2026-07-15/openapi.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_webpubsub]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/webpubsub/resource-manager/Microsoft.SignalRService/SignalRService/stable/2024-03-01/webpubsub.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_workloads_monitors]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/workloads/resource-manager/Microsoft.Workloads/stable/2023-04-01/monitors.json"
+          base_url = "https://management.azure.com"
+
+          [dynamic_providers.azure_workloads_sapvirtualinstance]
+          schema_source = "openapi"
+          schema_url = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/workloads/resource-manager/Microsoft.Workloads/stable/2023-04-01/SAPVirtualInstance.json"
+          base_url = "https://management.azure.com"
+          EOF
+
+          # UBI-182's own real collapse: each entry's own single fetch
+          # now produces both real members (resource mode under its own
+          # name, data-source mode synthesized under "<name>_ds") -- no
+          # separate "*_ds" tables exist in this repo's own driving
+          # config at all, matching the SAME collapse ubiquex's own
+          # sdk/providers/.ubx/config already went through.
+          rm -rf "${{ runner.temp }}/new-group"
+          ( cd "${{ runner.temp }}/gen" && \
+            "${{ runner.temp }}/ubx-provider-dynamic" \
+              --generate-snapshot-group="${{ runner.temp }}/new-group" \
+              --group-repo-name=azure \
+              --group-members=azure,azure_advisor,azure_analysisservices,azure_apimanagement_apigateway,azure_apimanagement_apimapis,azure_apimanagement_apimapiversionsets,azure_apimanagement_apimauthorizationproviders,azure_apimanagement_apimauthorizationservers,azure_apimanagement_apimbackends,azure_apimanagement_apimcaches,azure_apimanagement_apimcertificates,azure_apimanagement_apimcontenttypes,azure_apimanagement_apimdeployment,azure_apimanagement_apimdiagnostics,azure_apimanagement_apimdocumentations,azure_apimanagement_apimemailtemplates,azure_apimanagement_apimgatewayconfigconnections,azure_apimanagement_apimgateways,azure_apimanagement_apimgroups,azure_apimanagement_apimidentityprovider,azure_apimanagement_apimloggers,azure_apimanagement_apimnamedvalues,azure_apimanagement_apimnotifications,azure_apimanagement_apimopenidconnectproviders,azure_apimanagement_apimpolicies,azure_apimanagement_apimpolicyfragments,azure_apimanagement_apimpolicyrestrictions,azure_apimanagement_apimportalconfigs,azure_apimanagement_apimportalrevisions,azure_apimanagement_apimprivatelink,azure_apimanagement_apimproducts,azure_apimanagement_apimschema,azure_apimanagement_apimsubscriptions,azure_apimanagement_apimtags,azure_apimanagement_apimtenant,azure_apimanagement_apimusers,azure_apimanagement_apimworkspacebackends,azure_apimanagement_apimworkspacecertificates,azure_apimanagement_apimworkspacediagnostics,azure_apimanagement_apimworkspaceloggers,azure_apimanagement_apimworkspaces,azure_app_openapi,azure_app_sreagent,azure_appconfiguration,azure_applicationinsights_apikeys,azure_applicationinsights_components,azure_applicationinsights_proactivedetection,azure_applicationinsights_webtests,azure_applicationinsights_workbooks,azure_appplatform,azure_attestation,azure_authorization_roleassignmentscalls,azure_authorization_roledefinitionscalls,azure_authorization_roleassignmentschedulerequest,azure_authorization_roleeligibilityschedulerequest,azure_automanage,azure_automation_openapi,azure_kusto,azure_azureactivedirectory_privateendpointconnections,azure_azureactivedirectory_privatelinkforazuread,azure_azurestackhci_galleryimages,azure_azurestackhci_hci,azure_azurestackhci_logicalnetworks,azure_azurestackhci_marketplacegalleryimages,azure_azurestackhci_networkinterfaces,azure_azurestackhci_storagecontainers,azure_azurestackhci_virtualharddisks,azure_batch_openapi,azure_billing_openapi,azure_botservice,azure_cdn_openapi,azure_chaos_openapi,azure_codesigning_codesigningaccount,azure_cognitiveservices,azure_communication_openapi,azure_compute_containerservice,azure_confidentialledger_openapi,azure_consumption_openapi,azure_containerservice_fleets,azure_containerservice_managedclusters,azure_cosmos_db_openapi,azure_cost_management_openapi,azure_cpim_externalidentities,azure_dashboard_grafana,azure_databox,azure_databricks_openapi,azure_datadog,azure_datafactory_openapi,azure_datamigration_sqlmigration,azure_dataprotection,azure_devcenter,azure_devcenter_vdi,azure_devopsinfrastructure,azure_devtestlabs_dtl,azure_digitaltwins,azure_dns,azure_domainservices,azure_domainservices_oucontainer,azure_dynatrace,azure_elastic,azure_eventgrid,azure_eventhub_openapi,azure_extendedlocation_customlocations,azure_fabric,azure_fluidrelay,azure_graphservicesprod,azure_hardwaresecuritymodules_openapi,azure_hdinsight_applications,azure_hdinsight_cluster,azure_hdinsight_privateendpointconnections,azure_healthbot,azure_healthcareapis_healthcare_apis,azure_help,azure_hybridcompute_openapi,azure_hybridkubernetes_connectedclusters,azure_iotcentral,azure_iothub,azure_keyvault_openapi,azure_kubernetesconfiguration_extensions,azure_kubernetesconfiguration_fluxconfiguration,azure_kubernetesconfiguration,azure_liftrqumulo_qumulo_storage,azure_loadtestservice,azure_loadtestservice_playwright,azure_logic,azure_machinelearningservices_openapi,azure_maintenance,azure_managedservices,azure_management,azure_management_servicegroups,azure_maps_management,azure_marketplace,azure_mongocluster,azure_monitor_scheduledqueryrule_api,azure_msi_managedidentity,azure_mysql_openapi,azure_netapp,azure_network_applicationgateway,azure_network_expressroute,azure_network_firewall,azure_network_firewallpolicy,azure_network_firstpartyservicetag,azure_network_interconnectgroup,azure_network_loadbalancer,azure_network_networkgateway,azure_network_networkmanager,azure_network_networksecurityperimeter,azure_network_networkwatcher,azure_network_servicegateway,azure_network_virtualnetwork,azure_network_virtualnetworkappliance,azure_network_virtualwan,azure_newrelic,azure_nginx_swagger,azure_notificationhubs,azure_operationalinsights_openapi,azure_oracle_openapi,azure_paloaltonetworks_cloudngfw,azure_portal,azure_portal_tenantconfiguration,azure_postgresql_openapi,azure_powerbidedicated_openapi,azure_privatedns,azure_purview,azure_recoveryservicesbackup_bms,azure_recoveryservicessiterecovery_service,azure_redhatopenshift,azure_redisenterprise,azure_relay,azure_reservations,azure_resourceconnector_appliances,azure_resources_databoundaries,azure_resources_deployments,azure_resources_deploymentscripts,azure_resources_deploymentstacks,azure_resources_features,azure_resources_links,azure_resources_locks,azure_resources_managedapplications,azure_resources_openapi,azure_resources_privatelinks,azure_resources,azure_resources_subscriptionfeatureregistration,azure_resources_templatespecs,azure_scvmm,azure_search,azure_security_datascanners,azure_securityinsights_openapi,azure_servicebus,azure_servicefabric_application,azure_servicefabric_cluster,azure_servicenetworking_trafficcontroller,azure_signalr,azure_solutions_managedapplications,azure_sql_backupshorttermretentionpolicies,azure_sql_blobauditing,azure_sql_databaseadvancedthreatprotectionsettings,azure_sql_databases,azure_sql_databasesecurityalertpolicies,azure_sql_databasesqlvulnerabilityassessmentbaselines,azure_sql_databasesqlvulnerabilityassessmentrulebaselines,azure_sql_databasevulnerabilityassessmentrulebaselines,azure_sql_databasevulnerabilityassessments,azure_sql_databasevulnerabilityassessmentscans,azure_sql_datamaskingpolicies,azure_sql_deletedservers,azure_sql_distributedavailabilitygroups,azure_sql_elasticpools,azure_sql_encryptionprotectors,azure_sql_failovergroups,azure_sql_firewallrules,azure_sql_geobackuppolicies,azure_sql_instancefailovergroups,azure_sql_instancepools,azure_sql_ipv6firewallrules,azure_sql_jobagents,azure_sql_jobcredentials,azure_sql_jobexecutions,azure_sql_jobprivateendpoints,azure_sql_jobs,azure_sql_jobsteps,azure_sql_jobtargetgroups,azure_sql_ledgerdigestuploads,azure_sql_longtermretentionbackups,azure_sql_longtermretentionpolicies,azure_sql_managedbackupshorttermretentionpolicies,azure_sql_manageddatabaseadvancedthreatprotectionsettings,azure_sql_manageddatabases,azure_sql_manageddatabasesecurityalertpolicies,azure_sql_manageddatabasesensitivitylabels,azure_sql_manageddatabasetransparentdataencryption,azure_sql_manageddatabasevulnerabilityassessmentrulebaselines,azure_sql_manageddatabasevulnerabilityassessments,azure_sql_manageddatabasevulnerabilityassessmentscans,azure_sql_managedinstanceadministrators,azure_sql_managedinstanceadvancedthreatprotectionsettings,azure_sql_managedinstanceazureadonlyauthentications,azure_sql_managedinstancedtcs,azure_sql_managedinstanceencryptionprotectors,azure_sql_managedinstancekeys,azure_sql_managedinstancelongtermretentionpolicies,azure_sql_managedinstanceprivateendpointconnections,azure_sql_managedinstances,azure_sql_managedinstancevulnerabilityassessments,azure_sql_managedledgerdigestuploads,azure_sql_managedrestorabledroppeddatabasebackupshorttermretentionpolicies,azure_sql_managedserverdnsaliases,azure_sql_managedserversecurityalertpolicies,azure_sql_networksecurityperimeterconfigurations,azure_sql_outboundfirewallrules,azure_sql_privateendpointconnections,azure_sql_replicationlinks,azure_sql_restorepoints,azure_sql_sensitivitylabels,azure_sql_serveradvancedthreatprotectionsettings,azure_sql_serverazureadadministrators,azure_sql_serverazureadonlyauthentications,azure_sql_serverconfigurationoptions,azure_sql_serverconnectionpolicies,azure_sql_serverdevopsaudit,azure_sql_serverdnsaliases,azure_sql_serverkeys,azure_sql_servers,azure_sql_serversecurityalertpolicies,azure_sql_servertrustcertificates,azure_sql_servertrustgroups,azure_sql_servervulnerabilityassessments,azure_sql_sqlvulnerabilityassessmentbaseline,azure_sql_sqlvulnerabilityassessmentrulebaseline,azure_sql_sqlvulnerabilityassessmentssettings,azure_sql_startstopmanagedinstanceschedules,azure_sql_syncagents,azure_sql_syncgroups,azure_sql_syncmembers,azure_sql_transparentdataencryptions,azure_sql_virtualclusters,azure_sql_virtualnetworkrules,azure_sql_workloadclassifiers,azure_sql_workloadgroups,azure_storage_openapi,azure_streamanalytics_clusters,azure_streamanalytics_inputs,azure_streamanalytics_privateendpoints,azure_streamanalytics_transformations,azure_subscription_subscriptions,azure_synapse_azureadonlyauthentication,azure_synapse_bigdatapool,azure_synapse_firewallrule,azure_synapse_integrationruntime,azure_synapse_keys,azure_synapse_privateendpointconnections,azure_synapse_privatelinkhub,azure_synapse_sqlpool,azure_synapse_sqlserver,azure_synapse_workspace,azure_trafficmanager,azure_vi,azure_vmware,azure_web_openapi,azure_webpubsub,azure_workloads_monitors,azure_workloads_sapvirtualinstance \
+              --prev-snapshot="$GITHUB_WORKSPACE" )
+
+          new="$(python3 -c "import json; print(json.load(open('${{ runner.temp }}/new-group/manifest.json'))['version'])")"
+          echo "new=$new" >> "$GITHUB_OUTPUT"
+          if [ "$new" = "${{ steps.before.outputs.current }}" ]; then
+            echo "newer=false" >> "$GITHUB_OUTPUT"
+            echo "Already current at ${{ steps.before.outputs.current }} -- nothing to do."
+          else
+            echo "newer=true" >> "$GITHUB_OUTPUT"
+            echo "Real version change: ${{ steps.before.outputs.current }} -> $new"
+          fi
+
+      - name: Report which real members changed
+        if: steps.gen.outputs.newer == 'true'
+        run: |
+          set -euo pipefail
+          for f in "${{ runner.temp }}"/new-group/members/*.json; do
+            name="$(basename "$f" .json)"
+            if ! diff -q "$f" "members/$name.json" > /dev/null 2>&1; then
+              echo "changed member: $name"
+            fi
+          done
+
+      - name: Open PR
+        if: steps.gen.outputs.newer == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cp "${{ runner.temp }}/new-group/manifest.json" manifest.json
+          cp "${{ runner.temp }}"/new-group/members/*.json members/
+          git config user.name "ubx-bot"
+          git config user.email "actions@users.noreply.github.com"
+          branch="snapshot-regen/azure-${{ steps.gen.outputs.new }}"
+          git checkout -b "$branch"
+          git add manifest.json members/
+          git commit -m "snapshot: regenerate from Azure's own live Resource Manager specs, ${{ steps.before.outputs.current }} -> ${{ steps.gen.outputs.new }}"
+          git push origin "$branch" --force
+          gh pr create \
+            --title "snapshot: regenerate from Azure's own live Resource Manager specs (${{ steps.before.outputs.current }} -> ${{ steps.gen.outputs.new }})" \
+            --body "Automated regeneration (\`.github/workflows/hash-watch.yml\`), triggered by re-running ubx-provider-dynamic's own \`--generate-snapshot-group\` against Azure's own live Resource Manager specs (every real member, resource and data-source mode together, external refs bundled) and diffing mechanically against the previously committed group.
+
+          Previous version: \`${{ steps.before.outputs.current }}\`
+          New version: \`${{ steps.gen.outputs.new }}\`
+
+          Only the real, changed members/*.json files are touched -- unaffected members stay byte-identical. Never auto-merges -- review the diff before merging. After merge, dispatch \`publish.yml\` to cut the real GitHub Release." \
+            --base main --head "$branch"

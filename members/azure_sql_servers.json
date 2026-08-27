@@ -1,0 +1,1989 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_servers",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AdministratorType": {
+          "description": "Type of the sever administrator.",
+          "enum": [
+            "ActiveDirectory"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AdministratorType",
+            "values": [
+              {
+                "description": "ActiveDirectory",
+                "name": "ActiveDirectory",
+                "value": "ActiveDirectory"
+              }
+            ]
+          }
+        },
+        "Azure.Core.uuid": {
+          "description": "Universally Unique Identifier",
+          "format": "uuid",
+          "type": "string"
+        },
+        "Azure.Core.uuid_2": {
+          "description": "Universally Unique Identifier",
+          "format": "uuid",
+          "type": "string"
+        },
+        "CheckNameAvailabilityReason": {
+          "description": "The reason code explaining why the name is unavailable. Will be undefined if the name is available.",
+          "enum": [
+            "Invalid",
+            "AlreadyExists"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "CheckNameAvailabilityReason",
+            "values": [
+              {
+                "description": "Invalid",
+                "name": "Invalid",
+                "value": "Invalid"
+              },
+              {
+                "description": "AlreadyExists",
+                "name": "AlreadyExists",
+                "value": "AlreadyExists"
+              }
+            ]
+          }
+        },
+        "CheckNameAvailabilityRequest": {
+          "description": "A request to check whether the specified name for a resource is available.",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/CheckNameAvailabilityResourceType"
+            }
+          },
+          "required": [
+            "name",
+            "type"
+          ],
+          "type": "object"
+        },
+        "CheckNameAvailabilityResourceType": {
+          "enum": [
+            "Microsoft.Sql/servers"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "CheckNameAvailabilityResourceType",
+            "values": [
+              {
+                "description": "Microsoft.Sql/servers",
+                "name": "Microsoft.Sql/servers",
+                "value": "Microsoft.Sql/servers"
+              }
+            ]
+          }
+        },
+        "CheckNameAvailabilityResponse": {
+          "description": "The result of a name availability check.",
+          "properties": {
+            "available": {
+              "description": "True if the name is available, otherwise false.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "message": {
+              "description": "A message explaining why the name is unavailable. Will be undefined if the name is available.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name whose availability was checked.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "reason": {
+              "$ref": "#/components/schemas/CheckNameAvailabilityReason"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ExternalGovernanceStatus": {
+          "description": "Status of external governance.",
+          "enum": [
+            "Enabled",
+            "Disabled"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ExternalGovernanceStatus",
+            "values": [
+              {
+                "description": "Enabled",
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              }
+            ]
+          }
+        },
+        "IdentityType": {
+          "description": "The identity type. Set this to 'SystemAssigned' in order to automatically create and assign an Azure Active Directory principal for the resource.",
+          "enum": [
+            "None",
+            "SystemAssigned",
+            "UserAssigned",
+            "SystemAssigned,UserAssigned"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IdentityType",
+            "values": [
+              {
+                "description": "None",
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "description": "SystemAssigned",
+                "name": "SystemAssigned",
+                "value": "SystemAssigned"
+              },
+              {
+                "description": "UserAssigned",
+                "name": "UserAssigned",
+                "value": "UserAssigned"
+              },
+              {
+                "description": "SystemAssigned,UserAssigned",
+                "name": "SystemAssigned,UserAssigned",
+                "value": "SystemAssigned,UserAssigned"
+              }
+            ]
+          }
+        },
+        "ImportExportOperationResult": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "An ImportExport operation result resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/ImportExportOperationResultProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "ImportExportOperationResultProperties": {
+          "description": "Contains the operation result properties for import/export operation.",
+          "properties": {
+            "blobUri": {
+              "description": "Blob Uri.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "databaseName": {
+              "description": "Database name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "errorMessage": {
+              "description": "Error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastModifiedTime": {
+              "description": "Last modified time.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "privateEndpointConnections": {
+              "description": "Gets the status of private endpoints associated with this request.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnectionRequestStatus"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "queuedTime": {
+              "description": "Queued time.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requestId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "requestType": {
+              "description": "Request type.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serverName": {
+              "description": "Server name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "Operation status.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ImportNewDatabaseDefinition": {
+          "description": "Contains the information necessary to perform import operation for new database.",
+          "properties": {
+            "administratorLogin": {
+              "description": "Administrator login name. If AuthenticationType is ManagedIdentity, this field should specify the Managed Identity's resource ID.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "administratorLoginPassword": {
+              "description": "Administrator login password. If AuthenticationType is ManagedIdentity, this field should not be specified.",
+              "format": "password",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ],
+              "x-ms-secret": true
+            },
+            "authenticationType": {
+              "description": "Type of credentials provided for access to the target SQL server: SQL, ADPassword or ManagedIdentity.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "databaseName": {
+              "description": "Name of the import database.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "edition": {
+              "description": "Edition of the import database.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "maxSizeBytes": {
+              "description": "Max size in bytes for the import database.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "networkIsolation": {
+              "$ref": "#/components/schemas/NetworkIsolationSettings"
+            },
+            "serviceObjectiveName": {
+              "description": "Service level objective name of the import database.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "storageKey": {
+              "description": "Storage key for the storage account. If StorageKeyType is ManagedIdentity, this field should specify the Managed Identity's resource ID.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "storageKeyType": {
+              "$ref": "#/components/schemas/StorageKeyType"
+            },
+            "storageUri": {
+              "description": "Storage Uri.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            }
+          },
+          "required": [
+            "storageKeyType",
+            "storageKey",
+            "storageUri",
+            "administratorLogin"
+          ],
+          "type": "object"
+        },
+        "MinimalTlsVersion": {
+          "description": "Minimal TLS version. Allowed values: 'None', 1.0', '1.1', '1.2', '1.3'",
+          "enum": [
+            "None",
+            "1.0",
+            "1.1",
+            "1.2",
+            "1.3"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "MinimalTlsVersion",
+            "values": [
+              {
+                "description": "None",
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "description": "1.0",
+                "name": "1.0",
+                "value": "1.0"
+              },
+              {
+                "description": "1.1",
+                "name": "1.1",
+                "value": "1.1"
+              },
+              {
+                "description": "1.2",
+                "name": "1.2",
+                "value": "1.2"
+              },
+              {
+                "description": "1.3",
+                "name": "1.3",
+                "value": "1.3"
+              }
+            ]
+          }
+        },
+        "NetworkIsolationSettings": {
+          "description": "Contains the ARM resources for which to create private endpoint connection.",
+          "properties": {
+            "sqlServerResourceId": {
+              "description": "The resource id for the SQL server which is the target of this request. If set, private endpoint connection will be created for the SQL server. Must match server which is target of the operation.",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            },
+            "storageAccountResourceId": {
+              "description": "The resource id for the storage account used to store BACPAC file. If set, private endpoint connection will be created for the storage account. Must match storage account used for StorageUri parameter.",
+              "format": "arm-id",
+              "type": "string",
+              "x-ms-mutability": [
+                "create"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PrincipalType": {
+          "description": "Principal Type of the sever administrator.",
+          "enum": [
+            "User",
+            "Group",
+            "Application"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrincipalType",
+            "values": [
+              {
+                "description": "User",
+                "name": "User",
+                "value": "User"
+              },
+              {
+                "description": "Group",
+                "name": "Group",
+                "value": "Group"
+              },
+              {
+                "description": "Application",
+                "name": "Application",
+                "value": "Application"
+              }
+            ]
+          }
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "Properties of a private endpoint connection.",
+          "properties": {
+            "groupIds": {
+              "description": "Group IDs.",
+              "items": {
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpointProperty"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionStateProperty"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/PrivateEndpointProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionRequestStatus": {
+          "description": "Contains the private endpoint connection requests status.",
+          "properties": {
+            "privateEndpointConnectionName": {
+              "description": "The connection name for the private endpoint.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "privateLinkServiceId": {
+              "description": "Resource id for which the private endpoint is created.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "Status of this private endpoint connection.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointProperty": {
+          "properties": {
+            "id": {
+              "description": "Resource id of the private endpoint.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointProvisioningState": {
+          "description": "State of the private endpoint connection.",
+          "enum": [
+            "Approving",
+            "Ready",
+            "Dropping",
+            "Failed",
+            "Rejecting"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateEndpointProvisioningState",
+            "values": [
+              {
+                "description": "Approving",
+                "name": "Approving",
+                "value": "Approving"
+              },
+              {
+                "description": "Ready",
+                "name": "Ready",
+                "value": "Ready"
+              },
+              {
+                "description": "Dropping",
+                "name": "Dropping",
+                "value": "Dropping"
+              },
+              {
+                "description": "Failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Rejecting",
+                "name": "Rejecting",
+                "value": "Rejecting"
+              }
+            ]
+          }
+        },
+        "PrivateLinkServiceConnectionStateActionsRequire": {
+          "description": "The actions required for private link service connection.",
+          "enum": [
+            "None"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateLinkServiceConnectionStateActionsRequire",
+            "values": [
+              {
+                "description": "None",
+                "name": "None",
+                "value": "None"
+              }
+            ]
+          }
+        },
+        "PrivateLinkServiceConnectionStateProperty": {
+          "properties": {
+            "actionsRequired": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionStateActionsRequire"
+            },
+            "description": {
+              "description": "The private link service connection description.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/PrivateLinkServiceConnectionStateStatus"
+            }
+          },
+          "required": [
+            "status",
+            "description"
+          ],
+          "type": "object"
+        },
+        "PrivateLinkServiceConnectionStateStatus": {
+          "description": "The private link service connection status.",
+          "enum": [
+            "Approved",
+            "Pending",
+            "Rejected",
+            "Disconnected"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateLinkServiceConnectionStateStatus",
+            "values": [
+              {
+                "description": "Approved",
+                "name": "Approved",
+                "value": "Approved"
+              },
+              {
+                "description": "Pending",
+                "name": "Pending",
+                "value": "Pending"
+              },
+              {
+                "description": "Rejected",
+                "name": "Rejected",
+                "value": "Rejected"
+              },
+              {
+                "description": "Disconnected",
+                "name": "Disconnected",
+                "value": "Disconnected"
+              }
+            ]
+          }
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "RefreshExternalGovernanceStatusOperationResult": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "An RefreshExternalGovernanceStatus operation result resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RefreshExternalGovernanceStatusOperationResultProperties"
+            }
+          },
+          "type": "object"
+        },
+        "RefreshExternalGovernanceStatusOperationResultProperties": {
+          "description": "Contains the operation result properties for refresh external governance status operation.",
+          "properties": {
+            "errorMessage": {
+              "description": "Error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "queuedTime": {
+              "description": "Queued time.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "requestId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid_2"
+            },
+            "requestType": {
+              "description": "Request type.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serverName": {
+              "description": "Server name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "Operation status.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceIdentity": {
+          "description": "Azure Active Directory identity configuration for a resource.",
+          "properties": {
+            "principalId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "tenantId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "type": {
+              "$ref": "#/components/schemas/IdentityType"
+            },
+            "userAssignedIdentities": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/UserIdentity"
+              },
+              "description": "The resource ids of the user assigned identities to use",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "Server": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "An Azure SQL Database server.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ResourceIdentity"
+            },
+            "kind": {
+              "description": "Kind of sql server. This is metadata used for the Azure portal experience.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ServerProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ServerCreateMode": {
+          "description": "Create mode for server, only valid values for this are Normal and Restore.",
+          "enum": [
+            "Normal",
+            "Restore"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ServerCreateMode",
+            "values": [
+              {
+                "description": "Normal",
+                "name": "Normal",
+                "value": "Normal"
+              },
+              {
+                "description": "Restore",
+                "name": "Restore",
+                "value": "Restore"
+              }
+            ]
+          }
+        },
+        "ServerExternalAdministrator": {
+          "description": "Properties of a active directory administrator.",
+          "properties": {
+            "administratorType": {
+              "$ref": "#/components/schemas/AdministratorType"
+            },
+            "azureADOnlyAuthentication": {
+              "description": "Azure Active Directory only Authentication enabled.",
+              "type": "boolean"
+            },
+            "login": {
+              "description": "Login name of the server administrator.",
+              "type": "string"
+            },
+            "principalType": {
+              "$ref": "#/components/schemas/PrincipalType"
+            },
+            "sid": {
+              "$ref": "#/components/schemas/Azure.Core.uuid_2"
+            },
+            "tenantId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid_2"
+            }
+          },
+          "type": "object"
+        },
+        "ServerListResult": {
+          "description": "The response of a Server list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The Server items on this page",
+              "items": {
+                "$ref": "#/components/schemas/Server"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ServerNetworkAccessFlag": {
+          "description": "Whether or not to restrict outbound network access for this server.  Value is optional but if passed in, must be 'Enabled' or 'Disabled'",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "SecuredByPerimeter"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ServerNetworkAccessFlag",
+            "values": [
+              {
+                "description": "Enabled",
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "description": "SecuredByPerimeter",
+                "name": "SecuredByPerimeter",
+                "value": "SecuredByPerimeter"
+              }
+            ]
+          }
+        },
+        "ServerPrivateEndpointConnection": {
+          "description": "A private endpoint connection under a server",
+          "properties": {
+            "id": {
+              "description": "Resource ID.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "ServerProperties": {
+          "description": "The properties of a server.",
+          "properties": {
+            "administratorLogin": {
+              "description": "Administrator username for the server. Once created it cannot be changed.",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "administratorLoginPassword": {
+              "description": "The administrator login password (required for server creation).",
+              "format": "password",
+              "type": "string",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ],
+              "x-ms-secret": true
+            },
+            "administrators": {
+              "$ref": "#/components/schemas/ServerExternalAdministrator"
+            },
+            "createMode": {
+              "$ref": "#/components/schemas/ServerCreateMode"
+            },
+            "externalGovernanceStatus": {
+              "$ref": "#/components/schemas/ExternalGovernanceStatus"
+            },
+            "federatedClientId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid_2"
+            },
+            "fullyQualifiedDomainName": {
+              "description": "The fully qualified domain name of the server.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isIPv6Enabled": {
+              "$ref": "#/components/schemas/ServerNetworkAccessFlag"
+            },
+            "keyId": {
+              "description": "A CMK URI of the key to use for encryption.",
+              "type": "string"
+            },
+            "minimalTlsVersion": {
+              "$ref": "#/components/schemas/MinimalTlsVersion"
+            },
+            "primaryUserAssignedIdentityId": {
+              "description": "The resource id of a user assigned identity to be used by default.",
+              "type": "string"
+            },
+            "privateEndpointConnections": {
+              "description": "List of private endpoint connections on a server",
+              "items": {
+                "$ref": "#/components/schemas/ServerPrivateEndpointConnection"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/ServerPublicNetworkAccessFlag"
+            },
+            "restrictOutboundNetworkAccess": {
+              "$ref": "#/components/schemas/ServerNetworkAccessFlag"
+            },
+            "retentionDays": {
+              "description": "Number of days this server will stay soft-deleted.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "state": {
+              "description": "The state of the server.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "version": {
+              "description": "The version of the server.",
+              "type": "string"
+            },
+            "workspaceFeature": {
+              "$ref": "#/components/schemas/ServerWorkspaceFeature"
+            }
+          },
+          "type": "object"
+        },
+        "ServerPublicNetworkAccessFlag": {
+          "description": "Whether or not public endpoint access is allowed for this server.  Value is optional but if passed in, must be 'Enabled' or 'Disabled' or 'SecuredByPerimeter'",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "SecuredByPerimeter"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ServerPublicNetworkAccessFlag",
+            "values": [
+              {
+                "description": "Enabled",
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "description": "Disabled",
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "description": "SecuredByPerimeter",
+                "name": "SecuredByPerimeter",
+                "value": "SecuredByPerimeter"
+              }
+            ]
+          }
+        },
+        "ServerUpdate": {
+          "description": "An update request for an Azure SQL Database server.",
+          "properties": {
+            "identity": {
+              "$ref": "#/components/schemas/ResourceIdentity"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/ServerProperties"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "ServerWorkspaceFeature": {
+          "description": "Whether or not existing server has a workspace created and if it allows connection from workspace",
+          "enum": [
+            "Connected",
+            "Disconnected"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ServerWorkspaceFeature",
+            "values": [
+              {
+                "description": "Connected",
+                "name": "Connected",
+                "value": "Connected"
+              },
+              {
+                "description": "Disconnected",
+                "name": "Disconnected",
+                "value": "Disconnected"
+              }
+            ]
+          }
+        },
+        "StorageKeyType": {
+          "description": "Storage key type: StorageAccessKey, SharedAccessKey or ManagedIdentity.",
+          "enum": [
+            "SharedAccessKey",
+            "StorageAccessKey",
+            "ManagedIdentity"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "StorageKeyType",
+            "values": [
+              {
+                "description": "SharedAccessKey",
+                "name": "SharedAccessKey",
+                "value": "SharedAccessKey"
+              },
+              {
+                "description": "StorageAccessKey",
+                "name": "StorageAccessKey",
+                "value": "StorageAccessKey"
+              },
+              {
+                "description": "ManagedIdentity",
+                "name": "ManagedIdentity",
+                "value": "ManagedIdentity"
+              }
+            ]
+          }
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UserIdentity": {
+          "description": "Azure Active Directory identity configuration for a resource.",
+          "properties": {
+            "clientId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "principalId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Sql/checkNameAvailability": {
+        "post": {
+          "description": "Determines whether a resource can be created with the specified name.",
+          "operationId": "Servers_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Check for a server name that already exists": {
+              "$ref": "./examples/CheckNameAvailabilityServerAlreadyExists.json"
+            },
+            "Check for a server name that is available": {
+              "$ref": "./examples/CheckNameAvailabilityServerAvailable.json"
+            },
+            "Check for a server name that is invalid": {
+              "$ref": "./examples/CheckNameAvailabilityServerInvalid.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Sql/servers": {
+        "get": {
+          "description": "Gets a list of all servers in the subscription.",
+          "operationId": "Servers_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "The child resources to include in the response.",
+              "in": "query",
+              "name": "$expand",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ServerListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "List servers": {
+              "$ref": "./examples/ServerList.json"
+            },
+            "List servers with $expand=administrators/activedirectory": {
+              "$ref": "./examples/ServerListWithExpandEqualsAdministrators.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers": {
+        "get": {
+          "description": "Gets a list of servers in a resource groups.",
+          "operationId": "Servers_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The child resources to include in the response.",
+              "in": "query",
+              "name": "$expand",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ServerListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "List servers by resource group": {
+              "$ref": "./examples/ServerListByResourceGroup.json"
+            },
+            "List servers by resource group with $expand=administrators/activedirectory": {
+              "$ref": "./examples/ServerListByResourceGroupWithExpandEqualsAdministrators.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}": {
+        "delete": {
+          "description": "Deletes a server.",
+          "operationId": "Servers_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Delete server": {
+              "$ref": "./examples/ServerDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a server.",
+          "operationId": "Servers_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The child resources to include in the response.",
+              "in": "query",
+              "name": "$expand",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Server"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Get server": {
+              "$ref": "./examples/ServerGet.json"
+            },
+            "Get server with $expand=administrators/activedirectory": {
+              "$ref": "./examples/ServerGetWithExpandEqualsAdministrators.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates a server.",
+          "operationId": "Servers_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerUpdate"
+                }
+              }
+            },
+            "description": "The requested server resource state.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Server"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Update a server": {
+              "$ref": "./examples/ServerUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/Server",
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a server.",
+          "operationId": "Servers_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Server"
+                }
+              }
+            },
+            "description": "The requested server resource state.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Server"
+                  }
+                }
+              },
+              "description": "Resource 'Server' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Server"
+                  }
+                }
+              },
+              "description": "Resource 'Server' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Create server": {
+              "$ref": "./examples/ServerCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/Server",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/import": {
+        "post": {
+          "description": "Imports a bacpac into a new database.",
+          "operationId": "Servers_ImportDatabase",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportNewDatabaseDefinition"
+                }
+              }
+            },
+            "description": "The database import request parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ImportExportOperationResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Imports to a new database, using Managed Identity for the SQL server and storage account.": {
+              "$ref": "./examples/ImportNewDatabaseWithManagedIdentity.json"
+            },
+            "Imports to a new database, using private link for the SQL server and storage account.": {
+              "$ref": "./examples/ImportNewDatabaseWithNetworkIsolation.json"
+            },
+            "Imports to a new database.": {
+              "$ref": "./examples/ImportNewDatabase.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "./common.json#/definitions/ImportExportOperationResult",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/refreshExternalGovernanceStatus": {
+        "post": {
+          "description": "Refresh external governance enablement status.",
+          "operationId": "Servers_RefreshStatus",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RefreshExternalGovernanceStatusOperationResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Servers"
+          ],
+          "x-ms-examples": {
+            "Refresh external governance enablement status.": {
+              "$ref": "./examples/RefreshExternalGovernanceStatus.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/RefreshExternalGovernanceStatusOperationResult",
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Servers"
+      }
+    ]
+  }
+}

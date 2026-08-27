@@ -1,0 +1,1001 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_jobsteps",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Azure.Core.uuid": {
+          "description": "Universally Unique Identifier",
+          "format": "uuid",
+          "type": "string"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "JobStep": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A job step.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/JobStepProperties"
+            }
+          },
+          "type": "object"
+        },
+        "JobStepAction": {
+          "description": "The action to be executed by a job step.",
+          "properties": {
+            "source": {
+              "default": "Inline",
+              "description": "The source of the action to execute.",
+              "enum": [
+                "Inline"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "JobStepActionSource",
+                "values": [
+                  {
+                    "description": "Inline",
+                    "name": "Inline",
+                    "value": "Inline"
+                  }
+                ]
+              }
+            },
+            "type": {
+              "default": "TSql",
+              "description": "Type of action being executed by the job step.",
+              "enum": [
+                "TSql"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "JobStepActionType",
+                "values": [
+                  {
+                    "description": "TSql",
+                    "name": "TSql",
+                    "value": "TSql"
+                  }
+                ]
+              }
+            },
+            "value": {
+              "description": "The action value, for example the text of the T-SQL script to execute.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "JobStepExecutionOptions": {
+          "description": "The execution options of a job step.",
+          "properties": {
+            "initialRetryIntervalSeconds": {
+              "default": 1,
+              "description": "Initial delay between retries for job step execution.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "maximumRetryIntervalSeconds": {
+              "default": 120,
+              "description": "The maximum amount of time to wait between retries for job step execution.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "retryAttempts": {
+              "default": 10,
+              "description": "Maximum number of times the job step will be reattempted if the first attempt fails.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "retryIntervalBackoffMultiplier": {
+              "default": 2,
+              "description": "The backoff multiplier for the time between retries.",
+              "format": "float",
+              "type": "number"
+            },
+            "timeoutSeconds": {
+              "default": 43200,
+              "description": "Execution timeout for the job step.",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "JobStepListResult": {
+          "description": "The response of a JobStep list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The JobStep items on this page",
+              "items": {
+                "$ref": "#/components/schemas/JobStep"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "JobStepOutput": {
+          "description": "The output configuration of a job step.",
+          "properties": {
+            "credential": {
+              "description": "The resource ID of the credential to use to connect to the output destination.",
+              "type": "string"
+            },
+            "databaseName": {
+              "description": "The output destination database.",
+              "type": "string"
+            },
+            "resourceGroupName": {
+              "description": "The output destination resource group.",
+              "type": "string"
+            },
+            "schemaName": {
+              "default": "dbo",
+              "description": "The output destination schema.",
+              "type": "string"
+            },
+            "serverName": {
+              "description": "The output destination server name.",
+              "type": "string"
+            },
+            "subscriptionId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "tableName": {
+              "description": "The output destination table.",
+              "type": "string"
+            },
+            "type": {
+              "default": "SqlDatabase",
+              "description": "The output destination type.",
+              "enum": [
+                "SqlDatabase"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "JobStepOutputType",
+                "values": [
+                  {
+                    "description": "SqlDatabase",
+                    "name": "SqlDatabase",
+                    "value": "SqlDatabase"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "serverName",
+            "databaseName",
+            "tableName"
+          ],
+          "type": "object"
+        },
+        "JobStepProperties": {
+          "description": "Properties of a job step.",
+          "properties": {
+            "action": {
+              "$ref": "#/components/schemas/JobStepAction"
+            },
+            "credential": {
+              "description": "The resource ID of the job credential that will be used to connect to the targets.",
+              "type": "string"
+            },
+            "executionOptions": {
+              "$ref": "#/components/schemas/JobStepExecutionOptions"
+            },
+            "output": {
+              "$ref": "#/components/schemas/JobStepOutput"
+            },
+            "stepId": {
+              "description": "The job step's index within the job. If not specified when creating the job step, it will be created as the last step. If not specified when updating the job step, the step id is not modified.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "targetGroup": {
+              "description": "The resource ID of the target group that the job step will be executed on.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "targetGroup",
+            "action"
+          ],
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/jobAgents/{jobAgentName}/jobs/{jobName}/steps": {
+        "get": {
+          "description": "Gets all job steps for a job's current version.",
+          "operationId": "JobSteps_ListByJob",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStepListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "List job steps for the latest version of a job.": {
+              "$ref": "./examples/ListJobStepsByJob.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/jobAgents/{jobAgentName}/jobs/{jobName}/steps/{stepName}": {
+        "delete": {
+          "description": "Deletes a job step. This will implicitly create a new job version.",
+          "operationId": "JobSteps_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job step.",
+              "in": "path",
+              "name": "stepName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "Delete a job step.": {
+              "$ref": "./examples/DeleteJobStep.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a job step in a job's current version.",
+          "operationId": "JobSteps_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job step.",
+              "in": "path",
+              "name": "stepName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStep"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "Get the latest version of a job step.": {
+              "$ref": "./examples/GetJobStepByJob.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a job step. This will implicitly create a new job version.",
+          "operationId": "JobSteps_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job step.",
+              "in": "path",
+              "name": "stepName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStep"
+                }
+              }
+            },
+            "description": "The requested state of the job step.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStep"
+                  }
+                }
+              },
+              "description": "Resource 'JobStep' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStep"
+                  }
+                }
+              },
+              "description": "Resource 'JobStep' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "Create or update a job step with all properties specified.": {
+              "$ref": "./examples/CreateOrUpdateJobStepMax.json"
+            },
+            "Create or update a job step with minimal properties specified.": {
+              "$ref": "./examples/CreateOrUpdateJobStepMin.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/jobAgents/{jobAgentName}/jobs/{jobName}/versions/{jobVersion}/steps": {
+        "get": {
+          "description": "Gets all job steps in the specified job version.",
+          "operationId": "JobSteps_ListByVersion",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The version of the job to get.",
+              "in": "path",
+              "name": "jobVersion",
+              "required": true,
+              "schema": {
+                "format": "int32",
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStepListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "List job steps for the specified version of a job.": {
+              "$ref": "./examples/ListJobStepsByVersion.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/jobAgents/{jobAgentName}/jobs/{jobName}/versions/{jobVersion}/steps/{stepName}": {
+        "get": {
+          "description": "Gets the specified version of a job step.",
+          "operationId": "JobSteps_GetByVersion",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job agent.",
+              "in": "path",
+              "name": "jobAgentName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the job.",
+              "in": "path",
+              "name": "jobName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The version of the job to get.",
+              "in": "path",
+              "name": "jobVersion",
+              "required": true,
+              "schema": {
+                "format": "int32",
+                "type": "integer"
+              }
+            },
+            {
+              "description": "The name of the job step.",
+              "in": "path",
+              "name": "stepName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobStep"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "JobSteps"
+          ],
+          "x-ms-examples": {
+            "Get the specified version of a job step.": {
+              "$ref": "./examples/GetJobStepByVersion.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "JobSteps"
+      }
+    ]
+  }
+}

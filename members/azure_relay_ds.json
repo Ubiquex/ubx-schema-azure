@@ -1,0 +1,4369 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_relay",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "AccessKeys": {
+          "description": "Namespace/Relay Connection String",
+          "properties": {
+            "keyName": {
+              "description": "A string that describes the authorization rule.",
+              "type": "string"
+            },
+            "primaryConnectionString": {
+              "description": "Primary connection string of the created namespace authorization rule.",
+              "type": "string"
+            },
+            "primaryKey": {
+              "description": "A base64-encoded 256-bit primary key for signing and validating the SAS token.",
+              "type": "string"
+            },
+            "secondaryConnectionString": {
+              "description": "Secondary connection string of the created namespace authorization rule.",
+              "type": "string"
+            },
+            "secondaryKey": {
+              "description": "A base64-encoded 256-bit secondary key for signing and validating the SAS token.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "AccessRights": {
+          "enum": [
+            "Manage",
+            "Send",
+            "Listen"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "AccessRights",
+            "values": [
+              {
+                "name": "Manage",
+                "value": "Manage"
+              },
+              {
+                "name": "Send",
+                "value": "Send"
+              },
+              {
+                "name": "Listen",
+                "value": "Listen"
+              }
+            ]
+          }
+        },
+        "AuthorizationRule": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Single item in a List or Get AuthorizationRule operation",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/AuthorizationRuleProperties"
+            }
+          },
+          "type": "object"
+        },
+        "AuthorizationRuleListResult": {
+          "description": "The response of a AuthorizationRule list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The AuthorizationRule items on this page",
+              "items": {
+                "$ref": "#/components/schemas/AuthorizationRule"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "AuthorizationRuleProperties": {
+          "description": "Properties supplied to create or update AuthorizationRule",
+          "properties": {
+            "rights": {
+              "description": "The rights associated with the rule.",
+              "items": {
+                "$ref": "#/components/schemas/AccessRights"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "rights"
+          ],
+          "type": "object"
+        },
+        "CheckNameAvailability": {
+          "description": "Description of the check name availability request properties.",
+          "properties": {
+            "name": {
+              "description": "The namespace name to check for availability. The namespace name can contain only letters, numbers, and hyphens. The namespace must start with a letter, and it must end with a letter or number.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "CheckNameAvailabilityResult": {
+          "description": "Description of the check name availability request properties.",
+          "properties": {
+            "message": {
+              "description": "The detailed info regarding the reason associated with the namespace.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Value indicating namespace is available. Returns true if the namespace is available; otherwise, false.",
+              "type": "boolean"
+            },
+            "reason": {
+              "$ref": "#/components/schemas/UnavailableReason"
+            }
+          },
+          "type": "object"
+        },
+        "ConnectionState": {
+          "description": "ConnectionState information.",
+          "properties": {
+            "description": {
+              "description": "Description of the connection state.",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/components/schemas/PrivateLinkConnectionStatus"
+            }
+          },
+          "type": "object"
+        },
+        "DefaultAction": {
+          "description": "Default Action for Network Rule Set",
+          "enum": [
+            "Allow",
+            "Deny"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "DefaultAction",
+            "values": [
+              {
+                "name": "Allow",
+                "value": "Allow"
+              },
+              {
+                "name": "Deny",
+                "value": "Deny"
+              }
+            ]
+          }
+        },
+        "EndPointProvisioningState": {
+          "description": "Provisioning state of the Private Endpoint Connection.",
+          "enum": [
+            "Creating",
+            "Updating",
+            "Deleting",
+            "Succeeded",
+            "Canceled",
+            "Failed"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "EndPointProvisioningState",
+            "values": [
+              {
+                "name": "Creating",
+                "value": "Creating"
+              },
+              {
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "name": "Failed",
+                "value": "Failed"
+              }
+            ]
+          }
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "HybridConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Description of hybrid connection resource.",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/HybridConnectionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "HybridConnectionListResult": {
+          "description": "The response of a HybridConnection list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The HybridConnection items on this page",
+              "items": {
+                "$ref": "#/components/schemas/HybridConnection"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "HybridConnectionProperties": {
+          "description": "Properties of the HybridConnection.",
+          "properties": {
+            "createdAt": {
+              "description": "The time the hybrid connection was created.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "listenerCount": {
+              "description": "The number of listeners for this hybrid connection. Note that min : 1 and max:25 are supported.",
+              "format": "int32",
+              "maximum": 25,
+              "readOnly": true,
+              "type": "integer"
+            },
+            "requiresClientAuthorization": {
+              "description": "Returns true if client authorization is needed for this hybrid connection; otherwise, false.",
+              "type": "boolean"
+            },
+            "updatedAt": {
+              "description": "The time the namespace was updated.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "userMetadata": {
+              "description": "The usermetadata is a placeholder to store user-defined string data for the hybrid connection endpoint. For example, it can be used to store descriptive data, such as a list of teams and their contact information. Also, user-defined configuration settings can be stored.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "KeyType": {
+          "description": "The access key to regenerate.",
+          "enum": [
+            "PrimaryKey",
+            "SecondaryKey"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "KeyType",
+            "values": [
+              {
+                "name": "PrimaryKey",
+                "value": "PrimaryKey"
+              },
+              {
+                "name": "SecondaryKey",
+                "value": "SecondaryKey"
+              }
+            ]
+          }
+        },
+        "NWRuleSetIpRules": {
+          "description": "The response from the List namespace operation.",
+          "properties": {
+            "action": {
+              "$ref": "#/components/schemas/NetworkRuleIPAction"
+            },
+            "ipMask": {
+              "description": "IP Mask",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkRuleIPAction": {
+          "description": "The IP Filter Action",
+          "enum": [
+            "Allow"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NetworkRuleIPAction",
+            "values": [
+              {
+                "name": "Allow",
+                "value": "Allow"
+              }
+            ]
+          }
+        },
+        "NetworkRuleSet": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Description of topic resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NetworkRuleSetProperties"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkRuleSetProperties": {
+          "description": "NetworkRuleSet properties",
+          "properties": {
+            "defaultAction": {
+              "$ref": "#/components/schemas/DefaultAction"
+            },
+            "ipRules": {
+              "description": "List of IpRules",
+              "items": {
+                "$ref": "#/components/schemas/NWRuleSetIpRules"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "publicNetworkAccess": {
+              "$ref": "#/components/schemas/PublicNetworkAccess"
+            },
+            "trustedServiceAccessEnabled": {
+              "description": "Value that indicates whether Trusted Service Access is Enabled or not.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpoint": {
+          "description": "PrivateEndpoint information.",
+          "properties": {
+            "id": {
+              "description": "The ARM identifier for Private Endpoint.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnection": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Properties of the PrivateEndpointConnection.",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/PrivateEndpointConnectionProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateEndpointConnectionListResult": {
+          "description": "The response of a PrivateEndpointConnection list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The PrivateEndpointConnection items on this page",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "PrivateEndpointConnectionProperties": {
+          "description": "Properties of the private endpoint connection resource.",
+          "properties": {
+            "privateEndpoint": {
+              "$ref": "#/components/schemas/PrivateEndpoint"
+            },
+            "privateLinkServiceConnectionState": {
+              "$ref": "#/components/schemas/ConnectionState"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/EndPointProvisioningState"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkConnectionStatus": {
+          "description": "Status of the connection.",
+          "enum": [
+            "Pending",
+            "Approved",
+            "Rejected",
+            "Disconnected"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PrivateLinkConnectionStatus",
+            "values": [
+              {
+                "name": "Pending",
+                "value": "Pending"
+              },
+              {
+                "name": "Approved",
+                "value": "Approved"
+              },
+              {
+                "name": "Rejected",
+                "value": "Rejected"
+              },
+              {
+                "name": "Disconnected",
+                "value": "Disconnected"
+              }
+            ]
+          }
+        },
+        "PrivateLinkResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "A resource that supports private link capabilities.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/PrivateLinkResourceProperties"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkResourceProperties": {
+          "description": "Properties of PrivateLinkResource",
+          "properties": {
+            "groupId": {
+              "description": "The private link resource group id.",
+              "type": "string"
+            },
+            "requiredMembers": {
+              "description": "The private link resource required member names.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "requiredZoneNames": {
+              "description": "The private link resource Private link DNS zone name.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "PrivateLinkResourcesListResult": {
+          "description": "Result of the List private link resources operation.",
+          "properties": {
+            "nextLink": {
+              "description": "A link for the next page of private link resources.",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "A collection of private link resources",
+              "items": {
+                "$ref": "#/components/schemas/PrivateLinkResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "PublicNetworkAccess": {
+          "description": "This determines if traffic is allowed over public network. By default it is enabled.",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "SecuredByPerimeter"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "PublicNetworkAccess",
+            "values": [
+              {
+                "name": "Enabled",
+                "value": "Enabled"
+              },
+              {
+                "name": "Disabled",
+                "value": "Disabled"
+              },
+              {
+                "name": "SecuredByPerimeter",
+                "value": "SecuredByPerimeter"
+              }
+            ]
+          }
+        },
+        "RegenerateAccessKeyParameters": {
+          "description": "Parameters supplied to the regenerate authorization rule operation, specifies which key needs to be reset.",
+          "properties": {
+            "key": {
+              "description": "Optional. If the key value is provided, this is set to key type, or autogenerated key value set for key type.",
+              "type": "string"
+            },
+            "keyType": {
+              "$ref": "#/components/schemas/KeyType"
+            }
+          },
+          "required": [
+            "keyType"
+          ],
+          "type": "object"
+        },
+        "RelayNamespace": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Description of a namespace resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RelayNamespaceProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "type": "object"
+        },
+        "RelayNamespaceListResult": {
+          "description": "The response of a RelayNamespace list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The RelayNamespace items on this page",
+              "items": {
+                "$ref": "#/components/schemas/RelayNamespace"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "RelayNamespaceProperties": {
+          "description": "Properties of the namespace.",
+          "properties": {
+            "createdAt": {
+              "description": "The time the namespace was created.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "metricId": {
+              "description": "Identifier for Azure Insights metrics.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "minimumTlsVersion": {
+              "$ref": "#/components/schemas/TlsVersion"
+            },
+            "privateEndpointConnections": {
+              "description": "List of private endpoint connections.",
+              "items": {
+                "$ref": "#/components/schemas/PrivateEndpointConnection"
+              },
+              "type": "array"
+            },
+            "provisioningState": {
+              "description": "Provisioning state of the Namespace.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "publicNetworkAccess": {
+              "default": "Enabled",
+              "description": "This determines if traffic is allowed over public network. By default it is enabled.",
+              "enum": [
+                "Enabled",
+                "Disabled",
+                "SecuredByPerimeter"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "PublicNetworkAccess",
+                "values": [
+                  {
+                    "name": "Enabled",
+                    "value": "Enabled"
+                  },
+                  {
+                    "name": "Disabled",
+                    "value": "Disabled"
+                  },
+                  {
+                    "name": "SecuredByPerimeter",
+                    "value": "SecuredByPerimeter"
+                  }
+                ]
+              }
+            },
+            "serviceBusEndpoint": {
+              "description": "Endpoint you can use to perform Service Bus operations.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "Status of the Namespace.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "updatedAt": {
+              "description": "The time the namespace was updated.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RelayUpdateParameters": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ResourceNamespacePatch"
+            }
+          ],
+          "description": "Description of a namespace resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RelayNamespaceProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "type": "object"
+        },
+        "Relaytype": {
+          "description": "WCF relay type.",
+          "enum": [
+            "NetTcp",
+            "Http"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": false,
+            "name": "Relaytype"
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceNamespacePatch": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource_2"
+            }
+          ],
+          "description": "Definition of resource.",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "Resource_2": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Sku": {
+          "description": "SKU of the namespace.",
+          "properties": {
+            "name": {
+              "$ref": "#/components/schemas/SkuName"
+            },
+            "tier": {
+              "$ref": "#/components/schemas/SkuTier"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "SkuName": {
+          "description": "Name of this SKU.",
+          "enum": [
+            "Standard"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SkuName",
+            "values": [
+              {
+                "name": "Standard",
+                "value": "Standard"
+              }
+            ]
+          }
+        },
+        "SkuTier": {
+          "description": "The tier of this SKU.",
+          "enum": [
+            "Standard"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SkuTier",
+            "values": [
+              {
+                "name": "Standard",
+                "value": "Standard"
+              }
+            ]
+          }
+        },
+        "TlsVersion": {
+          "description": "TLS versions supported by Relay namespaces.",
+          "enum": [
+            "1.2",
+            "1.3"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "TlsVersion",
+            "values": [
+              {
+                "description": "TLS version 1.2.",
+                "name": "1.2",
+                "value": "1.2"
+              },
+              {
+                "description": "TLS version 1.3.",
+                "name": "1.3",
+                "value": "1.3"
+              }
+            ]
+          }
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "UnavailableReason": {
+          "description": "Specifies the reason for the unavailability of the service.",
+          "enum": [
+            "None",
+            "InvalidName",
+            "SubscriptionIsDisabled",
+            "NameInUse",
+            "NameInLockdown",
+            "TooManyNamespaceInCurrentSubscription"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "UnavailableReason",
+            "values": [
+              {
+                "name": "None",
+                "value": "None"
+              },
+              {
+                "name": "InvalidName",
+                "value": "InvalidName"
+              },
+              {
+                "name": "SubscriptionIsDisabled",
+                "value": "SubscriptionIsDisabled"
+              },
+              {
+                "name": "NameInUse",
+                "value": "NameInUse"
+              },
+              {
+                "name": "NameInLockdown",
+                "value": "NameInLockdown"
+              },
+              {
+                "name": "TooManyNamespaceInCurrentSubscription",
+                "value": "TooManyNamespaceInCurrentSubscription"
+              }
+            ]
+          }
+        },
+        "WcfRelay": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Description of the WCF relay resource.",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/WcfRelayProperties"
+            }
+          },
+          "type": "object"
+        },
+        "WcfRelayProperties": {
+          "description": "Properties of the WCF relay.",
+          "properties": {
+            "createdAt": {
+              "description": "The time the WCF relay was created.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isDynamic": {
+              "description": "Returns true if the relay is dynamic; otherwise, false.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "listenerCount": {
+              "description": "The number of listeners for this relay. Note that min :1 and max:25 are supported.",
+              "format": "int32",
+              "maximum": 25,
+              "readOnly": true,
+              "type": "integer"
+            },
+            "relayType": {
+              "$ref": "#/components/schemas/Relaytype"
+            },
+            "requiresClientAuthorization": {
+              "description": "Returns true if client authorization is needed for this relay; otherwise, false.",
+              "type": "boolean"
+            },
+            "requiresTransportSecurity": {
+              "description": "Returns true if transport security is needed for this relay; otherwise, false.",
+              "type": "boolean"
+            },
+            "updatedAt": {
+              "description": "The time the namespace was updated.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "userMetadata": {
+              "description": "The usermetadata is a placeholder to store user-defined string data for the WCF Relay endpoint. For example, it can be used to store descriptive data, such as list of teams and their contact information. Also, user-defined configuration settings can be stored.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "WcfRelaysListResult": {
+          "description": "The response of the list WCF relay operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The WcfRelay items on this page",
+              "items": {
+                "$ref": "#/components/schemas/WcfRelay"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these API to manage Azure Relay resources through Azure Resource Manager.",
+      "title": "Relay API",
+      "version": "2026-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Relay/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "RelayOperationsList": {
+              "$ref": "./examples/RelayOperations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Relay/checkNameAvailability": {
+        "post": {
+          "description": "Check the specified namespace name availability.",
+          "operationId": "Namespaces_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailability"
+                }
+              }
+            },
+            "description": "The request body",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "x-ms-examples": {
+            "RelayCheckNameAvailability": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceCheckNameAvailability.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Relay/namespaces": {
+        "get": {
+          "description": "Lists all the available namespaces within the subscription regardless of the resourceGroups.",
+          "operationId": "Namespaces_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespaceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceListBySubscription": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces": {
+        "get": {
+          "description": "Lists all the available namespaces within the ResourceGroup.",
+          "operationId": "Namespaces_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespaceListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceListByResourceGroup": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}": {
+        "delete": {
+          "description": "Deletes an existing namespace. This operation also removes all associated resources under the namespace.",
+          "operationId": "Namespaces_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceDelete": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Returns the description for the specified namespace.",
+          "operationId": "Namespaces_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespace"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceGet": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Creates or updates a namespace. Once created, this namespace's resource manifest is immutable. This operation is idempotent.",
+          "operationId": "Namespaces_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelayUpdateParameters"
+                }
+              }
+            },
+            "description": "Parameters for updating a namespace resource.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespace"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespace"
+                  }
+                }
+              },
+              "description": "Resource 'RelayNamespace' create operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceUpdate": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceUpdate.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create Azure Relay namespace.",
+          "operationId": "Namespaces_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelayNamespace"
+                }
+              }
+            },
+            "description": "Parameters supplied to create a namespace resource.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespace"
+                  }
+                }
+              },
+              "description": "Resource 'RelayNamespace' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RelayNamespace"
+                  }
+                }
+              },
+              "description": "Resource 'RelayNamespace' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "RelayNamespaces"
+          ],
+          "x-ms-examples": {
+            "RelayNamespaceCreate": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceCreate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/RelayNamespace",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/authorizationRules": {
+        "get": {
+          "description": "Authorization rules for a namespace.",
+          "operationId": "Namespaces_ListAuthorizationRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRuleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleListAll": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/authorizationRules/{authorizationRuleName}": {
+        "delete": {
+          "description": "Deletes a namespace authorization rule.",
+          "operationId": "Namespaces_DeleteAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleDelete": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Authorization rule for a namespace by name.",
+          "operationId": "Namespaces_GetAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleGet": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an authorization rule for a namespace.",
+          "operationId": "Namespaces_CreateOrUpdateAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationRule"
+                }
+              }
+            },
+            "description": "The authorization rule parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Resource 'AuthorizationRule' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleCreate": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/authorizationRules/{authorizationRuleName}/listKeys": {
+        "post": {
+          "description": "Primary and secondary connection strings to the namespace.",
+          "operationId": "Namespaces_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleListKey": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleListKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/authorizationRules/{authorizationRuleName}/regenerateKeys": {
+        "post": {
+          "description": "Regenerates the primary or secondary connection strings to the namespace.",
+          "operationId": "Namespaces_RegenerateKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegenerateAccessKeyParameters"
+                }
+              }
+            },
+            "description": "Parameters supplied to regenerate authorization rule.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "AuthorizationRules"
+          ],
+          "x-ms-examples": {
+            "RelayNameSpaceAuthorizationRuleRegenerateKey": {
+              "$ref": "./examples/NameSpaces/RelayNameSpaceAuthorizationRuleRegenerateKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections": {
+        "get": {
+          "description": "Lists the hybrid connection within the namespace.",
+          "operationId": "HybridConnections_ListByNamespace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HybridConnectionListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnectionOperationGroup"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionListAll": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections/{hybridConnectionName}": {
+        "delete": {
+          "description": "Deletes a hybrid connection.",
+          "operationId": "HybridConnections_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnectionOperationGroup"
+          ],
+          "x-ms-examples": {
+            "RelayHybridconnectionDelete": {
+              "$ref": "./examples/HybridConnection/RelayHybridconnectionDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Returns the description for the specified hybrid connection.",
+          "operationId": "HybridConnections_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HybridConnection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnectionOperationGroup"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionGet": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a service hybrid connection. This operation is idempotent.",
+          "operationId": "HybridConnections_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HybridConnection"
+                }
+              }
+            },
+            "description": "Parameters supplied to create a hybrid connection.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HybridConnection"
+                  }
+                }
+              },
+              "description": "Resource 'HybridConnection' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnectionOperationGroup"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionCreate": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections/{hybridConnectionName}/authorizationRules": {
+        "get": {
+          "description": "Authorization rules for a hybrid connection.",
+          "operationId": "HybridConnections_ListAuthorizationRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRuleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleListAll": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections/{hybridConnectionName}/authorizationRules/{authorizationRuleName}": {
+        "delete": {
+          "description": "Deletes a hybrid connection authorization rule.",
+          "operationId": "HybridConnections_DeleteAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleDelete": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Hybrid connection authorization rule for a hybrid connection by name.",
+          "operationId": "HybridConnections_GetAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleGet": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an authorization rule for a hybrid connection.",
+          "operationId": "HybridConnections_CreateOrUpdateAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationRule"
+                }
+              }
+            },
+            "description": "The authorization rule parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Resource 'AuthorizationRule' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleCreate": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections/{hybridConnectionName}/authorizationRules/{authorizationRuleName}/listKeys": {
+        "post": {
+          "description": "Primary and secondary connection strings to the hybrid connection.",
+          "operationId": "HybridConnections_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleListKey": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleListKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/hybridConnections/{hybridConnectionName}/authorizationRules/{authorizationRuleName}/regenerateKeys": {
+        "post": {
+          "description": "Regenerates the primary or secondary connection strings to the hybrid connection.",
+          "operationId": "HybridConnections_RegenerateKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The hybrid connection name.",
+              "in": "path",
+              "name": "hybridConnectionName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegenerateAccessKeyParameters"
+                }
+              }
+            },
+            "description": "Parameters supplied to regenerate authorization rule.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "HybridConnections"
+          ],
+          "x-ms-examples": {
+            "RelayHybridConnectionAuthorizationRuleRegenerateKey": {
+              "$ref": "./examples/HybridConnection/RelayHybridConnectionAuthorizationRuleRegenerateKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/networkRuleSets/default": {
+        "get": {
+          "description": "Gets NetworkRuleSet for a Namespace.",
+          "operationId": "Namespaces_GetNetworkRuleSet",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkRuleSet"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NetworkRuleSets"
+          ],
+          "x-ms-examples": {
+            "NameSpaceNetworkRuleSetGet": {
+              "$ref": "./examples/VirtualNetworkRules/RelayNetworkRuleSetGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or update NetworkRuleSet for a Namespace.",
+          "operationId": "Namespaces_CreateOrUpdateNetworkRuleSet",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkRuleSet"
+                }
+              }
+            },
+            "description": "The Namespace IpFilterRule.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkRuleSet"
+                  }
+                }
+              },
+              "description": "Resource 'NetworkRuleSet' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "NetworkRuleSets"
+          ],
+          "x-ms-examples": {
+            "NameSpaceNetworkRuleSetCreate": {
+              "$ref": "./examples/VirtualNetworkRules/RelayNetworkRuleSetCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/privateEndpointConnections": {
+        "get": {
+          "description": "Gets the available PrivateEndpointConnections within a namespace.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639412.aspx"
+          },
+          "operationId": "PrivateEndpointConnections_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnectionListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "PrivateEndpointConnectionsList": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnectionsList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/privateEndpointConnections/{privateEndpointConnectionName}": {
+        "delete": {
+          "description": "Deletes an existing namespace. This operation also removes all associated resources under the namespace.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639389.aspx"
+          },
+          "operationId": "PrivateEndpointConnections_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The PrivateEndpointConnection name",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "NameSpacePrivateEndPointConnectionDelete": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnectionsDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a description for the specified Private Endpoint Connection name.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639379.aspx"
+          },
+          "operationId": "PrivateEndpointConnections_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The PrivateEndpointConnection name",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "NameSpacePrivateEndPointConnectionGet": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnectionsGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates PrivateEndpointConnections of service namespace.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639408.aspx"
+          },
+          "operationId": "PrivateEndpointConnections_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The PrivateEndpointConnection name",
+              "in": "path",
+              "name": "privateEndpointConnectionName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivateEndpointConnection"
+                }
+              }
+            },
+            "description": "Parameters supplied to update Status of PrivateEndPoint Connection to namespace resource.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Resource 'PrivateEndpointConnection' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "Resource 'PrivateEndpointConnection' create operation succeeded"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateEndpointConnection"
+                  }
+                }
+              },
+              "description": "The request has been accepted for processing, but processing has not yet completed."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateEndpointConnections"
+          ],
+          "x-ms-examples": {
+            "NameSpacePrivateEndPointConnectionCreate": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateEndpointConnectionsCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/privateLinkResources": {
+        "get": {
+          "description": "Lists the private link resources for a container registry.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639379.aspx"
+          },
+          "operationId": "PrivateLinkResources_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateLinkResourcesListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateLinkResources"
+          ],
+          "x-ms-examples": {
+            "NameSpacePrivateLinkResourcesGet": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateLinkResourcesList.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/privateLinkResources/{privateLinkResourceName}": {
+        "get": {
+          "description": "Gets a private link resource by a specified group name for a container registry.",
+          "externalDocs": {
+            "url": "https://msdn.microsoft.com/en-us/library/azure/mt639379.aspx"
+          },
+          "operationId": "PrivateLinkResources_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the private link resource.",
+              "in": "path",
+              "name": "privateLinkResourceName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PrivateLinkResource"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "PrivateLinkResources"
+          ],
+          "x-ms-examples": {
+            "NameSpacePrivateLinkResourceGet": {
+              "$ref": "./examples/PrivateEndpointConnections/PrivateLinkResourcesGet.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays": {
+        "get": {
+          "description": "Lists the WCF relays within the namespace.",
+          "operationId": "WCFRelays_ListByNamespace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WcfRelaysListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WcfRelaysOps"
+          ],
+          "x-ms-examples": {
+            "RelayListAll": {
+              "$ref": "./examples/Relay/RelayListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays/{relayName}": {
+        "delete": {
+          "description": "Deletes a WCF relay.",
+          "operationId": "WCFRelays_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WcfRelaysOps"
+          ],
+          "x-ms-examples": {
+            "RelayDelete": {
+              "$ref": "./examples/Relay/RelayDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Returns the description for the specified WCF relay.",
+          "operationId": "WCFRelays_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WcfRelay"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "204": {
+              "description": "Operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WcfRelaysOps"
+          ],
+          "x-ms-examples": {
+            "RelayGet": {
+              "$ref": "./examples/Relay/RelayGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates a WCF relay. This operation is idempotent.",
+          "operationId": "WCFRelays_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WcfRelay"
+                }
+              }
+            },
+            "description": "Parameters supplied to create a WCF relay.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WcfRelay"
+                  }
+                }
+              },
+              "description": "Resource 'WcfRelay' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WcfRelaysOps"
+          ],
+          "x-ms-examples": {
+            "RelayCreate": {
+              "$ref": "./examples/Relay/RelayCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays/{relayName}/authorizationRules": {
+        "get": {
+          "description": "Authorization rules for a WCF relay.",
+          "operationId": "WCFRelays_ListAuthorizationRules",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRuleListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleListAll": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleListAll.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays/{relayName}/authorizationRules/{authorizationRuleName}": {
+        "delete": {
+          "description": "Deletes a WCF relay authorization rule.",
+          "operationId": "WCFRelays_DeleteAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleDelete": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get authorizationRule for a WCF relay by name.",
+          "operationId": "WCFRelays_GetAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleGet": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleGet.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates or updates an authorization rule for a WCF relay.",
+          "operationId": "WCFRelays_CreateOrUpdateAuthorizationRule",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationRule"
+                }
+              }
+            },
+            "description": "The authorization rule parameters.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthorizationRule"
+                  }
+                }
+              },
+              "description": "Resource 'AuthorizationRule' update operation succeeded"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleCreate": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleCreate.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays/{relayName}/authorizationRules/{authorizationRuleName}/listKeys": {
+        "post": {
+          "description": "Primary and secondary connection strings to the WCF relay.",
+          "operationId": "WCFRelays_ListKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleListKey.json": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleListKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Relay/namespaces/{namespaceName}/wcfRelays/{relayName}/authorizationRules/{authorizationRuleName}/regenerateKeys": {
+        "post": {
+          "description": "Regenerates the primary or secondary connection strings to the WCF relay.",
+          "operationId": "WCFRelays_RegenerateKeys",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The namespace name",
+              "in": "path",
+              "name": "namespaceName",
+              "required": true,
+              "schema": {
+                "maxLength": 50,
+                "minLength": 6,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The relay name.",
+              "in": "path",
+              "name": "relayName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            {
+              "description": "The authorization rule name.",
+              "in": "path",
+              "name": "authorizationRuleName",
+              "required": true,
+              "schema": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegenerateAccessKeyParameters"
+                }
+              }
+            },
+            "description": "Parameters supplied to regenerate authorization rule.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AccessKeys"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "WCFRelays"
+          ],
+          "x-ms-examples": {
+            "RelayAuthorizationRuleRegenerateKey.json": {
+              "$ref": "./examples/Relay/RelayAuthorizationRuleRegenerateKey.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Operations"
+      },
+      {
+        "name": "AuthorizationRules"
+      },
+      {
+        "name": "HybridConnections"
+      },
+      {
+        "name": "WCFRelays"
+      },
+      {
+        "name": "RelayNamespaces"
+      },
+      {
+        "name": "NetworkRuleSets"
+      },
+      {
+        "name": "HybridConnectionOperationGroup"
+      },
+      {
+        "name": "WcfRelaysOps"
+      },
+      {
+        "name": "PrivateEndpointConnections"
+      },
+      {
+        "name": "PrivateLinkResources"
+      }
+    ]
+  }
+}

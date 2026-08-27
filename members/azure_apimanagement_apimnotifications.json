@@ -1,0 +1,1121 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_apimanagement_apimnotifications",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "EmailParameter": {
+          "description": "Email identifier.",
+          "in": "path",
+          "name": "email",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "IfMatchOptionalParameter": {
+          "description": "ETag of the Entity. Not required when creating an entity, but required when updating an entity.",
+          "in": "header",
+          "name": "If-Match",
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "NotificationNameParameter": {
+          "description": "Notification Name Identifier.",
+          "enum": [
+            "RequestPublisherNotificationMessage",
+            "PurchasePublisherNotificationMessage",
+            "NewApplicationNotificationMessage",
+            "BCC",
+            "NewIssuePublisherNotificationMessage",
+            "AccountClosedPublisher",
+            "QuotaLimitApproachingPublisherNotificationMessage"
+          ],
+          "in": "path",
+          "name": "notificationName",
+          "required": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NotificationName",
+            "values": [
+              {
+                "description": "The following email recipients and users will receive email notifications about subscription requests for API products requiring approval.",
+                "value": "RequestPublisherNotificationMessage"
+              },
+              {
+                "description": "The following email recipients and users will receive email notifications about new API product subscriptions.",
+                "value": "PurchasePublisherNotificationMessage"
+              },
+              {
+                "description": "The following email recipients and users will receive email notifications when new applications are submitted to the application gallery.",
+                "value": "NewApplicationNotificationMessage"
+              },
+              {
+                "description": "The following recipients will receive blind carbon copies of all emails sent to developers.",
+                "value": "BCC"
+              },
+              {
+                "description": "The following email recipients and users will receive email notifications when a new issue or comment is submitted on the developer portal.",
+                "value": "NewIssuePublisherNotificationMessage"
+              },
+              {
+                "description": "The following email recipients and users will receive email notifications when developer closes his account.",
+                "value": "AccountClosedPublisher"
+              },
+              {
+                "description": "The following email recipients and users will receive email notifications when subscription usage gets close to usage quota.",
+                "value": "QuotaLimitApproachingPublisherNotificationMessage"
+              }
+            ]
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ServiceNameParameter": {
+          "description": "The name of the API Management service.",
+          "in": "path",
+          "maxLength": 50,
+          "minLength": 1,
+          "name": "serviceName",
+          "pattern": "^[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SkipQueryParameter": {
+          "description": "Number of records to skip.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 0,
+          "name": "$skip",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "TopQueryParameter": {
+          "description": "Number of records to return.",
+          "format": "int32",
+          "in": "query",
+          "minimum": 1,
+          "name": "$top",
+          "type": "integer",
+          "x-ms-parameter-location": "method"
+        },
+        "UserIdParameter": {
+          "description": "User identifier. Must be unique in the current API Management service instance.",
+          "in": "path",
+          "maxLength": 80,
+          "minLength": 1,
+          "name": "userId",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "NotificationCollection": {
+          "description": "Paged Notification list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/NotificationContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "NotificationContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Notification details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NotificationContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "NotificationContractProperties": {
+          "description": "Notification Contract properties.",
+          "properties": {
+            "description": {
+              "description": "Description of the Notification.",
+              "type": "string"
+            },
+            "recipients": {
+              "$ref": "#/components/schemas/RecipientsContractProperties"
+            },
+            "title": {
+              "description": "Title of the Notification.",
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "type": "object"
+        },
+        "NotificationContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Notification details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/NotificationContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "RecipientEmailCollection": {
+          "description": "Paged Recipient User list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/RecipientEmailContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "RecipientEmailContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Recipient Email details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RecipientEmailContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "RecipientEmailContractProperties": {
+          "description": "Recipient Email Contract Properties.",
+          "properties": {
+            "email": {
+              "description": "User Email subscribed to notification.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RecipientEmailContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Recipient Email details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RecipientEmailContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "RecipientUserCollection": {
+          "description": "Paged Recipient User list representation.",
+          "properties": {
+            "count": {
+              "description": "Total record count number across all pages.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "nextLink": {
+              "description": "Next page link if any.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Page values.",
+              "items": {
+                "$ref": "#/components/schemas/RecipientUserContract"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "RecipientUserContract": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Recipient User details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RecipientUsersContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "RecipientUserContract_2": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "Recipient User details.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/RecipientUsersContractProperties",
+              "x-ms-client-flatten": true
+            }
+          },
+          "type": "object"
+        },
+        "RecipientUsersContractProperties": {
+          "description": "Recipient User Contract Properties.",
+          "properties": {
+            "userId": {
+              "description": "API Management UserId subscribed to notification.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "RecipientsContractProperties": {
+          "description": "Notification Parameter contract.",
+          "properties": {
+            "emails": {
+              "description": "List of Emails subscribed for the notification.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "users": {
+              "description": "List of Users subscribed for the notification.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Use these REST APIs for performing operations on who is going to receive notifications associated with your Azure API Management deployment.",
+      "title": "ApiManagementClient",
+      "version": "2024-05-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications": {
+        "get": {
+          "description": "Lists a collection of properties defined within a service instance.",
+          "operationId": "Notification_ListByService",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/TopQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SkipQueryParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NotificationCollection"
+                  }
+                }
+              },
+              "description": "A Collection of the Notification for the specified API Management service instance."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Notification"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListNotifications": {
+              "$ref": "./examples/ApiManagementListNotifications.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications/{notificationName}": {
+        "get": {
+          "description": "Gets the details of the Notification specified by its identifier.",
+          "operationId": "Notification_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NotificationContract_2"
+                  }
+                }
+              },
+              "description": "The response body contains the specified Notification."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Notification"
+          ],
+          "x-ms-examples": {
+            "ApiManagementGetNotification": {
+              "$ref": "./examples/ApiManagementGetNotification.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create or Update API Management publisher notification.",
+          "operationId": "Notification_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IfMatchOptionalParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NotificationContract_2"
+                  }
+                }
+              },
+              "description": "Notification was successfully updated."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Notification"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateNotification": {
+              "$ref": "./examples/ApiManagementCreateNotification.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications/{notificationName}/recipientEmails": {
+        "get": {
+          "description": "Gets the list of the Notification Recipient Emails subscribed to a notification.",
+          "operationId": "NotificationRecipientEmail_ListByNotification",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientEmailCollection"
+                  }
+                }
+              },
+              "description": "The response body contains the Recipient Email collection subscribed to the notification."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientEmail"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListNotificationRecipientEmails": {
+              "$ref": "./examples/ApiManagementListNotificationRecipientEmails.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications/{notificationName}/recipientEmails/{email}": {
+        "delete": {
+          "description": "Removes the email from the list of Notification.",
+          "operationId": "NotificationRecipientEmail_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/EmailParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Recipient Email was successfully removed to the notification list."
+            },
+            "204": {
+              "description": "Recipient Email was successfully removed to the notification list."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientEmail"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteNotificationRecipientEmail": {
+              "$ref": "./examples/ApiManagementDeleteNotificationRecipientEmail.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Determine if Notification Recipient Email subscribed to the notification.",
+          "operationId": "NotificationRecipientEmail_CheckEntityExists",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/EmailParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "The Users is subscribed to receive the notification."
+            },
+            "404": {
+              "description": "The Users is not subscribed to receive the notification."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientEmail"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadNotificationRecipientEmail": {
+              "$ref": "./examples/ApiManagementHeadNotificationRecipientEmail.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Adds the Email address to the list of Recipients for the Notification.",
+          "operationId": "NotificationRecipientEmail_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/EmailParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientEmailContract_2"
+                  }
+                }
+              },
+              "description": "Recipient Email is already part of the notification list."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientEmailContract_2"
+                  }
+                }
+              },
+              "description": "Recipient Email was successfully added to the notification list."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientEmail"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateNotificationRecipientEmail": {
+              "$ref": "./examples/ApiManagementCreateNotificationRecipientEmail.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications/{notificationName}/recipientUsers": {
+        "get": {
+          "description": "Gets the list of the Notification Recipient User subscribed to the notification.",
+          "operationId": "NotificationRecipientUser_ListByNotification",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientUserCollection"
+                  }
+                }
+              },
+              "description": "The response body contains the Recipient User collection for the notification."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementListNotificationRecipientUsers": {
+              "$ref": "./examples/ApiManagementListNotificationRecipientUsers.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/notifications/{notificationName}/recipientUsers/{userId}": {
+        "delete": {
+          "description": "Removes the API Management user from the list of Notification.",
+          "operationId": "NotificationRecipientUser_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Recipient User was successfully removed from the notification list."
+            },
+            "204": {
+              "description": "Recipient User was successfully removed from the notification list."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementDeleteNotificationRecipientUser": {
+              "$ref": "./examples/ApiManagementDeleteNotificationRecipientUser.json"
+            }
+          }
+        },
+        "head": {
+          "description": "Determine if the Notification Recipient User is subscribed to the notification.",
+          "operationId": "NotificationRecipientUser_CheckEntityExists",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "The User is subscribed to receive the notification."
+            },
+            "404": {
+              "description": "Entity does not exists."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementHeadNotificationRecipientUser": {
+              "$ref": "./examples/ApiManagementHeadNotificationRecipientUser.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Adds the API Management User to the list of Recipients for the Notification.",
+          "operationId": "NotificationRecipientUser_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ServiceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NotificationNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/UserIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientUserContract_2"
+                  }
+                }
+              },
+              "description": "Recipient User is already part of the notification list."
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RecipientUserContract_2"
+                  }
+                }
+              },
+              "description": "Recipient User was successfully added to the notification list."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "NotificationRecipientUser"
+          ],
+          "x-ms-examples": {
+            "ApiManagementCreateNotificationRecipientUser": {
+              "$ref": "./examples/ApiManagementCreateNotificationRecipientUser.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

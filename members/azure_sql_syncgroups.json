@@ -1,0 +1,1726 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_sql_syncgroups",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Azure.Core.uuid": {
+          "description": "Universally Unique Identifier",
+          "format": "uuid",
+          "type": "string"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ProxyResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for a Azure Resource Manager proxy resource. It will not have tags and a location",
+          "title": "Proxy Resource",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "Sku": {
+          "description": "An ARM Resource SKU.",
+          "properties": {
+            "capacity": {
+              "description": "Capacity of the particular SKU.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "family": {
+              "description": "If the service has different generations of hardware, for the same SKU, then that can be captured here.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the SKU, typically, a letter + Number code, e.g. P3.",
+              "type": "string"
+            },
+            "size": {
+              "description": "Size of the particular SKU",
+              "type": "string"
+            },
+            "tier": {
+              "description": "The tier or edition of the particular SKU, e.g. Basic, Premium.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "SyncConflictResolutionPolicy": {
+          "description": "Conflict resolution policy of the sync group.",
+          "enum": [
+            "HubWin",
+            "MemberWin"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SyncConflictResolutionPolicy",
+            "values": [
+              {
+                "description": "HubWin",
+                "name": "HubWin",
+                "value": "HubWin"
+              },
+              {
+                "description": "MemberWin",
+                "name": "MemberWin",
+                "value": "MemberWin"
+              }
+            ]
+          }
+        },
+        "SyncDatabaseIdListResult": {
+          "description": "A list of sync database ID properties.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SyncDatabaseIdProperties items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SyncDatabaseIdProperties"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SyncDatabaseIdProperties": {
+          "description": "Properties of the sync database id.",
+          "properties": {
+            "id": {
+              "description": "ARM resource id of sync database.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SyncFullSchemaProperties": {
+          "description": "Properties of the database full schema.",
+          "properties": {
+            "lastUpdateTime": {
+              "description": "Last update time of the database schema.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tables": {
+              "description": "List of tables in the database full schema.",
+              "items": {
+                "$ref": "#/components/schemas/SyncFullSchemaTable"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SyncFullSchemaPropertiesListResult": {
+          "description": "A list of sync schema properties.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SyncFullSchemaProperties items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SyncFullSchemaProperties"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SyncFullSchemaTable": {
+          "description": "Properties of the table in the database full schema.",
+          "properties": {
+            "columns": {
+              "description": "List of columns in the table of database full schema.",
+              "items": {
+                "$ref": "#/components/schemas/SyncFullSchemaTableColumn"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "errorId": {
+              "description": "Error id of the table.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "hasError": {
+              "description": "If there is error in the table.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the table.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "quotedName": {
+              "description": "Quoted name of the table.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SyncFullSchemaTableColumn": {
+          "description": "Properties of the column in the table of database full schema.",
+          "properties": {
+            "dataSize": {
+              "description": "Data size of the column.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "dataType": {
+              "description": "Data type of the column.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "errorId": {
+              "description": "Error id of the column.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "hasError": {
+              "description": "If there is error in the table.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "isPrimaryKey": {
+              "description": "If it is the primary key of the table.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the column.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "quotedName": {
+              "description": "Quoted name of the column.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroup": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/ProxyResource"
+            }
+          ],
+          "description": "An Azure SQL Database sync group.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/SyncGroupProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/Sku"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupListResult": {
+          "description": "The response of a SyncGroup list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SyncGroup items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SyncGroup"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SyncGroupLogListResult": {
+          "description": "A list of sync group log properties.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SyncGroupLogProperties items on this page",
+              "items": {
+                "$ref": "#/components/schemas/SyncGroupLogProperties"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "SyncGroupLogProperties": {
+          "description": "Properties of an Azure SQL Database sync group log.",
+          "properties": {
+            "details": {
+              "description": "Details of the sync group log.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "operationStatus": {
+              "description": "OperationStatus of the sync group log.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "source": {
+              "description": "Source of the sync group log.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "timestamp": {
+              "description": "Timestamp of the sync group log.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "tracingId": {
+              "$ref": "#/components/schemas/Azure.Core.uuid"
+            },
+            "type": {
+              "$ref": "#/components/schemas/SyncGroupLogType"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupLogType": {
+          "description": "Type of the sync group log.",
+          "enum": [
+            "All",
+            "Error",
+            "Warning",
+            "Success"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SyncGroupLogType",
+            "values": [
+              {
+                "description": "All",
+                "name": "All",
+                "value": "All"
+              },
+              {
+                "description": "Error",
+                "name": "Error",
+                "value": "Error"
+              },
+              {
+                "description": "Warning",
+                "name": "Warning",
+                "value": "Warning"
+              },
+              {
+                "description": "Success",
+                "name": "Success",
+                "value": "Success"
+              }
+            ]
+          }
+        },
+        "SyncGroupProperties": {
+          "description": "Properties of a sync group with support to MI.",
+          "properties": {
+            "conflictLoggingRetentionInDays": {
+              "description": "Conflict logging retention period.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "conflictResolutionPolicy": {
+              "$ref": "#/components/schemas/SyncConflictResolutionPolicy"
+            },
+            "enableConflictLogging": {
+              "description": "If conflict logging is enabled.",
+              "type": "boolean"
+            },
+            "hubDatabasePassword": {
+              "description": "Password for the sync group hub database credential.",
+              "format": "password",
+              "type": "string",
+              "x-ms-mutability": [
+                "update",
+                "create"
+              ],
+              "x-ms-secret": true
+            },
+            "hubDatabaseUserName": {
+              "description": "User name for the sync group hub database credential.",
+              "type": "string"
+            },
+            "interval": {
+              "description": "Sync interval of the sync group.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "lastSyncTime": {
+              "description": "Last sync time of the sync group.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "privateEndpointName": {
+              "description": "Private endpoint name of the sync group if use private link connection is enabled.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "schema": {
+              "$ref": "#/components/schemas/SyncGroupSchema"
+            },
+            "syncDatabaseId": {
+              "description": "ARM resource id of the sync database in the sync group.",
+              "type": "string"
+            },
+            "syncState": {
+              "$ref": "#/components/schemas/SyncGroupState"
+            },
+            "usePrivateLinkConnection": {
+              "description": "If use private link connection is enabled.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupSchema": {
+          "description": "Properties of sync group schema.",
+          "properties": {
+            "masterSyncMemberName": {
+              "description": "Name of master sync member where the schema is from.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "List of tables in sync group schema.",
+              "items": {
+                "$ref": "#/components/schemas/SyncGroupSchemaTable"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupSchemaTable": {
+          "description": "Properties of table in sync group schema.",
+          "properties": {
+            "columns": {
+              "description": "List of columns in sync group schema.",
+              "items": {
+                "$ref": "#/components/schemas/SyncGroupSchemaTableColumn"
+              },
+              "type": "array"
+            },
+            "quotedName": {
+              "description": "Quoted name of sync group schema table.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupSchemaTableColumn": {
+          "description": "Properties of column in sync group table.",
+          "properties": {
+            "dataSize": {
+              "description": "Data size of the column.",
+              "type": "string"
+            },
+            "dataType": {
+              "description": "Data type of the column.",
+              "type": "string"
+            },
+            "quotedName": {
+              "description": "Quoted name of sync group table column.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SyncGroupState": {
+          "description": "Sync state of the sync group.",
+          "enum": [
+            "NotReady",
+            "Error",
+            "Warning",
+            "Progressing",
+            "Good"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SyncGroupState",
+            "values": [
+              {
+                "description": "NotReady",
+                "name": "NotReady",
+                "value": "NotReady"
+              },
+              {
+                "description": "Error",
+                "name": "Error",
+                "value": "Error"
+              },
+              {
+                "description": "Warning",
+                "name": "Warning",
+                "value": "Warning"
+              },
+              {
+                "description": "Progressing",
+                "name": "Progressing",
+                "value": "Progressing"
+              },
+              {
+                "description": "Good",
+                "name": "Good",
+                "value": "Good"
+              }
+            ]
+          }
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Azure SQL Database management API provides a RESTful set of web APIs that interact with Azure SQL Database services to manage your databases. The API enables users to create, retrieve, update, and delete databases, servers, and other entities.",
+      "title": "SqlManagementClient",
+      "version": "2025-01-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Sql/locations/{locationName}/syncDatabaseIds": {
+        "get": {
+          "description": "Gets a collection of sync database ids.",
+          "operationId": "SyncGroups_ListSyncDatabaseIds",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "description": "The name of the region where the resource is located.",
+              "in": "path",
+              "name": "locationName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncDatabaseIdListResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Get a sync database ID": {
+              "$ref": "./examples/SyncGroupGetSyncDatabaseId.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups": {
+        "get": {
+          "description": "Lists sync groups under a hub database.",
+          "operationId": "SyncGroups_ListByDatabase",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroupListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "List sync groups under a given database": {
+              "$ref": "./examples/SyncGroupListByDatabase.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}": {
+        "delete": {
+          "description": "Deletes a sync group.",
+          "operationId": "SyncGroups_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resource deleted successfully."
+            },
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Delete a sync group": {
+              "$ref": "./examples/SyncGroupDelete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Gets a sync group.",
+          "operationId": "SyncGroups_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroup"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Get a sync group": {
+              "$ref": "./examples/SyncGroupGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates a sync group.",
+          "operationId": "SyncGroups_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncGroup"
+                }
+              }
+            },
+            "description": "The requested sync group resource state.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroup"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Update a sync group": {
+              "$ref": "./examples/SyncGroupPatch.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/SyncGroup",
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Creates or updates a sync group.",
+          "operationId": "SyncGroups_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncGroup"
+                }
+              }
+            },
+            "description": "The requested sync group resource state.",
+            "required": true,
+            "x-originalParamName": "parameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroup"
+                  }
+                }
+              },
+              "description": "Resource 'SyncGroup' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroup"
+                  }
+                }
+              },
+              "description": "Resource 'SyncGroup' create operation succeeded",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Create a sync group": {
+              "$ref": "./examples/SyncGroupCreate.json"
+            },
+            "Update a sync group": {
+              "$ref": "./examples/SyncGroupUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-schema": "#/definitions/SyncGroup",
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}/cancelSync": {
+        "post": {
+          "description": "Cancels a sync group synchronization.",
+          "operationId": "SyncGroups_CancelSync",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Cancel a sync group synchronization": {
+              "$ref": "./examples/SyncGroupCancelSync.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}/hubSchemas": {
+        "get": {
+          "description": "Gets a collection of hub database schemas.",
+          "operationId": "SyncGroups_ListHubSchemas",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncFullSchemaPropertiesListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Get a hub database schema.": {
+              "$ref": "./examples/SyncGroupGetHubSchema.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}/logs": {
+        "get": {
+          "description": "Gets a collection of sync group logs.",
+          "operationId": "SyncGroups_ListLogs",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Get logs generated after this time.",
+              "in": "query",
+              "name": "startTime",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Get logs generated before this time.",
+              "in": "query",
+              "name": "endTime",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The types of logs to retrieve.",
+              "in": "query",
+              "name": "type",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "All",
+                  "Error",
+                  "Warning",
+                  "Success"
+                ],
+                "type": "string"
+              },
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "SyncGroupsType",
+                "values": [
+                  {
+                    "description": "All",
+                    "name": "All",
+                    "value": "All"
+                  },
+                  {
+                    "description": "Error",
+                    "name": "Error",
+                    "value": "Error"
+                  },
+                  {
+                    "description": "Warning",
+                    "name": "Warning",
+                    "value": "Warning"
+                  },
+                  {
+                    "description": "Success",
+                    "name": "Success",
+                    "value": "Success"
+                  }
+                ]
+              }
+            },
+            {
+              "description": "The continuation token for this operation.",
+              "in": "query",
+              "name": "continuationToken",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SyncGroupLogListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Get sync group logs": {
+              "$ref": "./examples/SyncGroupGetLog.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}/refreshHubSchema": {
+        "post": {
+          "description": "Refreshes a hub database schema.",
+          "operationId": "SyncGroups_RefreshHubSchema",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Refresh a hub database schema.": {
+              "$ref": "./examples/SyncGroupRefreshHubSchema.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/databases/{databaseName}/syncGroups/{syncGroupName}/triggerSync": {
+        "post": {
+          "description": "Triggers a sync group synchronization.",
+          "operationId": "SyncGroups_TriggerSync",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the server.",
+              "in": "path",
+              "name": "serverName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the database.",
+              "in": "path",
+              "name": "databaseName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "The name of the sync group.",
+              "in": "path",
+              "name": "syncGroupName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "SyncGroups"
+          ],
+          "x-ms-examples": {
+            "Trigger a sync group synchronization.": {
+              "$ref": "./examples/SyncGroupTriggerSync.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "SyncGroups"
+      }
+    ]
+  }
+}

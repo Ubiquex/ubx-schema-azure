@@ -1,0 +1,906 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_synapse_bigdatapool",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "WorkspaceNameParameter": {
+          "description": "The name of the workspace.",
+          "in": "path",
+          "name": "workspaceName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "AutoPauseProperties": {
+          "description": "Auto-pausing properties of a Big Data pool powered by Apache Spark",
+          "properties": {
+            "delayInMinutes": {
+              "description": "Number of minutes of idle time before the Big Data pool is automatically paused.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "enabled": {
+              "description": "Whether auto-pausing is enabled for the Big Data pool.",
+              "type": "boolean"
+            }
+          },
+          "title": "Spark pool auto-pausing properties",
+          "type": "object"
+        },
+        "AutoScaleProperties": {
+          "description": "Auto-scaling properties of a Big Data pool powered by Apache Spark",
+          "properties": {
+            "enabled": {
+              "description": "Whether automatic scaling is enabled for the Big Data pool.",
+              "type": "boolean"
+            },
+            "maxNodeCount": {
+              "description": "The maximum number of nodes the Big Data pool can support.",
+              "format": "int32",
+              "type": "integer",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "minNodeCount": {
+              "description": "The minimum number of nodes the Big Data pool can support.",
+              "format": "int32",
+              "type": "integer",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            }
+          },
+          "title": "Spark pool auto-scaling properties",
+          "type": "object"
+        },
+        "BigDataPoolPatchInfo": {
+          "description": "Properties patch for a Big Data pool",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Updated tags for the Big Data pool",
+              "type": "object"
+            }
+          },
+          "title": "Patch for a Big Data pool",
+          "type": "object"
+        },
+        "BigDataPoolResourceInfo": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "A Big Data pool",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/BigDataPoolResourceProperties"
+            }
+          },
+          "title": "Big Data pool",
+          "type": "object"
+        },
+        "BigDataPoolResourceInfoListResult": {
+          "description": "Collection of Big Data pool information",
+          "properties": {
+            "nextLink": {
+              "description": "Link to the next page of results",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of Big Data pools",
+              "items": {
+                "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+              },
+              "type": "array"
+            }
+          },
+          "title": "Collection of Big Data pools",
+          "type": "object"
+        },
+        "BigDataPoolResourceProperties": {
+          "description": "Properties of a Big Data pool powered by Apache Spark",
+          "properties": {
+            "autoPause": {
+              "$ref": "#/components/schemas/AutoPauseProperties"
+            },
+            "autoScale": {
+              "$ref": "#/components/schemas/AutoScaleProperties"
+            },
+            "cacheSize": {
+              "description": "The cache size",
+              "format": "int32",
+              "type": "integer"
+            },
+            "creationDate": {
+              "description": "The time when the Big Data pool was created.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "customLibraries": {
+              "description": "List of custom libraries/packages associated with the spark pool.",
+              "items": {
+                "$ref": "#/components/schemas/LibraryInfo"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "defaultSparkLogFolder": {
+              "description": "The default folder where Spark logs will be written.",
+              "type": "string"
+            },
+            "dynamicExecutorAllocation": {
+              "$ref": "#/components/schemas/DynamicExecutorAllocation"
+            },
+            "isAutotuneEnabled": {
+              "description": "Whether autotune is required or not.",
+              "title": "Enable Autotune",
+              "type": "boolean",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "isComputeIsolationEnabled": {
+              "description": "Whether compute isolation is required or not.",
+              "type": "boolean"
+            },
+            "lastSucceededTimestamp": {
+              "description": "The time when the Big Data pool was updated successfully.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "libraryRequirements": {
+              "$ref": "#/components/schemas/LibraryRequirements"
+            },
+            "nodeCount": {
+              "description": "The number of nodes in the Big Data pool.",
+              "format": "int32",
+              "type": "integer",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "nodeSize": {
+              "description": "The level of compute power that each node in the Big Data pool has.",
+              "enum": [
+                "None",
+                "Small",
+                "Medium",
+                "Large",
+                "XLarge",
+                "XXLarge",
+                "XXXLarge"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "NodeSize"
+              }
+            },
+            "nodeSizeFamily": {
+              "description": "The kind of nodes that the Big Data pool provides.",
+              "enum": [
+                "None",
+                "MemoryOptimized",
+                "HardwareAcceleratedFPGA",
+                "HardwareAcceleratedGPU"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "NodeSizeFamily"
+              }
+            },
+            "provisioningState": {
+              "description": "The state of the Big Data pool.",
+              "type": "string"
+            },
+            "sessionLevelPackagesEnabled": {
+              "description": "Whether session level packages enabled.",
+              "type": "boolean"
+            },
+            "sparkConfigProperties": {
+              "$ref": "#/components/schemas/SparkConfigProperties"
+            },
+            "sparkEventsFolder": {
+              "description": "The Spark events folder",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read",
+                "update"
+              ]
+            },
+            "sparkVersion": {
+              "description": "The Apache Spark version.",
+              "type": "string"
+            }
+          },
+          "title": "Spark pool properties",
+          "type": "object"
+        },
+        "DynamicExecutorAllocation": {
+          "description": "Dynamic Executor Allocation Properties",
+          "properties": {
+            "enabled": {
+              "description": "Indicates whether Dynamic Executor Allocation is enabled or not.",
+              "type": "boolean"
+            },
+            "maxExecutors": {
+              "description": "The maximum number of executors alloted",
+              "format": "int32",
+              "type": "integer"
+            },
+            "minExecutors": {
+              "description": "The minimum number of executors alloted",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "LibraryInfo": {
+          "description": "Library/package information of a Big Data pool powered by Apache Spark",
+          "properties": {
+            "containerName": {
+              "description": "Storage blob container name.",
+              "type": "string"
+            },
+            "creatorId": {
+              "description": "Creator Id of the library/package.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of the library.",
+              "type": "string"
+            },
+            "path": {
+              "description": "Storage blob path of library.",
+              "type": "string"
+            },
+            "provisioningStatus": {
+              "description": "Provisioning status of the library/package.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "Type of the library.",
+              "type": "string"
+            },
+            "uploadedTimestamp": {
+              "description": "The last update time of the library.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Information about a library/package created at the workspace level.",
+          "type": "object"
+        },
+        "LibraryRequirements": {
+          "description": "Library requirements for a Big Data pool powered by Apache Spark",
+          "properties": {
+            "content": {
+              "description": "The library requirements.",
+              "type": "string"
+            },
+            "filename": {
+              "description": "The filename of the library requirements file.",
+              "type": "string"
+            },
+            "time": {
+              "description": "The last update time of the library requirements file.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Spark pool library version requirements",
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SparkConfigProperties": {
+          "description": "SparkConfig Properties for a Big Data pool powered by Apache Spark",
+          "properties": {
+            "configurationType": {
+              "description": "The type of the spark config properties file.",
+              "enum": [
+                "File",
+                "Artifact"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ConfigurationType"
+              },
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "content": {
+              "description": "The spark config properties.",
+              "type": "string"
+            },
+            "filename": {
+              "description": "The filename of the spark config properties file.",
+              "type": "string"
+            },
+            "time": {
+              "description": "The last update time of the spark config properties file.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Spark pool Config Properties",
+          "type": "object"
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Synapse Analytics APIs",
+      "title": "SynapseManagementClient",
+      "version": "2021-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/bigDataPools": {
+        "get": {
+          "description": "List Big Data pools in a workspace.",
+          "operationId": "BigDataPools_ListByWorkspace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfoListResult"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "summary": "List the Big Data pools in a workspace.",
+          "tags": [
+            "BigDataPools"
+          ],
+          "x-ms-examples": {
+            "List Big Data pools in a workspace": {
+              "$ref": "./examples/ListBigDataPoolsInWorkspace.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/bigDataPools/{bigDataPoolName}": {
+        "delete": {
+          "description": "Delete a Big Data pool from the workspace.",
+          "operationId": "BigDataPools_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "description": "Big Data pool name",
+              "in": "path",
+              "name": "bigDataPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "204": {
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "summary": "Delete a Big Data pool.",
+          "tags": [
+            "BigDataPools"
+          ],
+          "x-ms-examples": {
+            "Delete a Big Data pool": {
+              "$ref": "./examples/DeleteBigDataPool.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Get a Big Data pool.",
+          "operationId": "BigDataPools_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "description": "Big Data pool name",
+              "in": "path",
+              "name": "bigDataPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "summary": "Get Big Data pool",
+          "tags": [
+            "BigDataPools"
+          ],
+          "x-ms-examples": {
+            "Get a Big Data pool": {
+              "$ref": "./examples/GetBigDataPool.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Patch a Big Data pool.",
+          "operationId": "BigDataPools_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "description": "Big Data pool name",
+              "in": "path",
+              "name": "bigDataPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BigDataPoolPatchInfo"
+                }
+              }
+            },
+            "description": "The updated Big Data pool properties",
+            "required": true,
+            "x-originalParamName": "bigDataPoolPatchInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "summary": "Update a Big Data pool.",
+          "tags": [
+            "BigDataPools"
+          ],
+          "x-ms-examples": {
+            "Update a Big Data pool": {
+              "$ref": "./examples/UpdateBigDataPool.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create a new Big Data pool.",
+          "operationId": "BigDataPools_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "description": "Big Data pool name",
+              "in": "path",
+              "name": "bigDataPoolName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "Whether to stop any running jobs in the Big Data pool",
+              "in": "query",
+              "name": "force",
+              "schema": {
+                "default": false,
+                "type": "boolean"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                }
+              }
+            },
+            "description": "The Big Data pool to create.",
+            "required": true,
+            "x-originalParamName": "bigDataPoolInfo"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "202": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BigDataPoolResourceInfo"
+                  }
+                }
+              },
+              "description": ""
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "summary": "Create a Big Data pool.",
+          "tags": [
+            "BigDataPools"
+          ],
+          "x-ms-examples": {
+            "Create or update a Big Data pool": {
+              "$ref": "./examples/CreateOrUpdateBigDataPool.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

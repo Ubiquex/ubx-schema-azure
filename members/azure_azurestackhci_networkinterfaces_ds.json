@@ -1,0 +1,826 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_azurestackhci_networkinterfaces",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "NetworkInterfaceNameParameter": {
+          "description": "Name of the network interface",
+          "in": "path",
+          "name": "networkInterfaceName",
+          "required": true,
+          "schema": {
+            "maxLength": 80,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-._a-zA-Z0-9]{0,78}[_a-zA-Z0-9]$",
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "ExtendedLocation": {
+          "description": "The complex type of the extended location.",
+          "properties": {
+            "name": {
+              "description": "The name of the extended location.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/ExtendedLocationType"
+            }
+          },
+          "type": "object"
+        },
+        "ExtendedLocationType": {
+          "description": "The type of extendedLocation.",
+          "enum": [
+            "CustomLocation"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ExtendedLocationTypes"
+          }
+        },
+        "IPConfiguration": {
+          "description": "InterfaceIPConfiguration iPConfiguration in a network interface.",
+          "properties": {
+            "name": {
+              "description": "Name - The name of the resource that is unique within a resource group. This name can be used to access the resource.",
+              "pattern": "^[a-zA-Z0-9]$|^[a-zA-Z0-9][-._a-zA-Z0-9]{0,78}[_a-zA-Z0-9]$",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "properties": {
+              "description": "InterfaceIPConfigurationPropertiesFormat properties of IP configuration.",
+              "properties": {
+                "gateway": {
+                  "description": "Gateway for network interface",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "prefixLength": {
+                  "description": "prefixLength for network interface",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "privateIPAddress": {
+                  "description": "PrivateIPAddress - Private IP address of the IP configuration.",
+                  "type": "string"
+                },
+                "subnet": {
+                  "description": "Subnet - Name of Subnet bound to the IP configuration.",
+                  "properties": {
+                    "id": {
+                      "description": "ID - The ARM resource id in the form of /subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroupName}/...",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object",
+          "x-ms-client-flatten": true
+        },
+        "InterfaceDNSSettings": {
+          "properties": {
+            "dnsServers": {
+              "description": "List of DNS server IP Addresses for the interface",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkInterfaceProperties": {
+          "description": "Properties under the network interface resource",
+          "properties": {
+            "dnsSettings": {
+              "$ref": "#/components/schemas/InterfaceDNSSettings"
+            },
+            "ipConfigurations": {
+              "description": "IPConfigurations - A list of IPConfigurations of the network interface.",
+              "items": {
+                "$ref": "#/components/schemas/IPConfiguration"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "macAddress": {
+              "description": "MacAddress - The MAC address of the network interface.",
+              "type": "string"
+            },
+            "provisioningState": {
+              "description": "Provisioning state of the network interface.",
+              "enum": [
+                "Succeeded",
+                "Failed",
+                "InProgress",
+                "Accepted",
+                "Deleting",
+                "Canceled"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ProvisioningStateEnum"
+              }
+            },
+            "status": {
+              "$ref": "#/components/schemas/NetworkInterfaceStatus"
+            }
+          },
+          "type": "object",
+          "x-ms-client-flatten": true
+        },
+        "NetworkInterfaceStatus": {
+          "description": "The observed state of network interfaces",
+          "properties": {
+            "errorCode": {
+              "description": "NetworkInterface provisioning error code",
+              "type": "string"
+            },
+            "errorMessage": {
+              "description": "Descriptive error message",
+              "type": "string"
+            },
+            "provisioningStatus": {
+              "properties": {
+                "operationId": {
+                  "description": "The ID of the operation performed on the network interface",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The status of the operation performed on the network interface [Succeeded, Failed, InProgress]",
+                  "enum": [
+                    "Succeeded",
+                    "Failed",
+                    "InProgress"
+                  ],
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": true,
+                    "name": "Status"
+                  }
+                }
+              },
+              "type": "object"
+            }
+          },
+          "readOnly": true,
+          "type": "object",
+          "x-ms-client-flatten": true
+        },
+        "NetworkInterfaces": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "The network interface resource definition.",
+          "properties": {
+            "extendedLocation": {
+              "$ref": "#/components/schemas/ExtendedLocation"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/NetworkInterfaceProperties"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true,
+          "x-ms-client-flatten": true
+        },
+        "NetworkInterfacesListResult": {
+          "properties": {
+            "nextLink": {
+              "type": "string"
+            },
+            "value": {
+              "items": {
+                "$ref": "#/components/schemas/NetworkInterfaces"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "NetworkInterfacesUpdateRequest": {
+          "description": "The network interface resource patch definition.",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "The Microsoft.AzureStackHCI Rest API spec.",
+      "title": "AzureStackHCI",
+      "version": "2024-01-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/providers/Microsoft.AzureStackHCI/networkInterfaces": {
+        "get": {
+          "description": "Lists all of the network interfaces in the specified subscription. Use the nextLink property in the response to get the next page of network interfaces.",
+          "operationId": "NetworkInterfaces_ListAll",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfacesListResult"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "ListNetworkInterfaceBySubscription": {
+              "$ref": "./examples/ListNetworkInterfaceBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/networkInterfaces": {
+        "get": {
+          "description": "Lists all of the network interfaces in the specified resource group. Use the nextLink property in the response to get the next page of network interfaces.",
+          "operationId": "NetworkInterfaces_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfacesListResult"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "ListNetworkInterfaceByResourceGroup": {
+              "$ref": "./examples/ListNetworkInterfaceByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureStackHCI/networkInterfaces/{networkInterfaceName}": {
+        "delete": {
+          "description": "The operation to delete a network interface.",
+          "operationId": "NetworkInterfaces_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkInterfaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Accepted",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "No content"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "DeleteNetworkInterface": {
+              "$ref": "./examples/DeleteNetworkInterface.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "get": {
+          "description": "Gets a network interface",
+          "operationId": "NetworkInterfaces_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkInterfaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfaces"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "GetNetworkInterface": {
+              "$ref": "./examples/GetNetworkInterface.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "The operation to update a network interface.",
+          "operationId": "NetworkInterfaces_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkInterfaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkInterfacesUpdateRequest"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "networkInterfaces"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfaces"
+                  }
+                }
+              },
+              "description": "OK"
+            },
+            "202": {
+              "description": "Accepted",
+              "headers": {
+                "Location": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "UpdateNetworkInterface": {
+              "$ref": "./examples/UpdateNetworkInterface.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        },
+        "put": {
+          "description": "The operation to create or update a network interface. Please note some properties can be set only during network interface creation.",
+          "operationId": "NetworkInterfaces_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/NetworkInterfaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkInterfaces"
+                }
+              }
+            },
+            "required": true,
+            "x-originalParamName": "networkInterfaces"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfaces"
+                  }
+                }
+              },
+              "description": "Updated"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NetworkInterfaces"
+                  }
+                }
+              },
+              "description": "Created"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "x-ms-examples": {
+            "PutNetworkInterface": {
+              "$ref": "./examples/PutNetworkInterface.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

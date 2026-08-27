@@ -1,0 +1,1471 @@
+{
+  "schema_source": "openapi",
+  "mode": "resource",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_cpim_externalidentities",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "Version of the API to be used with the client request.",
+          "in": "query",
+          "name": "api-version",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group.",
+          "in": "path",
+          "name": "resourceGroupName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceNameParameter": {
+          "description": "The initial domain name of the Azure AD B2C tenant.",
+          "in": "path",
+          "name": "resourceName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "Subscription credentials which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "schemas": {
+        "AvailableOperations": {
+          "description": "Available operations of the service",
+          "properties": {
+            "nextLink": {
+              "description": "URL client should use to fetch the next page (per server side paging).\r\nIt's null for now, added for future use.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Collection of available operation details",
+              "items": {
+                "$ref": "#/components/schemas/OperationDetail"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "B2CResourceSKU": {
+          "description": "SKU properties of the Azure AD B2C tenant. Learn more about Azure AD B2C billing at [aka.ms/b2cBilling](https://aka.ms/b2cBilling).",
+          "properties": {
+            "name": {
+              "description": "The name of the SKU for the tenant.",
+              "enum": [
+                "Standard",
+                "PremiumP1",
+                "PremiumP2"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "B2CResourceSKUName",
+                "values": [
+                  {
+                    "description": "Azure AD B2C usage is billed to a linked Azure subscription and uses a monthly active users (MAU) billing model.",
+                    "value": "Standard"
+                  },
+                  {
+                    "description": "Azure AD B2C usage is billed to a linked Azure subscription and uses number of authentications based billing.",
+                    "value": "PremiumP1"
+                  },
+                  {
+                    "description": "Azure AD B2C usage is billed to a linked Azure subscription and uses number of authentications based billing.",
+                    "value": "PremiumP2"
+                  }
+                ]
+              }
+            },
+            "tier": {
+              "description": "The tier of the tenant.",
+              "enum": [
+                "A0"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "B2CResourceSKUTier",
+                "values": [
+                  {
+                    "description": "The SKU tier used for all Azure AD B2C tenants.",
+                    "value": "A0"
+                  }
+                ]
+              }
+            }
+          },
+          "type": "object"
+        },
+        "B2CTenantResource": {
+          "properties": {
+            "id": {
+              "description": "An identifier that represents the Azure AD B2C tenant resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "location": {
+              "description": "The location in which the resource is hosted and data resides. Can be one of 'United States', 'Europe', 'Asia Pacific', or 'Australia'. Refer to [this documentation](https://aka.ms/B2CDataResidency) for more information.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "name": {
+              "description": "The name of the Azure AD B2C tenant resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/B2CTenantResourceProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/B2CResourceSKU"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource Tags",
+              "type": "object"
+            },
+            "type": {
+              "description": "The type of the B2C tenant resource.",
+              "enum": [
+                "Microsoft.AzureActiveDirectory/b2cDirectories"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "TypeValue",
+                "values": [
+                  {
+                    "description": "The resource type for Azure AD B2C tenant resource.",
+                    "value": "Microsoft.AzureActiveDirectory/b2cDirectories"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "location",
+            "sku"
+          ],
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "B2CTenantResourceList": {
+          "description": "The collection of Azure AD B2C tenant resources",
+          "properties": {
+            "value": {
+              "description": "List of Azure AD B2C tenant resources",
+              "items": {
+                "$ref": "#/components/schemas/B2CTenantResource"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "B2CTenantResourceProperties": {
+          "description": "Properties of the Azure AD B2C tenant Azure resource.",
+          "properties": {
+            "billingConfig": {
+              "description": "The billing configuration for the tenant.",
+              "properties": {
+                "billingType": {
+                  "description": "The type of billing. Will be MAU for all new customers. If 'Auths', it can be updated to 'MAU'. Cannot be changed if value is 'MAU'. Learn more about Azure AD B2C billing at [aka.ms/b2cBilling](https://aka.ms/b2cbilling).",
+                  "enum": [
+                    "MAU",
+                    "Auths"
+                  ],
+                  "type": "string",
+                  "x-ms-enum": {
+                    "modelAsString": true,
+                    "name": "BillingType",
+                    "values": [
+                      {
+                        "description": "Azure AD B2C usage is billed to a linked Azure subscription and uses a monthly active users (MAU) billing model.",
+                        "value": "MAU"
+                      },
+                      {
+                        "description": "Azure AD B2C usage is billed to a linked Azure subscription and uses number of authentications based billing.",
+                        "value": "Auths"
+                      }
+                    ]
+                  }
+                },
+                "effectiveStartDateUtc": {
+                  "description": "The data from which the billing type took effect",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "tenantId": {
+              "description": "An identifier of the Azure AD B2C tenant.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "B2CTenantUpdateRequest": {
+          "description": "The request body to update the Azure AD B2C tenant resource.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/B2CTenantResourceProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/B2CResourceSKU"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource Tags",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityRequestBody": {
+          "description": "The information required to check the availability of the name for the tenant.",
+          "properties": {
+            "countryCode": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "name": {
+              "description": "The domain name to check for availability.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "countryCode"
+          ],
+          "type": "object"
+        },
+        "CloudError": {
+          "description": "An error response for a resource management request.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorResponse_2"
+            }
+          },
+          "type": "object",
+          "x-ms-external": true
+        },
+        "CountryCode": {
+          "description": "Country code of Azure tenant (e.g. 'US'). Refer to [aka.ms/B2CDataResidency](https://aka.ms/B2CDataResidency) to see valid country codes and corresponding data residency locations. If you do not see a country code in an valid data residency location, choose one from the list.",
+          "type": "string"
+        },
+        "CreateTenantProperties": {
+          "description": "These properties are used to create the Azure AD B2C tenant. These properties are not part of the Azure resource.",
+          "properties": {
+            "countryCode": {
+              "$ref": "#/components/schemas/CountryCode"
+            },
+            "displayName": {
+              "description": "The display name of the Azure AD B2C tenant.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CreateTenantRequestBody": {
+          "description": "The information needed to create the Azure AD B2C tenant and corresponding Azure resource, which is used for billing purposes.",
+          "properties": {
+            "location": {
+              "description": "The location in which the resource is hosted and data resides. Can be one of 'United States', 'Europe', 'Asia Pacific', or 'Australia'. Refer to [this documentation](https://aka.ms/B2CDataResidency) for more information.",
+              "type": "string"
+            },
+            "properties": {
+              "properties": {
+                "createTenantProperties": {
+                  "$ref": "#/components/schemas/CreateTenantProperties"
+                }
+              },
+              "type": "object",
+              "x-ms-client-flatten": true
+            },
+            "sku": {
+              "$ref": "#/components/schemas/B2CResourceSKU"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource Tags",
+              "type": "object"
+            }
+          },
+          "required": [
+            "location",
+            "sku",
+            "properties"
+          ],
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "ErrorResponse_2": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "GuestUsagesResource": {
+          "description": "Guest Usages Resource",
+          "properties": {
+            "id": {
+              "description": "An identifier that represents the Guest Usages resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "location": {
+              "description": "Location of the Guest Usages resource.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "name": {
+              "description": "The name of the Guest Usages resource.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/GuestUsagesResourceProperties"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs of additional resource provisioning properties.",
+              "type": "object"
+            },
+            "type": {
+              "description": "The type of the Guest Usages resource.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "GuestUsagesResourceList": {
+          "description": "The collection of guest usages resources",
+          "properties": {
+            "value": {
+              "description": "List of guest usages resources",
+              "items": {
+                "$ref": "#/components/schemas/GuestUsagesResource"
+              },
+              "readOnly": true,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "GuestUsagesResourcePatch": {
+          "description": "Guest Usages Resource for Patch",
+          "properties": {
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Key-value pairs of additional resource provisioning properties.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "GuestUsagesResourceProperties": {
+          "description": "Guest Usages Resource Properties",
+          "properties": {
+            "tenantId": {
+              "description": "An identifier for the tenant for which the resource is being created",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "NameAvailabilityReason": {
+          "description": "Describes the reason for the 'nameAvailable' value.",
+          "enum": [
+            "AlreadyExists",
+            "Invalid"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "NameAvailabilityReasonType",
+            "values": [
+              {
+                "description": "The name is already in use and is therefore unavailable.",
+                "value": "AlreadyExists"
+              },
+              {
+                "description": "The name provided does not match the resource provider’s naming requirements (incorrect length, unsupported characters, etc.).",
+                "value": "Invalid"
+              }
+            ]
+          }
+        },
+        "NameAvailabilityResponse": {
+          "description": "Response of the CheckNameAvailability operation.",
+          "properties": {
+            "message": {
+              "description": "Description of the reason if name is not available.",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "True if the name is available and can be used to create a new tenant. Otherwise false.",
+              "type": "boolean"
+            },
+            "reason": {
+              "$ref": "#/components/schemas/NameAvailabilityReason"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDetail": {
+          "description": "Operation detail payload",
+          "properties": {
+            "display": {
+              "$ref": "#/components/schemas/OperationDisplay"
+            },
+            "isDataAction": {
+              "description": "Indicates whether the operation is a data action",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of the operation",
+              "type": "string"
+            },
+            "origin": {
+              "description": "Origin of the operation",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "OperationDisplay": {
+          "description": "Operation display payload",
+          "properties": {
+            "description": {
+              "description": "Localized friendly description for the operation",
+              "type": "string"
+            },
+            "operation": {
+              "description": "Localized friendly name for the operation",
+              "type": "string"
+            },
+            "provider": {
+              "description": "Resource provider of the operation",
+              "type": "string"
+            },
+            "resource": {
+              "description": "Resource of the operation",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Manage the Azure resource for an Azure Active Directory B2C tenant and guestUsages resource for External Identities in Azure AD",
+      "title": "ExternalIdentities",
+      "version": "2021-04-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.AzureActiveDirectory/operations": {
+        "get": {
+          "description": "Lists the operations available from this provider.",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AvailableOperations"
+                  }
+                }
+              },
+              "description": "Describe the result of a successful operation."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "operations_list": {
+              "$ref": "./examples/OperationsList.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.AzureActiveDirectory/b2cDirectories": {
+        "get": {
+          "description": "Get all the Azure AD B2C tenant resources in a subscription.",
+          "operationId": "B2CTenants_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/B2CTenantResourceList"
+                  }
+                }
+              },
+              "description": "Azure AD B2C tenant resources in subscription successfully retrieved."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "B2CTenants_ListBySubscription": {
+              "$ref": "./examples/listTenantsBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.AzureActiveDirectory/checkNameAvailability": {
+        "post": {
+          "description": "Checks the availability and validity of a domain name for the tenant.",
+          "operationId": "B2CTenants_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequestBody"
+                }
+              }
+            },
+            "x-originalParamName": "checkNameAvailabilityRequestBody"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/NameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "The result of checking for the name availability."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "Check name availability - available": {
+              "$ref": "./examples/checkNameAvailability-available.json"
+            },
+            "Check name availability - taken": {
+              "$ref": "./examples/checkNameAvailability-taken.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.AzureActiveDirectory/guestUsages": {
+        "get": {
+          "description": "Gets Guest Usages resources under a subscription for the Microsoft.AzureActiveDirectory resource provider",
+          "operationId": "GuestUsages_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GuestUsagesResourceList"
+                  }
+                }
+              },
+              "description": "List of Guest Usages resources under the subscription successfully retrieved."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Gets Guest Usages resources under a subscription",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsagesSubscription_List": {
+              "$ref": "./examples/GuestUsagesSubscriptionGet.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureActiveDirectory/b2cDirectories": {
+        "get": {
+          "description": "Get all the Azure AD B2C tenant resources in a resource group.",
+          "operationId": "B2CTenants_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/B2CTenantResourceList"
+                  }
+                }
+              },
+              "description": "List of Azure AD B2C tenants in resource group successfully retrieved."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "B2CTenants_ListByResourceGroup": {
+              "$ref": "./examples/listTenantsByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureActiveDirectory/b2cDirectories/{resourceName}": {
+        "delete": {
+          "description": "Initiates an async operation to delete the Azure AD B2C tenant and Azure resource. The resource deletion can only happen as the last step in [the tenant deletion process](https://aka.ms/deleteB2Ctenant). ",
+          "operationId": "B2CTenants_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Response of the URL in Location header if the asynchronous operation is successful. Resource will no longer exist."
+            },
+            "202": {
+              "description": "Resource deletion request accepted. The Location header indicates the URL/location in which to poll for a result of the asynchronous operation. ",
+              "headers": {
+                "Location": {
+                  "description": "Contains the URL/location which can return the deletion status.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "Contains the number of seconds to wait before checking the deletion status.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "NoContent - Azure AD B2C tenant resource successfully deleted or didn't exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "Delete tenant": {
+              "$ref": "./examples/deleteTenant.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get the Azure AD B2C tenant resource.",
+          "operationId": "B2CTenants_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/B2CTenantResource"
+                  }
+                }
+              },
+              "description": "Azure AD B2C tenant resource successfully retrieved."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "Get tenant": {
+              "$ref": "./examples/getTenant.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update the Azure AD B2C tenant resource.",
+          "operationId": "B2CTenants_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/B2CTenantUpdateRequest"
+                }
+              }
+            },
+            "x-originalParamName": "updateTenantRequestBody"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/B2CTenantResource"
+                  }
+                }
+              },
+              "description": "Updated the Azure AD B2C tenant resource."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "Update tenant": {
+              "$ref": "./examples/updateTenant.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Initiates an async request to create both the Azure AD B2C tenant and the corresponding Azure resource linked to a subscription.",
+          "operationId": "B2CTenants_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTenantRequestBody"
+                }
+              }
+            },
+            "x-originalParamName": "createTenantRequestBody"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/B2CTenantResource"
+                  }
+                }
+              },
+              "description": "OK - Response of the URL in Location header if the async operation is successful. Resource will be created."
+            },
+            "202": {
+              "description": "Azure AD B2C tenant create request accepted. The Location header indicates the URL/location in which to check to get the async status of the operation.",
+              "headers": {
+                "Location": {
+                  "description": "Location URI to poll for result",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "Contains the number of seconds to wait before polling the location.",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "tags": [
+            "B2CTenants"
+          ],
+          "x-ms-examples": {
+            "Create tenant": {
+              "$ref": "./examples/createTenant.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureActiveDirectory/guestUsages": {
+        "get": {
+          "description": "Gets Guest Usages resources under a resource group for the Microsoft.AzureActiveDirectory resource provider",
+          "operationId": "GuestUsages_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GuestUsagesResourceList"
+                  }
+                }
+              },
+              "description": "List of Guest Usages resources under the resourceGroup successfully retrieved."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Gets Guest Usages resources under resource group",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsagesResourceGroup_List": {
+              "$ref": "./examples/GuestUsagesResourceGroupGet.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": null
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.AzureActiveDirectory/guestUsages/{resourceName}": {
+        "delete": {
+          "description": "Deletes a Guest Usages resource for the Microsoft.AzureActiveDirectory resource provider",
+          "operationId": "GuestUsages_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Guest Usages resource was successfully deleted."
+            },
+            "204": {
+              "description": "Guest Usages resource successfully deleted or didn't exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Deletes a Guest Usages resource",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsages_Delete": {
+              "$ref": "./examples/GuestUsagesDelete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Gets a Guest Usages resource for the Microsoft.AzureActiveDirectory resource provider",
+          "operationId": "GuestUsages_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GuestUsagesResource"
+                  }
+                }
+              },
+              "description": "Guest Usages resource successfully retrieved"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Gets a Guest Usages resource",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsages_Get": {
+              "$ref": "./examples/GuestUsagesGet.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Updates a Guest Usages resource for the Microsoft.AzureActiveDirectory resource provider",
+          "operationId": "GuestUsages_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestUsagesResourcePatch"
+                }
+              }
+            },
+            "description": "Guest Usages Resource to be updated",
+            "x-originalParamName": "ResourcePatch"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GuestUsagesResource"
+                  }
+                }
+              },
+              "description": "Guest Usages Resource Successfully Updated"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Updates a Guest Usages resource",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsages_Update": {
+              "$ref": "./examples/GuestUsagesUpdate.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Creates a Guest Usages resource, which is used to linking a subscription to an instance of Azure AD External Identities. [Learn more](https://aka.ms/extidbilling).",
+          "operationId": "GuestUsages_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestUsagesResource"
+                }
+              }
+            },
+            "description": "Guest Usages resource to be created",
+            "x-originalParamName": "Resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/GuestUsagesResource"
+                  }
+                }
+              },
+              "description": "The request was successful and the resource was created successfully"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError"
+                  }
+                }
+              },
+              "description": "Error response describing why the operation failed."
+            }
+          },
+          "summary": "Creates a Guest Usages resource",
+          "tags": [
+            "GuestUsages"
+          ],
+          "x-ms-examples": {
+            "GuestUsages_Create": {
+              "$ref": "./examples/GuestUsagesCreate.json"
+            }
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}

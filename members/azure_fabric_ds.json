@@ -1,0 +1,1589 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_fabric",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "LocationParameter": {
+          "description": "The name of the Azure region.",
+          "in": "path",
+          "minLength": 1,
+          "name": "location",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription. The value must be an UUID.",
+          "format": "uuid",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "schemas": {
+        "Azure.Core.azureLocation": {
+          "description": "Represents an Azure geography region where supported resource providers live.",
+          "type": "string"
+        },
+        "CapacityAdministration": {
+          "description": "The administration properties of the Fabric capacity resource",
+          "properties": {
+            "members": {
+              "description": "An array of administrator user identities.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "members"
+          ],
+          "type": "object"
+        },
+        "CheckNameAvailabilityRequest": {
+          "description": "The check availability request body.",
+          "properties": {
+            "name": {
+              "description": "The name of the resource for which availability needs to be checked.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The resource type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "CheckNameAvailabilityResponse": {
+          "description": "The check availability result.",
+          "properties": {
+            "message": {
+              "description": "Detailed reason why the given name is available.",
+              "type": "string"
+            },
+            "nameAvailable": {
+              "description": "Indicates if the resource name is available.",
+              "type": "boolean"
+            },
+            "reason": {
+              "description": "The reason why the given name is not available.",
+              "enum": [
+                "Invalid",
+                "AlreadyExists"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "CheckNameAvailabilityReason"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "FabricCapacity": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/TrackedResource"
+            }
+          ],
+          "description": "Fabric Capacity resource",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/FabricCapacityProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/RpSku"
+            }
+          },
+          "required": [
+            "properties",
+            "sku"
+          ],
+          "type": "object"
+        },
+        "FabricCapacityListResult": {
+          "description": "The response of a FabricCapacity list operation.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of items",
+              "format": "uri",
+              "type": "string"
+            },
+            "value": {
+              "description": "The FabricCapacity items on this page",
+              "items": {
+                "$ref": "#/components/schemas/FabricCapacity"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "FabricCapacityProperties": {
+          "description": "The Microsoft Fabric capacity properties.",
+          "properties": {
+            "administration": {
+              "$ref": "#/components/schemas/CapacityAdministration"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/ProvisioningState"
+            },
+            "state": {
+              "$ref": "#/components/schemas/ResourceState"
+            }
+          },
+          "required": [
+            "administration"
+          ],
+          "type": "object"
+        },
+        "FabricCapacityUpdate": {
+          "description": "The type used for update operations of the FabricCapacity.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/FabricCapacityUpdateProperties"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/RpSku"
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "FabricCapacityUpdateProperties": {
+          "description": "The updatable properties of the FabricCapacity.",
+          "properties": {
+            "administration": {
+              "$ref": "#/components/schemas/CapacityAdministration"
+            }
+          },
+          "type": "object"
+        },
+        "Operation": {
+          "description": "Details of a REST API operation, returned from the Resource Provider Operations API",
+          "properties": {
+            "actionType": {
+              "description": "Enum. Indicates the action type. \"Internal\" refers to actions that are for internal only APIs.",
+              "enum": [
+                "Internal"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ActionType"
+              }
+            },
+            "display": {
+              "description": "Localized display information for this particular operation.",
+              "properties": {
+                "description": {
+                  "description": "The short, localized friendly description of the operation; suitable for tool tips and detailed views.",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "operation": {
+                  "description": "The concise, localized friendly name for the operation; suitable for dropdowns. E.g. \"Create or Update Virtual Machine\", \"Restart Virtual Machine\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "The localized friendly form of the resource provider name, e.g. \"Microsoft Monitoring Insights\" or \"Microsoft Compute\".",
+                  "readOnly": true,
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The localized friendly name of the resource type related to this operation. E.g. \"Virtual Machines\" or \"Job Schedule Collections\".",
+                  "readOnly": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "isDataAction": {
+              "description": "Whether the operation applies to data-plane. This is \"true\" for data-plane operations and \"false\" for ARM/control-plane operations.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "name": {
+              "description": "The name of the operation, as per Resource-Based Access Control (RBAC). Examples: \"Microsoft.Compute/virtualMachines/write\", \"Microsoft.Compute/virtualMachines/capture/action\"",
+              "readOnly": true,
+              "type": "string"
+            },
+            "origin": {
+              "description": "The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is \"user,system\"",
+              "enum": [
+                "user",
+                "system",
+                "user,system"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "Origin"
+              }
+            }
+          },
+          "title": "REST API Operation",
+          "type": "object"
+        },
+        "OperationListResult": {
+          "description": "A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of results.",
+          "properties": {
+            "nextLink": {
+              "description": "URL to get the next set of operation list results (if there are any).",
+              "format": "uri",
+              "readOnly": true,
+              "type": "string"
+            },
+            "value": {
+              "description": "List of operations supported by the resource provider",
+              "items": {
+                "$ref": "#/components/schemas/Operation"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "name"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "ProvisioningState": {
+          "description": "The provisioning state of the Fabric capacity resource.",
+          "enum": [
+            "Succeeded",
+            "Failed",
+            "Canceled",
+            "Deleting",
+            "Provisioning",
+            "Updating"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ProvisioningState",
+            "values": [
+              {
+                "description": "Resource has been created.",
+                "name": "Succeeded",
+                "value": "Succeeded"
+              },
+              {
+                "description": "Resource creation failed.",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Resource creation was canceled.",
+                "name": "Canceled",
+                "value": "Canceled"
+              },
+              {
+                "description": "Resource is deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Resource is provisioning",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "Resource is updating",
+                "name": "Updating",
+                "value": "Updating"
+              }
+            ]
+          }
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. E.g. \"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}\"",
+              "format": "arm-id",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "systemData": {
+              "$ref": "#/components/schemas/systemData"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "ResourceState": {
+          "description": "The state of the Fabric capacity resource.",
+          "enum": [
+            "Active",
+            "Provisioning",
+            "Failed",
+            "Updating",
+            "Deleting",
+            "Suspending",
+            "Suspended",
+            "Pausing",
+            "Paused",
+            "Resuming",
+            "Scaling",
+            "Preparing"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "ResourceState",
+            "values": [
+              {
+                "description": "Resource is active",
+                "name": "Active",
+                "value": "Active"
+              },
+              {
+                "description": "Resource is provisioning",
+                "name": "Provisioning",
+                "value": "Provisioning"
+              },
+              {
+                "description": "Resource is failed",
+                "name": "Failed",
+                "value": "Failed"
+              },
+              {
+                "description": "Resource is updating",
+                "name": "Updating",
+                "value": "Updating"
+              },
+              {
+                "description": "Resource is deleting",
+                "name": "Deleting",
+                "value": "Deleting"
+              },
+              {
+                "description": "Resource is suspending",
+                "name": "Suspending",
+                "value": "Suspending"
+              },
+              {
+                "description": "Resource is suspended",
+                "name": "Suspended",
+                "value": "Suspended"
+              },
+              {
+                "description": "Resource is pausing",
+                "name": "Pausing",
+                "value": "Pausing"
+              },
+              {
+                "description": "Resource is paused",
+                "name": "Paused",
+                "value": "Paused"
+              },
+              {
+                "description": "Resource is resuming",
+                "name": "Resuming",
+                "value": "Resuming"
+              },
+              {
+                "description": "Resource is scaling",
+                "name": "Scaling",
+                "value": "Scaling"
+              },
+              {
+                "description": "Resource is preparing",
+                "name": "Preparing",
+                "value": "Preparing"
+              }
+            ]
+          }
+        },
+        "RpSku": {
+          "description": "Represents the SKU name and Azure pricing tier for Microsoft Fabric capacity resource.",
+          "properties": {
+            "name": {
+              "description": "The name of the SKU level.",
+              "type": "string"
+            },
+            "tier": {
+              "$ref": "#/components/schemas/RpSkuTier"
+            }
+          },
+          "required": [
+            "name",
+            "tier"
+          ],
+          "type": "object"
+        },
+        "RpSkuDetailsForExistingResource": {
+          "description": "An object that represents SKU details for existing resources",
+          "properties": {
+            "resourceType": {
+              "description": "The resource type",
+              "type": "string"
+            },
+            "sku": {
+              "$ref": "#/components/schemas/RpSku"
+            }
+          },
+          "required": [
+            "resourceType",
+            "sku"
+          ],
+          "type": "object"
+        },
+        "RpSkuDetailsForNewResource": {
+          "description": "The SKU details",
+          "properties": {
+            "locations": {
+              "description": "The list of available locations for the SKU",
+              "items": {
+                "$ref": "#/components/schemas/Azure.Core.azureLocation"
+              },
+              "type": "array"
+            },
+            "name": {
+              "description": "The SKU's name",
+              "type": "string"
+            },
+            "resourceType": {
+              "description": "The resource type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourceType",
+            "name",
+            "locations"
+          ],
+          "type": "object"
+        },
+        "RpSkuEnumerationForExistingResourceResult": {
+          "description": "An object that represents enumerating SKUs for existing resources",
+          "properties": {
+            "nextLink": {
+              "description": "Url for the next page.  Null if no more pages available",
+              "type": "string"
+            },
+            "value": {
+              "description": "The SKU details",
+              "items": {
+                "$ref": "#/components/schemas/RpSkuDetailsForExistingResource"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "RpSkuEnumerationForNewResourceResult": {
+          "description": "An object that represents enumerating SKUs for new resources.",
+          "properties": {
+            "nextLink": {
+              "description": "Url for the next page.  Null if no more pages available",
+              "type": "string"
+            },
+            "value": {
+              "description": "The collection of available SKUs for new resources",
+              "items": {
+                "$ref": "#/components/schemas/RpSkuDetailsForNewResource"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "RpSkuProperties": {
+          "description": "The SKU properties",
+          "properties": {
+            "locations": {
+              "description": "The list of available locations for the SKU",
+              "items": {
+                "$ref": "#/components/schemas/Azure.Core.azureLocation"
+              },
+              "type": "array"
+            },
+            "name": {
+              "description": "The SKU's name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "locations"
+          ],
+          "type": "object"
+        },
+        "RpSkuTier": {
+          "description": "The name of the Azure pricing tier to which the SKU applies.",
+          "enum": [
+            "Fabric"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "RpSkuTier",
+            "values": [
+              {
+                "description": "Fabric tier",
+                "name": "fabric",
+                "value": "Fabric"
+              }
+            ]
+          }
+        },
+        "TrackedResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager tracked top level resource which has 'tags' and a 'location'",
+          "properties": {
+            "location": {
+              "description": "The geo-location where the resource lives",
+              "type": "string",
+              "x-ms-mutability": [
+                "read",
+                "create"
+              ]
+            },
+            "tags": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Resource tags.",
+              "type": "object",
+              "x-ms-mutability": [
+                "read",
+                "create",
+                "update"
+              ]
+            }
+          },
+          "required": [
+            "location"
+          ],
+          "title": "Tracked Resource",
+          "type": "object"
+        },
+        "systemData": {
+          "description": "Metadata pertaining to creation and last modification of the resource.",
+          "properties": {
+            "createdAt": {
+              "description": "The timestamp of resource creation (UTC).",
+              "format": "date-time",
+              "type": "string"
+            },
+            "createdBy": {
+              "description": "The identity that created the resource.",
+              "type": "string"
+            },
+            "createdByType": {
+              "description": "The type of identity that created the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            },
+            "lastModifiedAt": {
+              "description": "The timestamp of resource last modification (UTC)",
+              "format": "date-time",
+              "type": "string"
+            },
+            "lastModifiedBy": {
+              "description": "The identity that last modified the resource.",
+              "type": "string"
+            },
+            "lastModifiedByType": {
+              "description": "The type of identity that last modified the resource.",
+              "enum": [
+                "User",
+                "Application",
+                "ManagedIdentity",
+                "Key"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "createdByType"
+              }
+            }
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow.",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Microsoft.Fabric Resource Provider management API.",
+      "title": "Microsoft.Fabric management service",
+      "version": "2023-11-01",
+      "x-typespec-generated": [
+        {
+          "emitter": "@azure-tools/typespec-autorest"
+        }
+      ]
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/providers/Microsoft.Fabric/operations": {
+        "get": {
+          "description": "List the operations for the provider",
+          "operationId": "Operations_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OperationListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "Operations"
+          ],
+          "x-ms-examples": {
+            "List operations": {
+              "$ref": "./examples/Operations_List.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Fabric/capacities": {
+        "get": {
+          "description": "List FabricCapacity resources by subscription ID",
+          "operationId": "FabricCapacities_ListBySubscription",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacityListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "List capacities by subscription": {
+              "$ref": "./examples/FabricCapacities_ListBySubscription.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Fabric/locations/{location}/checkNameAvailability": {
+        "post": {
+          "description": "Implements local CheckNameAvailability operations",
+          "operationId": "FabricCapacities_CheckNameAvailability",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/LocationParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckNameAvailabilityRequest"
+                }
+              }
+            },
+            "description": "The CheckAvailability request",
+            "required": true,
+            "x-originalParamName": "body"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CheckNameAvailabilityResponse"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Check name availability of a capacity": {
+              "$ref": "./examples/FabricCapacities_CheckNameAvailability.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/providers/Microsoft.Fabric/skus": {
+        "get": {
+          "description": "List eligible SKUs for Microsoft Fabric resource provider",
+          "operationId": "FabricCapacities_ListSkus",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RpSkuEnumerationForNewResourceResult"
+                  }
+                }
+              },
+              "description": "The request has succeeded."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "List eligible SKUs for a new capacity": {
+              "$ref": "./examples/FabricCapacities_ListSkus.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fabric/capacities": {
+        "get": {
+          "description": "List FabricCapacity resources by resource group",
+          "operationId": "FabricCapacities_ListByResourceGroup",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacityListResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "List capacities by resource group": {
+              "$ref": "./examples/FabricCapacities_ListByResourceGroup.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fabric/capacities/{capacityName}": {
+        "delete": {
+          "description": "Delete a FabricCapacity",
+          "operationId": "FabricCapacities_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Resource deletion accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "204": {
+              "description": "Resource does not exist."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Delete a capacity": {
+              "$ref": "./examples/FabricCapacities_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "get": {
+          "description": "Get a FabricCapacity",
+          "operationId": "FabricCapacities_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacity"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Get a capacity": {
+              "$ref": "./examples/FabricCapacities_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update a FabricCapacity",
+          "operationId": "FabricCapacities_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FabricCapacityUpdate"
+                }
+              }
+            },
+            "description": "The resource properties to be updated.",
+            "required": true,
+            "x-originalParamName": "properties"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacity"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "202": {
+              "description": "Resource update request accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Update capacity properties": {
+              "$ref": "./examples/FabricCapacities_Update.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        },
+        "put": {
+          "description": "Create a FabricCapacity",
+          "operationId": "FabricCapacities_CreateOrUpdate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FabricCapacity"
+                }
+              }
+            },
+            "description": "Resource create parameters.",
+            "required": true,
+            "x-originalParamName": "resource"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacity"
+                  }
+                }
+              },
+              "description": "Resource 'FabricCapacity' update operation succeeded"
+            },
+            "201": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FabricCapacity"
+                  }
+                }
+              },
+              "description": "Resource 'FabricCapacity' create operation succeeded",
+              "headers": {
+                "Azure-AsyncOperation": {
+                  "description": "A link to the status monitor",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Create or update a capacity": {
+              "$ref": "./examples/FabricCapacities_CreateOrUpdate.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fabric/capacities/{capacityName}/resume": {
+        "post": {
+          "description": "Resume operation of the specified Fabric capacity instance.",
+          "operationId": "FabricCapacities_Resume",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Resume capacity": {
+              "$ref": "./examples/FabricCapacities_Resume.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fabric/capacities/{capacityName}/skus": {
+        "get": {
+          "description": "List eligible SKUs for a Microsoft Fabric resource",
+          "operationId": "FabricCapacities_ListSkusForCapacity",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RpSkuEnumerationForExistingResourceResult"
+                  }
+                }
+              },
+              "description": "Azure operation completed successfully."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "List eligible SKUs for an existing capacity": {
+              "$ref": "./examples/FabricCapacities_ListSkusForCapacity.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Fabric/capacities/{capacityName}/suspend": {
+        "post": {
+          "description": "Suspend operation of the specified Fabric capacity instance.",
+          "operationId": "FabricCapacities_Suspend",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "description": "The name of the Microsoft Fabric capacity. It must be a minimum of 3 characters, and a maximum of 63.",
+              "in": "path",
+              "name": "capacityName",
+              "required": true,
+              "schema": {
+                "maxLength": 63,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9]*$",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The request has succeeded."
+            },
+            "202": {
+              "description": "Resource operation accepted.",
+              "headers": {
+                "Location": {
+                  "description": "The Location header contains the URL where the status of the long running operation can be checked.",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "Retry-After": {
+                  "description": "The Retry-After header can indicate how long the client should wait before polling the operation status.",
+                  "schema": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              },
+              "description": "An unexpected error response."
+            }
+          },
+          "tags": [
+            "FabricCapacities"
+          ],
+          "x-ms-examples": {
+            "Suspend capacity": {
+              "$ref": "./examples/FabricCapacities_Suspend.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "location"
+          }
+        }
+      }
+    },
+    "security": [
+      {
+        "azure_auth": [
+          "user_impersonation"
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "FabricCapacities"
+      },
+      {
+        "name": "Operations"
+      }
+    ]
+  }
+}

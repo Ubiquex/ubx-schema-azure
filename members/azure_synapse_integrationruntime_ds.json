@@ -1,0 +1,3398 @@
+{
+  "schema_source": "openapi",
+  "mode": "data_source",
+  "auth": {
+    "Type": "",
+    "Params": null
+  },
+  "base_url": "https://management.azure.com",
+  "retry": {
+    "MaxAttempts": 0,
+    "InitialBackoff": "",
+    "MaxBackoff": "",
+    "Jitter": null,
+    "RespectRetryAfter": null,
+    "RateLimitResetHeader": ""
+  },
+  "timeouts": {
+    "Create": "",
+    "Read": "",
+    "Update": "",
+    "Delete": "",
+    "Default": ""
+  },
+  "wire_name": "azure_synapse_integrationruntime",
+  "raw_spec": {
+    "components": {
+      "parameters": {
+        "ApiVersionParameter": {
+          "description": "The API version to use for this operation.",
+          "in": "query",
+          "minLength": 1,
+          "name": "api-version",
+          "required": true,
+          "type": "string"
+        },
+        "IntegrationRuntimeNameParameter": {
+          "description": "Integration runtime name",
+          "in": "path",
+          "name": "integrationRuntimeName",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "x-ms-parameter-location": "method"
+        },
+        "ResourceGroupNameParameter": {
+          "description": "The name of the resource group. The name is case insensitive.",
+          "in": "path",
+          "maxLength": 90,
+          "minLength": 1,
+          "name": "resourceGroupName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        },
+        "SubscriptionIdParameter": {
+          "description": "The ID of the target subscription.",
+          "in": "path",
+          "minLength": 1,
+          "name": "subscriptionId",
+          "required": true,
+          "type": "string"
+        },
+        "WorkspaceNameParameter": {
+          "description": "The name of the workspace.",
+          "in": "path",
+          "name": "workspaceName",
+          "required": true,
+          "type": "string",
+          "x-ms-parameter-location": "method"
+        }
+      },
+      "schemas": {
+        "AzureEntityResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/Resource"
+            }
+          ],
+          "description": "The resource model definition for an Azure Resource Manager resource with an etag.",
+          "properties": {
+            "etag": {
+              "description": "Resource Etag.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Entity Resource",
+          "type": "object",
+          "x-ms-client-name": "AzureEntityResource"
+        },
+        "CloudError": {
+          "description": "The object that defines the structure of an Azure Synapse error response.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/CloudErrorBody",
+              "x-ms-client-flatten": true
+            }
+          },
+          "required": [
+            "error"
+          ],
+          "type": "object",
+          "x-ms-external": true
+        },
+        "CloudErrorBody": {
+          "description": "The object that defines the structure of an Azure Synapse error.",
+          "properties": {
+            "code": {
+              "description": "Error code.",
+              "type": "string"
+            },
+            "details": {
+              "description": "Array with additional error details.",
+              "items": {
+                "$ref": "#/components/schemas/CloudError"
+              },
+              "type": "array"
+            },
+            "message": {
+              "description": "Error message.",
+              "type": "string"
+            },
+            "target": {
+              "description": "Property name/path in request associated with error.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ],
+          "type": "object",
+          "x-ms-external": true
+        },
+        "CloudError_2": {
+          "description": "The object that defines the structure of an Azure Synapse error response.",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/CloudErrorBody",
+              "x-ms-client-flatten": true
+            }
+          },
+          "required": [
+            "error"
+          ],
+          "type": "object",
+          "x-ms-external": true
+        },
+        "CmdkeySetup": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/CustomSetupBase"
+            }
+          ],
+          "description": "The custom setup of running cmdkey commands.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/CmdkeySetupTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object"
+        },
+        "CmdkeySetupTypeProperties": {
+          "description": "Cmdkey command custom setup type properties.",
+          "properties": {
+            "password": {
+              "$ref": "#/components/schemas/SecretBase"
+            },
+            "targetName": {
+              "description": "The server name of data source access.",
+              "type": "object"
+            },
+            "userName": {
+              "description": "The user name of data source access.",
+              "type": "object"
+            }
+          },
+          "required": [
+            "targetName",
+            "userName",
+            "password"
+          ],
+          "type": "object"
+        },
+        "ComponentSetup": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/CustomSetupBase"
+            }
+          ],
+          "description": "The custom setup of installing 3rd party components.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/LicensedComponentSetupTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object"
+        },
+        "CustomSetupBase": {
+          "description": "The base definition of the custom setup.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "type": {
+              "description": "The type of custom setup.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "EntityReference": {
+          "description": "The entity reference.",
+          "properties": {
+            "referenceName": {
+              "description": "The name of this referenced entity.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of this referenced entity.",
+              "enum": [
+                "IntegrationRuntimeReference",
+                "LinkedServiceReference"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeEntityReferenceType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "EnvironmentVariableSetup": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/CustomSetupBase"
+            }
+          ],
+          "description": "The custom setup of setting environment variable.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/EnvironmentVariableSetupTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object"
+        },
+        "EnvironmentVariableSetupTypeProperties": {
+          "description": "Environment variable custom setup type properties.",
+          "properties": {
+            "variableName": {
+              "description": "The name of the environment variable.",
+              "type": "string"
+            },
+            "variableValue": {
+              "description": "The value of the environment variable.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "variableName",
+            "variableValue"
+          ],
+          "type": "object"
+        },
+        "ErrorAdditionalInfo": {
+          "description": "The resource management error additional info.",
+          "properties": {
+            "info": {
+              "description": "The additional info.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "type": {
+              "description": "The additional info type.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorDetail": {
+          "description": "The error detail.",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ErrorResponse": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "ErrorResponse_2": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.)",
+          "properties": {
+            "additionalInfo": {
+              "description": "The error additional info.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorAdditionalInfo"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "code": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "details": {
+              "description": "The error details.",
+              "items": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": [
+                "message",
+                "target"
+              ]
+            },
+            "message": {
+              "description": "The error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "target": {
+              "description": "The error target.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Error Response",
+          "type": "object"
+        },
+        "ErrorResponse_3": {
+          "description": "Common error response for all Azure Resource Manager APIs to return error details for failed operations. (This also follows the OData error response format.).",
+          "properties": {
+            "error": {
+              "$ref": "#/components/schemas/ErrorDetail"
+            }
+          },
+          "title": "Error response",
+          "type": "object"
+        },
+        "GetSsisObjectMetadataRequest": {
+          "description": "The request payload of get SSIS object metadata.",
+          "properties": {
+            "metadataPath": {
+              "description": "Metadata path.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntime": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Azure Synapse nested object which serves as a compute resource for activities.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "description": {
+              "description": "Integration runtime description.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/IntegrationRuntimeType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "IntegrationRuntimeAuthKeys": {
+          "description": "The integration runtime authentication keys.",
+          "properties": {
+            "authKey1": {
+              "description": "The primary integration runtime authentication key.",
+              "type": "string"
+            },
+            "authKey2": {
+              "description": "The secondary integration runtime authentication key.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeAutoUpdate": {
+          "description": "The state of integration runtime auto update.",
+          "enum": [
+            "On",
+            "Off"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IntegrationRuntimeAutoUpdate"
+          },
+          "x-ms-identifiers": []
+        },
+        "IntegrationRuntimeComputeProperties": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "The compute resource properties for managed integration runtime.",
+          "properties": {
+            "dataFlowProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeDataFlowProperties"
+            },
+            "location": {
+              "description": "The location for managed integration runtime. The supported regions could be found on https://docs.microsoft.com/en-us/azure/data-factory/data-factory-data-movement-activities",
+              "type": "string"
+            },
+            "maxParallelExecutionsPerNode": {
+              "description": "Maximum parallel executions count per node for managed integration runtime.",
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "nodeSize": {
+              "description": "The node size requirement to managed integration runtime.",
+              "type": "string"
+            },
+            "numberOfNodes": {
+              "description": "The required number of nodes for managed integration runtime.",
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "vNetProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeVNetProperties"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeConnectionInfo": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Connection information for encrypting the on-premises data source credentials.",
+          "properties": {
+            "hostServiceUri": {
+              "description": "The on-premises integration runtime host URL.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "identityCertThumbprint": {
+              "description": "The integration runtime SSL certificate thumbprint. Click-Once application uses it to do server validation.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isIdentityCertExprired": {
+              "description": "Whether the identity certificate is expired.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "publicKey": {
+              "description": "The public key for encrypting a credential when transferring the credential to the integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serviceToken": {
+              "description": "The token generated in service. Callers use this token to authenticate to integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "version": {
+              "description": "The integration runtime version.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeCustomSetupScriptProperties": {
+          "description": "Custom setup script properties for a managed dedicated integration runtime.",
+          "properties": {
+            "blobContainerUri": {
+              "description": "The URI of the Azure blob container that contains the custom setup script.",
+              "type": "string"
+            },
+            "sasToken": {
+              "$ref": "#/components/schemas/SecureString"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeCustomerVirtualNetwork": {
+          "description": "The definition and properties of virtual network to which Azure-SSIS integration runtime will join.",
+          "properties": {
+            "subnetId": {
+              "description": "The ID of subnet to which Azure-SSIS integration runtime will join.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeDataFlowProperties": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Data flow properties for managed integration runtime.",
+          "properties": {
+            "computeType": {
+              "description": "Compute type of the cluster which will execute data flow job.",
+              "enum": [
+                "General",
+                "MemoryOptimized",
+                "ComputeOptimized"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "DataFlowComputeType"
+              }
+            },
+            "coreCount": {
+              "description": "Core count of the cluster which will execute data flow job. Supported values are: 8, 16, 32, 48, 80, 144 and 272.",
+              "format": "int32",
+              "type": "integer"
+            },
+            "timeToLive": {
+              "description": "Time to live (in minutes) setting of the cluster which will execute data flow job.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeDataProxyProperties": {
+          "description": "Data proxy properties for a managed dedicated integration runtime.",
+          "properties": {
+            "connectVia": {
+              "$ref": "#/components/schemas/EntityReference"
+            },
+            "path": {
+              "description": "The path to contain the staged data in the Blob storage.",
+              "type": "string"
+            },
+            "stagingLinkedService": {
+              "$ref": "#/components/schemas/EntityReference"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeListResponse": {
+          "description": "A list of integration runtime resources.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of results, if any remaining results exist.",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of integration runtimes.",
+              "items": {
+                "$ref": "#/components/schemas/IntegrationRuntimeResource"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        },
+        "IntegrationRuntimeMonitoringData": {
+          "description": "Get monitoring data response.",
+          "properties": {
+            "name": {
+              "description": "Integration runtime name.",
+              "type": "string"
+            },
+            "nodes": {
+              "description": "Integration runtime node monitoring data.",
+              "items": {
+                "$ref": "#/components/schemas/IntegrationRuntimeNodeMonitoringData"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeNodeIpAddress": {
+          "description": "The IP address of self-hosted integration runtime node.",
+          "properties": {
+            "ipAddress": {
+              "description": "The IP address of self-hosted integration runtime node.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeNodeMonitoringData": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Monitoring data for integration runtime node.",
+          "properties": {
+            "availableMemoryInMB": {
+              "description": "Available memory (MB) on the integration runtime node.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "concurrentJobsLimit": {
+              "description": "Maximum concurrent jobs on the integration runtime node.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "concurrentJobsRunning": {
+              "description": "The number of jobs currently running on the integration runtime node.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "cpuUtilization": {
+              "description": "CPU percentage on the integration runtime node.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "maxConcurrentJobs": {
+              "description": "The maximum concurrent jobs in this integration runtime.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "nodeName": {
+              "description": "Name of the integration runtime node.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "receivedBytes": {
+              "description": "Received bytes on the integration runtime node.",
+              "readOnly": true,
+              "type": "number"
+            },
+            "sentBytes": {
+              "description": "Sent bytes on the integration runtime node.",
+              "readOnly": true,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeOutboundNetworkDependenciesCategoryEndpoint": {
+          "description": "Azure-SSIS integration runtime outbound network dependency endpoints for one category.",
+          "properties": {
+            "category": {
+              "description": "The category of outbound network dependency.",
+              "type": "string"
+            },
+            "endpoints": {
+              "description": "The endpoints for outbound network dependency.",
+              "items": {
+                "$ref": "#/components/schemas/IntegrationRuntimeOutboundNetworkDependenciesEndpoint"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeOutboundNetworkDependenciesEndpoint": {
+          "description": "The endpoint for Azure-SSIS integration runtime outbound network dependency.",
+          "properties": {
+            "domainName": {
+              "description": "The domain name of endpoint.",
+              "type": "string"
+            },
+            "endpointDetails": {
+              "description": "The details of endpoint.",
+              "items": {
+                "$ref": "#/components/schemas/IntegrationRuntimeOutboundNetworkDependenciesEndpointDetails"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeOutboundNetworkDependenciesEndpointDetails": {
+          "description": "The details of Azure-SSIS integration runtime outbound network dependency endpoint.",
+          "properties": {
+            "port": {
+              "description": "The port of endpoint.",
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeOutboundNetworkDependenciesEndpointsResponse": {
+          "description": "Azure-SSIS integration runtime outbound network dependency endpoints.",
+          "properties": {
+            "value": {
+              "description": "The list of outbound network dependency endpoints.",
+              "items": {
+                "$ref": "#/components/schemas/IntegrationRuntimeOutboundNetworkDependenciesCategoryEndpoint"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeRegenerateKeyParameters": {
+          "description": "Parameters to regenerate the authentication key.",
+          "properties": {
+            "keyName": {
+              "description": "The name of the authentication key to regenerate.",
+              "enum": [
+                "authKey1",
+                "authKey2"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeAuthKeyName"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SubResource"
+            }
+          ],
+          "description": "Integration runtime resource type.",
+          "properties": {
+            "properties": {
+              "$ref": "#/components/schemas/IntegrationRuntime"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "IntegrationRuntimeSsisCatalogInfo": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Catalog information for managed dedicated integration runtime.",
+          "properties": {
+            "catalogAdminPassword": {
+              "$ref": "#/components/schemas/SecureString"
+            },
+            "catalogAdminUserName": {
+              "description": "The administrator user name of catalog database.",
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "catalogPricingTier": {
+              "description": "The pricing tier for the catalog database. The valid values could be found in https://azure.microsoft.com/en-us/pricing/details/sql-database/",
+              "enum": [
+                "Basic",
+                "Standard",
+                "Premium",
+                "PremiumRS"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeSsisCatalogPricingTier"
+              }
+            },
+            "catalogServerEndpoint": {
+              "description": "The catalog database server URL.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeSsisProperties": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "SSIS properties for managed integration runtime.",
+          "properties": {
+            "catalogInfo": {
+              "$ref": "#/components/schemas/IntegrationRuntimeSsisCatalogInfo"
+            },
+            "customSetupScriptProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeCustomSetupScriptProperties"
+            },
+            "dataProxyProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeDataProxyProperties"
+            },
+            "edition": {
+              "description": "The edition for the SSIS Integration Runtime",
+              "enum": [
+                "Standard",
+                "Enterprise"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeEdition"
+              }
+            },
+            "expressCustomSetupProperties": {
+              "description": "Custom setup without script properties for a SSIS integration runtime.",
+              "items": {
+                "$ref": "#/components/schemas/CustomSetupBase"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "licenseType": {
+              "description": "License type for bringing your own license scenario.",
+              "enum": [
+                "BasePrice",
+                "LicenseIncluded"
+              ],
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeLicenseType"
+              }
+            }
+          },
+          "type": "object"
+        },
+        "IntegrationRuntimeState": {
+          "description": "The state of integration runtime.",
+          "enum": [
+            "Initial",
+            "Stopped",
+            "Started",
+            "Starting",
+            "Stopping",
+            "NeedRegistration",
+            "Online",
+            "Limited",
+            "Offline",
+            "AccessDenied"
+          ],
+          "readOnly": true,
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IntegrationRuntimeState"
+          }
+        },
+        "IntegrationRuntimeStatus": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Integration runtime status.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "dataFactoryName": {
+              "description": "The workspace name which the integration runtime belong to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "state": {
+              "$ref": "#/components/schemas/IntegrationRuntimeState"
+            },
+            "type": {
+              "$ref": "#/components/schemas/IntegrationRuntimeType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "IntegrationRuntimeStatusResponse": {
+          "description": "Integration runtime status response.",
+          "properties": {
+            "name": {
+              "description": "The integration runtime name.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "properties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeStatus"
+            }
+          },
+          "required": [
+            "properties"
+          ],
+          "type": "object"
+        },
+        "IntegrationRuntimeType": {
+          "description": "The type of integration runtime.",
+          "enum": [
+            "Managed",
+            "SelfHosted"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "IntegrationRuntimeType"
+          }
+        },
+        "IntegrationRuntimeVNetProperties": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "VNet properties for managed integration runtime.",
+          "properties": {
+            "publicIPs": {
+              "description": "Resource IDs of the public IP addresses that this integration runtime will use.",
+              "items": {
+                "description": "The ID of the public IP address.",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "subnet": {
+              "description": "The name of the subnet this integration runtime will join.",
+              "type": "string"
+            },
+            "subnetId": {
+              "description": "The ID of subnet, to which this Azure-SSIS integration runtime will be joined.",
+              "type": "string"
+            },
+            "vNetId": {
+              "description": "The ID of the VNet that this integration runtime will join.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "LicensedComponentSetupTypeProperties": {
+          "description": "Installation of licensed component setup type properties.",
+          "properties": {
+            "componentName": {
+              "description": "The name of the 3rd party component.",
+              "type": "string"
+            },
+            "licenseKey": {
+              "$ref": "#/components/schemas/SecretBase"
+            }
+          },
+          "required": [
+            "componentName"
+          ],
+          "type": "object"
+        },
+        "LinkedIntegrationRuntime": {
+          "description": "The linked integration runtime information.",
+          "properties": {
+            "createTime": {
+              "description": "The creating time of the linked integration runtime.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "dataFactoryLocation": {
+              "description": "The location of the workspace for which the linked integration runtime belong to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "dataFactoryName": {
+              "description": "The name of the workspace for which the linked integration runtime belong to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the linked integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "subscriptionId": {
+              "description": "The subscription ID for which the linked integration runtime belong to.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "LinkedIntegrationRuntimeKeyAuthorization": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/LinkedIntegrationRuntimeType"
+            }
+          ],
+          "description": "The key authorization type integration runtime.",
+          "properties": {
+            "key": {
+              "$ref": "#/components/schemas/SecureString"
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "Key"
+        },
+        "LinkedIntegrationRuntimeRbacAuthorization": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/LinkedIntegrationRuntimeType"
+            }
+          ],
+          "description": "The role based access control (RBAC) authorization type integration runtime.",
+          "properties": {
+            "resourceId": {
+              "description": "The resource identifier of the integration runtime to be shared.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resourceId"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "RBAC"
+        },
+        "LinkedIntegrationRuntimeType": {
+          "description": "The base definition of a linked integration runtime.",
+          "discriminator": {
+            "propertyName": "authorizationType"
+          },
+          "properties": {
+            "authorizationType": {
+              "description": "The authorization type for integration runtime sharing.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "authorizationType"
+          ],
+          "type": "object"
+        },
+        "ManagedIntegrationRuntime": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/IntegrationRuntime"
+            }
+          ],
+          "description": "Managed integration runtime, including managed elastic and managed dedicated integration runtimes.",
+          "properties": {
+            "managedVirtualNetwork": {
+              "$ref": "#/components/schemas/ManagedIntegrationRuntimeManagedVirtualNetworkReference"
+            },
+            "provisioningState": {
+              "$ref": "#/components/schemas/IntegrationRuntimeState"
+            },
+            "typeProperties": {
+              "$ref": "#/components/schemas/ManagedIntegrationRuntimeTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "Managed"
+        },
+        "ManagedIntegrationRuntimeError": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Error definition for managed integration runtime.",
+          "properties": {
+            "code": {
+              "description": "Error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "message": {
+              "description": "Error message.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "parameters": {
+              "description": "Managed integration runtime error parameters.",
+              "items": {
+                "description": "Error message parameters.",
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "time": {
+              "description": "The time when the error occurred.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIntegrationRuntimeManagedVirtualNetworkReference": {
+          "description": "Managed integration runtime managed virtual network reference.",
+          "properties": {
+            "id": {
+              "description": "The id of the managed virtual network.",
+              "type": "string",
+              "x-ms-mutability": [
+                "create",
+                "read"
+              ]
+            },
+            "referenceName": {
+              "description": "The reference name of the managed virtual network",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the managed virtual network.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIntegrationRuntimeNode": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Properties of integration runtime node.",
+          "properties": {
+            "errors": {
+              "description": "The errors that occurred on this integration runtime node.",
+              "items": {
+                "$ref": "#/components/schemas/ManagedIntegrationRuntimeError"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "nodeId": {
+              "description": "The managed integration runtime node id.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "The managed integration runtime node status.",
+              "enum": [
+                "Starting",
+                "Available",
+                "Recycling",
+                "Unavailable"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "ManagedIntegrationRuntimeNodeStatus"
+              },
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIntegrationRuntimeOperationResult": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Properties of managed integration runtime operation result.",
+          "properties": {
+            "activityId": {
+              "description": "The activity id for the operation request.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "errorCode": {
+              "description": "The error code.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "parameters": {
+              "description": "Managed integration runtime error parameters.",
+              "items": {
+                "description": "Error message parameters.",
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "result": {
+              "description": "The operation result.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "startTime": {
+              "description": "The start time of the operation.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The operation type. Could be start or stop.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIntegrationRuntimeStatus": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/IntegrationRuntimeStatus"
+            }
+          ],
+          "description": "Managed integration runtime status.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/ManagedIntegrationRuntimeStatusTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "Managed"
+        },
+        "ManagedIntegrationRuntimeStatusTypeProperties": {
+          "description": "Managed integration runtime status type properties.",
+          "properties": {
+            "createTime": {
+              "description": "The time at which the integration runtime was created, in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastOperation": {
+              "$ref": "#/components/schemas/ManagedIntegrationRuntimeOperationResult"
+            },
+            "nodes": {
+              "description": "The list of nodes for managed integration runtime.",
+              "items": {
+                "$ref": "#/components/schemas/ManagedIntegrationRuntimeNode"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "otherErrors": {
+              "description": "The errors that occurred on this integration runtime.",
+              "items": {
+                "$ref": "#/components/schemas/ManagedIntegrationRuntimeError"
+              },
+              "readOnly": true,
+              "type": "array",
+              "x-ms-identifiers": []
+            }
+          },
+          "type": "object"
+        },
+        "ManagedIntegrationRuntimeTypeProperties": {
+          "description": "Managed integration runtime type properties.",
+          "properties": {
+            "computeProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeComputeProperties"
+            },
+            "customerVirtualNetwork": {
+              "$ref": "#/components/schemas/IntegrationRuntimeCustomerVirtualNetwork"
+            },
+            "ssisProperties": {
+              "$ref": "#/components/schemas/IntegrationRuntimeSsisProperties"
+            }
+          },
+          "type": "object"
+        },
+        "Resource": {
+          "description": "Common fields that are returned in the response for all Azure Resource Manager resources",
+          "properties": {
+            "id": {
+              "description": "Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}",
+              "readOnly": true,
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the resource",
+              "readOnly": true,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of the resource. E.g. \"Microsoft.Compute/virtualMachines\" or \"Microsoft.Storage/storageAccounts\"",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "title": "Resource",
+          "type": "object",
+          "x-ms-azure-resource": true
+        },
+        "SecretBase": {
+          "description": "The base definition of a secret type.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "type": {
+              "description": "Type of the secret.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "SecureString": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SecretBase"
+            }
+          ],
+          "description": "Azure Synapse secure string definition. The string value will be masked with asterisks '*' during Get or List API calls.",
+          "properties": {
+            "value": {
+              "description": "Value of secure string.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "SecureString"
+        },
+        "SelfHostedIntegrationRuntime": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/IntegrationRuntime"
+            }
+          ],
+          "description": "Self-hosted integration runtime.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/SelfHostedIntegrationRuntimeTypeProperties"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "SelfHosted"
+        },
+        "SelfHostedIntegrationRuntimeNode": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "description": "Properties of Self-hosted integration runtime node.",
+          "properties": {
+            "capabilities": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The integration runtime capabilities dictionary",
+              "readOnly": true,
+              "type": "object"
+            },
+            "concurrentJobsLimit": {
+              "description": "Maximum concurrent jobs on the integration runtime node.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "expiryTime": {
+              "description": "The time at which the integration runtime will expire in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "hostServiceUri": {
+              "description": "URI for the host machine of the integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "isActiveDispatcher": {
+              "description": "Indicates whether this node is the active dispatcher for integration runtime requests.",
+              "readOnly": true,
+              "type": "boolean"
+            },
+            "lastConnectTime": {
+              "description": "The most recent time at which the integration runtime was connected in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastEndUpdateTime": {
+              "description": "The last time for the integration runtime node update end.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastStartTime": {
+              "description": "The time the node last started up.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastStartUpdateTime": {
+              "description": "The last time for the integration runtime node update start.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastStopTime": {
+              "description": "The integration runtime node last stop time.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "lastUpdateResult": {
+              "description": "The result of the last integration runtime node update.",
+              "enum": [
+                "None",
+                "Succeed",
+                "Fail"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeUpdateResult"
+              }
+            },
+            "machineName": {
+              "description": "Machine name of the integration runtime node.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "maxConcurrentJobs": {
+              "description": "The maximum concurrent jobs in this integration runtime.",
+              "format": "int32",
+              "readOnly": true,
+              "type": "integer"
+            },
+            "nodeName": {
+              "description": "Name of the integration runtime node.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "registerTime": {
+              "description": "The time at which the integration runtime node was registered in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "status": {
+              "description": "Status of the integration runtime node.",
+              "enum": [
+                "NeedRegistration",
+                "Online",
+                "Limited",
+                "Offline",
+                "Upgrading",
+                "Initializing",
+                "InitializeFailed"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "SelfHostedIntegrationRuntimeNodeStatus"
+              }
+            },
+            "version": {
+              "description": "Version of the integration runtime node.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "versionStatus": {
+              "description": "Status of the integration runtime node version.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SelfHostedIntegrationRuntimeStatus": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/IntegrationRuntimeStatus"
+            }
+          ],
+          "description": "Self-hosted integration runtime status.",
+          "properties": {
+            "typeProperties": {
+              "$ref": "#/components/schemas/SelfHostedIntegrationRuntimeStatusTypeProperties"
+            }
+          },
+          "required": [
+            "typeProperties"
+          ],
+          "type": "object",
+          "x-ms-discriminator-value": "SelfHosted"
+        },
+        "SelfHostedIntegrationRuntimeStatusTypeProperties": {
+          "description": "Self-hosted integration runtime status type properties.",
+          "properties": {
+            "autoUpdate": {
+              "$ref": "#/components/schemas/IntegrationRuntimeAutoUpdate"
+            },
+            "autoUpdateETA": {
+              "description": "The estimated time when the self-hosted integration runtime will be updated.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "capabilities": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Object with additional information about integration runtime capabilities.",
+              "readOnly": true,
+              "type": "object"
+            },
+            "createTime": {
+              "description": "The time at which the integration runtime was created, in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "internalChannelEncryption": {
+              "description": "It is used to set the encryption mode for node-node communication channel (when more than 2 self-hosted integration runtime nodes exist).",
+              "enum": [
+                "NotSet",
+                "SslEncrypted",
+                "NotEncrypted"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-ms-enum": {
+                "modelAsString": true,
+                "name": "IntegrationRuntimeInternalChannelEncryptionMode"
+              },
+              "x-ms-identifiers": []
+            },
+            "latestVersion": {
+              "description": "The latest version on download center.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "links": {
+              "description": "The list of linked integration runtimes that are created to share with this integration runtime.",
+              "items": {
+                "$ref": "#/components/schemas/LinkedIntegrationRuntime"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "localTimeZoneOffset": {
+              "description": "The local time zone offset in hours.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "nodeCommunicationChannelEncryptionMode": {
+              "description": "The node communication Channel encryption mode",
+              "readOnly": true,
+              "type": "string"
+            },
+            "nodes": {
+              "description": "The list of nodes for this integration runtime.",
+              "items": {
+                "$ref": "#/components/schemas/SelfHostedIntegrationRuntimeNode"
+              },
+              "type": "array",
+              "x-ms-identifiers": []
+            },
+            "pushedVersion": {
+              "description": "The version that the integration runtime is going to update to.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "scheduledUpdateDate": {
+              "description": "The date at which the integration runtime will be scheduled to update, in ISO8601 format.",
+              "format": "date-time",
+              "readOnly": true,
+              "type": "string"
+            },
+            "serviceUrls": {
+              "description": "The URLs for the services used in integration runtime backend service.",
+              "items": {
+                "description": "The service URL",
+                "type": "string"
+              },
+              "readOnly": true,
+              "type": "array"
+            },
+            "taskQueueId": {
+              "description": "The task queue id of the integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "updateDelayOffset": {
+              "description": "The time in the date scheduled by service to update the integration runtime, e.g., PT03H is 3 hours",
+              "readOnly": true,
+              "type": "string"
+            },
+            "version": {
+              "description": "Version of the integration runtime.",
+              "readOnly": true,
+              "type": "string"
+            },
+            "versionStatus": {
+              "description": "Status of the integration runtime version.",
+              "readOnly": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SelfHostedIntegrationRuntimeTypeProperties": {
+          "description": "The self-hosted integration runtime properties.",
+          "properties": {
+            "linkedInfo": {
+              "$ref": "#/components/schemas/LinkedIntegrationRuntimeType"
+            }
+          },
+          "type": "object"
+        },
+        "SsisEnvironment": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SsisObjectMetadata"
+            }
+          ],
+          "description": "Ssis environment.",
+          "properties": {
+            "folderId": {
+              "description": "Folder id which contains environment.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "variables": {
+              "description": "Variable in environment",
+              "items": {
+                "$ref": "#/components/schemas/SsisVariable"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Environment"
+        },
+        "SsisEnvironmentReference": {
+          "description": "Ssis environment reference.",
+          "properties": {
+            "environmentFolderName": {
+              "description": "Environment folder name.",
+              "type": "string"
+            },
+            "environmentName": {
+              "description": "Environment name.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Environment reference id.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "referenceType": {
+              "description": "Reference type",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SsisFolder": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SsisObjectMetadata"
+            }
+          ],
+          "description": "Ssis folder.",
+          "type": "object",
+          "x-ms-discriminator-value": "Folder"
+        },
+        "SsisObjectMetadata": {
+          "description": "SSIS object metadata.",
+          "discriminator": {
+            "propertyName": "type"
+          },
+          "properties": {
+            "description": {
+              "description": "Metadata description.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Metadata id.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "name": {
+              "description": "Metadata name.",
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/components/schemas/SsisObjectMetadataType"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        "SsisObjectMetadataListResponse": {
+          "description": "A list of SSIS object metadata.",
+          "properties": {
+            "nextLink": {
+              "description": "The link to the next page of results, if any remaining results exist.",
+              "type": "string"
+            },
+            "value": {
+              "description": "List of SSIS object metadata.",
+              "items": {
+                "$ref": "#/components/schemas/SsisObjectMetadata"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "SsisObjectMetadataStatusResponse": {
+          "description": "The status of the operation.",
+          "properties": {
+            "error": {
+              "description": "The operation error message.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The operation name.",
+              "type": "string"
+            },
+            "properties": {
+              "description": "The operation properties.",
+              "type": "string"
+            },
+            "status": {
+              "description": "The status of the operation.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SsisObjectMetadataType": {
+          "description": "The type of SSIS object metadata.",
+          "enum": [
+            "Folder",
+            "Project",
+            "Package",
+            "Environment"
+          ],
+          "type": "string",
+          "x-ms-enum": {
+            "modelAsString": true,
+            "name": "SsisObjectMetadataType"
+          }
+        },
+        "SsisPackage": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SsisObjectMetadata"
+            }
+          ],
+          "description": "Ssis Package.",
+          "properties": {
+            "folderId": {
+              "description": "Folder id which contains package.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "parameters": {
+              "description": "Parameters in package",
+              "items": {
+                "$ref": "#/components/schemas/SsisParameter"
+              },
+              "type": "array"
+            },
+            "projectId": {
+              "description": "Project id which contains package.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "projectVersion": {
+              "description": "Project version which contains package.",
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Package"
+        },
+        "SsisParameter": {
+          "description": "Ssis parameter.",
+          "properties": {
+            "dataType": {
+              "description": "Parameter type.",
+              "type": "string"
+            },
+            "defaultValue": {
+              "description": "Default value of parameter.",
+              "type": "string"
+            },
+            "description": {
+              "description": "Parameter description.",
+              "type": "string"
+            },
+            "designDefaultValue": {
+              "description": "Design default value of parameter.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Parameter id.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "name": {
+              "description": "Parameter name.",
+              "type": "string"
+            },
+            "required": {
+              "description": "Whether parameter is required.",
+              "type": "boolean"
+            },
+            "sensitive": {
+              "description": "Whether parameter is sensitive.",
+              "type": "boolean"
+            },
+            "sensitiveDefaultValue": {
+              "description": "Default sensitive value of parameter.",
+              "type": "string"
+            },
+            "valueSet": {
+              "description": "Parameter value set.",
+              "type": "boolean"
+            },
+            "valueType": {
+              "description": "Parameter value type.",
+              "type": "string"
+            },
+            "variable": {
+              "description": "Parameter reference variable.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SsisProject": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/SsisObjectMetadata"
+            }
+          ],
+          "description": "Ssis project.",
+          "properties": {
+            "environmentRefs": {
+              "description": "Environment reference in project",
+              "items": {
+                "$ref": "#/components/schemas/SsisEnvironmentReference"
+              },
+              "type": "array"
+            },
+            "folderId": {
+              "description": "Folder id which contains project.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "parameters": {
+              "description": "Parameters in project",
+              "items": {
+                "$ref": "#/components/schemas/SsisParameter"
+              },
+              "type": "array"
+            },
+            "version": {
+              "description": "Project version.",
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "type": "object",
+          "x-ms-discriminator-value": "Project"
+        },
+        "SsisVariable": {
+          "description": "Ssis variable.",
+          "properties": {
+            "dataType": {
+              "description": "Variable type.",
+              "type": "string"
+            },
+            "description": {
+              "description": "Variable description.",
+              "type": "string"
+            },
+            "id": {
+              "description": "Variable id.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "name": {
+              "description": "Variable name.",
+              "type": "string"
+            },
+            "sensitive": {
+              "description": "Whether variable is sensitive.",
+              "type": "boolean"
+            },
+            "sensitiveValue": {
+              "description": "Variable sensitive value.",
+              "type": "string"
+            },
+            "value": {
+              "description": "Variable value.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "SubResource": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/AzureEntityResource"
+            }
+          ],
+          "description": "Azure Synapse nested resource, which belongs to a workspace."
+        },
+        "UpdateIntegrationRuntimeNodeRequest": {
+          "description": "Update integration runtime node request.",
+          "properties": {
+            "concurrentJobsLimit": {
+              "description": "The number of concurrent jobs permitted to run on the integration runtime node. Values between 1 and maxConcurrentJobs(inclusive) are allowed.",
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "UpdateIntegrationRuntimeRequest": {
+          "description": "Update integration runtime request.",
+          "properties": {
+            "autoUpdate": {
+              "$ref": "#/components/schemas/IntegrationRuntimeAutoUpdate"
+            },
+            "updateDelayOffset": {
+              "description": "The time offset (in hours) in the day, e.g., PT03H is 3 hours. The integration runtime auto update will happen on that time.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "securitySchemes": {
+        "azure_auth": {
+          "description": "Azure Active Directory OAuth2 Flow",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+              "scopes": {
+                "user_impersonation": "impersonate your user account"
+              }
+            }
+          },
+          "type": "oauth2"
+        }
+      }
+    },
+    "info": {
+      "description": "Azure Synapse Analytics APIs",
+      "title": "SynapseManagementClient",
+      "version": "2021-06-01"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes": {
+        "get": {
+          "description": "List all integration runtimes",
+          "operationId": "IntegrationRuntimes_ListByWorkspace",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeListResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CloudError_2"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "List integration runtimes",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "List integration runtimes": {
+              "$ref": "./examples/IntegrationRuntimes_ListByWorkspace.json"
+            }
+          },
+          "x-ms-pageable": {
+            "nextLinkName": "nextLink"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}": {
+        "delete": {
+          "description": "Delete an integration runtime",
+          "operationId": "IntegrationRuntimes_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "202": {
+              "description": "Accepted."
+            },
+            "204": {
+              "description": "No Content."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from DELETE integration runtime operation."
+            }
+          },
+          "summary": "Delete integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Delete integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Delete.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        },
+        "get": {
+          "description": "Get an integration runtime",
+          "operationId": "IntegrationRuntimes_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "ETag of the integration runtime entity. Should only be specified for get. If the ETag matches the existing entity tag, or if * was provided, then no content will be returned.",
+              "in": "header",
+              "name": "If-None-Match",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeResource"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "304": {
+              "description": "Not modified."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from GET integration runtime operation."
+            }
+          },
+          "summary": "Get integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Update an integration runtime",
+          "operationId": "IntegrationRuntimes_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateIntegrationRuntimeRequest"
+                }
+              }
+            },
+            "description": "The parameters for updating an integration runtime.",
+            "required": true,
+            "x-originalParamName": "updateIntegrationRuntimeRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeResource"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Update integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Update integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Update.json"
+            }
+          }
+        },
+        "put": {
+          "description": "Create an integration runtime",
+          "operationId": "IntegrationRuntimes_Create",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "ETag of the integration runtime entity. Should only be specified for update, for which it should match existing entity or can be * for unconditional update.",
+              "in": "header",
+              "name": "If-Match",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationRuntimeResource"
+                }
+              }
+            },
+            "description": "Integration runtime resource definition.",
+            "required": true,
+            "x-originalParamName": "integrationRuntime"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeResource"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "202": {
+              "description": "Accepted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from PUT integration runtime operation."
+            }
+          },
+          "summary": "Create integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Create integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Create.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/disableInteractiveQuery": {
+        "post": {
+          "description": "Disable interactive query in integration runtime",
+          "operationId": "IntegrationRuntimes_DisableInteractiveQuery",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "202": {
+              "description": "Accepted"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Stop integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_DisableInteractiveQuery.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/enableInteractiveQuery": {
+        "post": {
+          "description": "Enable interactive query in integration runtime",
+          "operationId": "IntegrationRuntimes_EnableInteractiveQuery",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "202": {
+              "description": "Accepted"
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Stop integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_EnableInteractiveQuery.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/getConnectionInfo": {
+        "post": {
+          "description": "Get connection info for an integration runtime",
+          "operationId": "IntegrationRuntimeConnectionInfos_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeConnectionInfo"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_2"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime connection info",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get connection info": {
+              "$ref": "./examples/IntegrationRuntimes_GetConnectionInfo.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/getObjectMetadata": {
+        "post": {
+          "description": "Get object metadata from an integration runtime",
+          "operationId": "IntegrationRuntimeObjectMetadata_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSsisObjectMetadataRequest"
+                }
+              }
+            },
+            "description": "The parameters for getting a SSIS object metadata.",
+            "x-originalParamName": "getMetadataRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SsisObjectMetadataListResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime object metadata",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get integration runtime object metadata": {
+              "$ref": "./examples/IntegrationRuntimeObjectMetadata_List.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/getStatus": {
+        "post": {
+          "description": "Get the integration runtime status",
+          "operationId": "IntegrationRuntimeStatus_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeStatusResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime status",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get status": {
+              "$ref": "./examples/IntegrationRuntimes_GetStatus.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/listAuthKeys": {
+        "post": {
+          "description": "List authentication keys in an integration runtime",
+          "operationId": "IntegrationRuntimeAuthKeys_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeAuthKeys"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "List integration runtime authentication keys",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "List auth keys": {
+              "$ref": "./examples/IntegrationRuntimes_ListAuthKeys.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/monitoringData": {
+        "post": {
+          "description": "Get monitoring data for an integration runtime",
+          "operationId": "IntegrationRuntimeMonitoringData_List",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeMonitoringData"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime monitoring data",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get monitoring data": {
+              "$ref": "./examples/IntegrationRuntimeMonitoringData_List.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/nodes/{nodeName}": {
+        "delete": {
+          "description": "Delete an integration runtime node",
+          "operationId": "IntegrationRuntimeNodes_Delete",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "Integration runtime node name",
+              "in": "path",
+              "name": "nodeName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "204": {
+              "description": "No Content."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Delete integration runtime node",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Delete integration runtime node": {
+              "$ref": "./examples/IntegrationRuntimeNodes_Delete.json"
+            }
+          }
+        },
+        "get": {
+          "description": "Get an integration runtime node",
+          "operationId": "IntegrationRuntimeNodes_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "Integration runtime node name",
+              "in": "path",
+              "name": "nodeName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SelfHostedIntegrationRuntimeNode"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime node",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get integration runtime node": {
+              "$ref": "./examples/IntegrationRuntimeNodes_Get.json"
+            }
+          }
+        },
+        "patch": {
+          "description": "Create an integration runtime node",
+          "operationId": "IntegrationRuntimeNodes_Update",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "Integration runtime node name",
+              "in": "path",
+              "name": "nodeName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateIntegrationRuntimeNodeRequest"
+                }
+              }
+            },
+            "description": "The parameters for updating an integration runtime node.",
+            "required": true,
+            "x-originalParamName": "updateIntegrationRuntimeNodeRequest"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SelfHostedIntegrationRuntimeNode"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Create integration runtime node",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Update integration runtime node": {
+              "$ref": "./examples/IntegrationRuntimeNodes_Update.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/nodes/{nodeName}/ipAddress": {
+        "post": {
+          "description": "Get the IP address of an integration runtime node",
+          "operationId": "IntegrationRuntimeNodeIpAddress_Get",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            },
+            {
+              "description": "Integration runtime node name",
+              "in": "path",
+              "name": "nodeName",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeNodeIpAddress"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Get integration runtime node IP address",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Get integration runtime node IP address": {
+              "$ref": "./examples/IntegrationRuntimeNodes_GetIpAddress.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/outboundNetworkDependenciesEndpoints": {
+        "get": {
+          "description": "Gets the list of outbound network dependencies for a given Azure-SSIS integration runtime.",
+          "operationId": "IntegrationRuntimes_ListOutboundNetworkDependenciesEndpoints",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeOutboundNetworkDependenciesEndpointsResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Gets list of outbound network dependencies for a given Azure-SSIS integration runtime.",
+          "tags": [
+            "integrationRuntimes"
+          ],
+          "x-ms-examples": {
+            "Get outbound network dependency endpoints": {
+              "$ref": "./examples/IntegrationRuntimes_ListOutboundNetworkDependenciesEndpoints.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/refreshObjectMetadata": {
+        "post": {
+          "description": "Refresh the object metadata in an integration runtime",
+          "operationId": "IntegrationRuntimeObjectMetadata_Refresh",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SsisObjectMetadataStatusResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "202": {
+              "description": "Accepted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Refresh integration runtime object metadata",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Refresh object metadata": {
+              "$ref": "./examples/IntegrationRuntimeObjectMetadata_Refresh.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/regenerateAuthKey": {
+        "post": {
+          "description": "Regenerate the authentication key for an integration runtime",
+          "operationId": "IntegrationRuntimeAuthKeys_Regenerate",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationRuntimeRegenerateKeyParameters"
+                }
+              }
+            },
+            "description": "The parameters for regenerating integration runtime authentication key.",
+            "required": true,
+            "x-originalParamName": "regenerateKeyParameters"
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeAuthKeys"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Regenerate integration runtime authentication key",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Regenerate auth key": {
+              "$ref": "./examples/IntegrationRuntimes_RegenerateAuthKey.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/start": {
+        "post": {
+          "description": "Start an integration runtime",
+          "operationId": "IntegrationRuntimes_Start",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/IntegrationRuntimeStatusResponse"
+                  }
+                }
+              },
+              "description": "OK."
+            },
+            "202": {
+              "description": "Accepted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Start integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Start integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Start.json"
+            }
+          },
+          "x-ms-long-running-operation": true,
+          "x-ms-long-running-operation-options": {
+            "final-state-via": "azure-async-operation"
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/stop": {
+        "post": {
+          "description": "Stop an integration runtime",
+          "operationId": "IntegrationRuntimes_Stop",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "202": {
+              "description": "Accepted."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Stop integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Stop integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Stop.json"
+            }
+          },
+          "x-ms-long-running-operation": true
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/syncCredentials": {
+        "post": {
+          "description": "Force the integration runtime to synchronize credentials across integration runtime nodes, and this will override the credentials across all worker nodes with those available on the dispatcher node. If you already have the latest credential backup file, you should manually import it (preferred) on any self-hosted integration runtime node than using this API directly.",
+          "operationId": "IntegrationRuntimeCredentials_Sync",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Sync integration runtime credentials",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Sync credentials": {
+              "$ref": "./examples/IntegrationRuntimes_SyncCredentials.json"
+            }
+          }
+        }
+      },
+      "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Synapse/workspaces/{workspaceName}/integrationRuntimes/{integrationRuntimeName}/upgrade": {
+        "post": {
+          "description": "Upgrade an integration runtime",
+          "operationId": "IntegrationRuntimes_Upgrade",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/ApiVersionParameter"
+            },
+            {
+              "$ref": "#/components/parameters/SubscriptionIdParameter"
+            },
+            {
+              "$ref": "#/components/parameters/ResourceGroupNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/WorkspaceNameParameter"
+            },
+            {
+              "$ref": "#/components/parameters/IntegrationRuntimeNameParameter"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK."
+            },
+            "default": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse_3"
+                  }
+                }
+              },
+              "description": "An error response received from the Azure Synapse service."
+            }
+          },
+          "summary": "Upgrade integration runtime",
+          "tags": [
+            "IntegrationRuntime"
+          ],
+          "x-ms-examples": {
+            "Upgrade integration runtime": {
+              "$ref": "./examples/IntegrationRuntimes_Upgrade.json"
+            }
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "https://management.azure.com/"
+      }
+    ]
+  }
+}
