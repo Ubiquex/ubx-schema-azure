@@ -55,3 +55,13 @@ member from that one fetch.
   the `GetProviderSchema` gRPC call itself, not parsing/translation/merging
   (UBI-195, filed, not yet fixed). Not this repo's own bug to fix, but worth
   knowing before assuming a hang.
+
+## Architecture documentation
+
+This repo's own snapshot content is generated, never architectural on
+its own. A change to HOW it's generated — the pinning/versioning
+mechanism, `hash-watch.yml`/`publish.yml`'s own real logic, anything
+about `min_binary_version` or the diff/version-derivation rules — is
+architectural, and gets `ubiquex-internals`' own Provider System page
+(the developer documentation site) updated in the same body of work,
+never a follow-up. Matches `ubiquex` CLAUDE.md rule 10.
