@@ -83,3 +83,13 @@ bundle is gone entirely. See `internal/snapshot/diff.go` and
 `AssembleGroup` in `ubx-provider-dynamic` for the real rule.
 
 `v1.0.0` is this group's real, first-ever snapshot.
+
+<!-- README-GEN:BEGIN -->
+**Real, current published version:** `v1.0.0`
+
+## Links
+
+- Docs: https://docs.ubiquex.io
+- Internals (architecture and design): https://github.com/Ubiquex/ubiquex-internals
+- Linear board: https://linear.app/ubiquex
+<!-- README-GEN:END -->
