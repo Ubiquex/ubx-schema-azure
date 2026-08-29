@@ -16,9 +16,16 @@ Swagger 2.0 spec per real product, e.g. `azure_network_virtualnetwork`,
 `azure_sql_databases`), each fetched once and built into BOTH a
 resource-mode member and a data-source-mode member from that one fetch:
 
-- 302 resource-mode members (1,090 real resource types total).
-- 302 data-source-mode members (2,177 real, unclaimed read-only
-  operations total).
+- 302 resource-mode members (1,107 real resource types total -- UBI-181's
+  own narrow create-verb allowlist, `internal/dsfilter`, admits 16 more
+  than a literal "create"/"insert"-only check found, real, published ARM
+  operations like `Databases_Create`/`FirewallRules_CreateOrUpdate` whose
+  async response never structurally matched their own read schema).
+- 302 data-source-mode members (1,614 real, unclaimed read-only
+  operations total -- down from the pre-UBI-181 count: the same PR's own
+  five-rule filter now excludes watch/operation-status/execution/
+  computed/reference-duplication candidates that were never real data
+  sources to begin with).
 
 This is the first real group in this org whose own real specs needed
 external `$ref` bundling before they could be published at all: Azure's
